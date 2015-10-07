@@ -1,39 +1,29 @@
 license_identifier
 ===
 
-[[![Build Status](https://jenkins.open.qualcomm.com/buildStatus/icon?job=codebom)](https://jenkins.open.qualcomm.com/job/codebom/)]
-
-The purpose of codebom is to identify the license text region and the type of license
-in the source code.
+The purpose of this program 'license_identifier' is to scan the source code files and
+identify the license text region and the type of license.
 
 Installation
 ===
 
-Use Python's `pip` to install the latest release of `codebom` from Enterprise
-GitHub:
-
-```bash
-$ pip install --user git+https://github.qualcomm.com/gregf/codebom@0.0.5
-```
+Please install python3.  Download the source code from this repository. 
 
 Status
 ===
 
-[Current Source Code](https://github.qualcomm.com/phshin/license_identification/releases)
+[Current Source Code](https://github.qualcomm.com/phshin/license_identifier)
 
-[Wiki - Technical Description and Roadmap](https://github.qualcomm.com/gregf/codebom/milestones/0.1.0)
+[Wiki - Technical Description and Roadmap](http://qosp-wiki.qualcomm.com/wiki/OS_License_Identification)
 
 
 Usage
 ===
 
 ```
-usage: python3 license_identifer [-h] [--version] [-f FILE] {lint,scan,verify}
+Please go into ./src folder.
 
-Validate a Bill of Materials
-
-positional arguments:
-{lint,scan,verify}  a command to run
+usage: python3 license_identifer folder_name 
 
 optional arguments:
 -h, --help     show this help message and exit
@@ -41,20 +31,8 @@ optional arguments:
 -f FILE
 ```
 
-Sample Bill of Materials `.bom.yaml`:
-
-```yaml
-license: AllRightsReserved
-license-file: LICENSE
-development-dependencies:
-- root: setup.py
-- root: lib/pytest
-dependencies:
-- root: lib/gitpython
-origin: https://github.com/gitpython-developers/GitPython/archive/0.3.6.tar.gz
-license: BSD3
-license-file: LICENSE
-```
+If you want to add more licenses, please create a text file with the license text.
+Then, save it into the ./src/license_dir folder.
 
 To verify the file is valid YAML, contains the expected fields, and
 the field values are in the expected format.
