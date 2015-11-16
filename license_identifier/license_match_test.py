@@ -1,16 +1,16 @@
 import pytest
 
-from . import license_identifier
+from . import license_match
 
 
 @pytest.fixture()
 def match():
-    return license_identifier.LicenseMatch(
+    return license_match.LicenseMatch(
         'file_name', 'path/to/file', 'license', 0, 10, True, True)
 
 
 def test_equal_matches(match):
-    eq_match = license_identifier.LicenseMatch(
+    eq_match = license_match.LicenseMatch(
         match.file_name,
         match.file_path,
         match.license,
@@ -23,7 +23,7 @@ def test_equal_matches(match):
 
 
 def test_diff_file_name(match):
-    diff_match = license_identifier.LicenseMatch(
+    diff_match = license_match.LicenseMatch(
         '{}_diff'.format(match.file_name),
         match.file_path,
         match.license,
@@ -36,7 +36,7 @@ def test_diff_file_name(match):
 
 
 def test_diff_file_path(match):
-    diff_match = license_identifier.LicenseMatch(
+    diff_match = license_match.LicenseMatch(
         match.file_name,
         '{}_diff'.format(match.file_path),
         match.license,
@@ -49,7 +49,7 @@ def test_diff_file_path(match):
 
 
 def test_diff_license(match):
-    diff_match = license_identifier.LicenseMatch(
+    diff_match = license_match.LicenseMatch(
         match.file_name,
         match.file_path,
         '{}_diff'.format(match.license),
@@ -62,7 +62,7 @@ def test_diff_license(match):
 
 
 def test_diff_start_byte(match):
-    diff_match = license_identifier.LicenseMatch(
+    diff_match = license_match.LicenseMatch(
         match.file_name,
         match.file_path,
         match.license,
@@ -75,7 +75,7 @@ def test_diff_start_byte(match):
 
 
 def test_diff_length(match):
-    diff_match = license_identifier.LicenseMatch(
+    diff_match = license_match.LicenseMatch(
         match.file_name,
         match.file_path,
         match.license,
@@ -88,7 +88,7 @@ def test_diff_length(match):
 
 
 def test_diff_full_text(match):
-    diff_match = license_identifier.LicenseMatch(
+    diff_match = license_match.LicenseMatch(
         match.file_name,
         match.file_path,
         match.license,
@@ -101,7 +101,7 @@ def test_diff_full_text(match):
 
 
 def test_diff_scan_error(match):
-    diff_match = license_identifier.LicenseMatch(
+    diff_match = license_match.LicenseMatch(
         match.file_name,
         match.file_path,
         match.license,
@@ -114,24 +114,24 @@ def test_diff_scan_error(match):
 
 
 def test_has_snippet():
-    match = license_identifier.LicenseMatch('name', 'path', 'lic', 0, 10)
+    match = license_match.LicenseMatch('name', 'path', 'lic', 0, 10)
 
     assert match.has_snippet
 
 
 def test_has_no_snippet():
-    match = license_identifier.LicenseMatch('name', 'path', 'lic', 10, 0)
+    match = license_match.LicenseMatch('name', 'path', 'lic', 10, 0)
 
     assert match.has_snippet == False
 
 
 def test_full_text_defaults_to_false():
-    match = license_identifier.LicenseMatch('name', 'path', 'lic', 10, 0)
+    match = license_match.LicenseMatch('name', 'path', 'lic', 10, 0)
 
     assert match.full_text == False
 
 
 def test_scan_error_defaults_to_false():
-    match = license_identifier.LicenseMatch('name', 'path', 'lic', 10, 0)
+    match = license_match.LicenseMatch('name', 'path', 'lic', 10, 0)
 
     assert match.scan_error == False
