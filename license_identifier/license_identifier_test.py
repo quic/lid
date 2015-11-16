@@ -1,8 +1,8 @@
 #
 # Unit Tests to go here
 #
-import n_grams as ng
-import license_identifier as lcs_id
+from . import n_grams as ng
+from . import license_identifier as lcs_id
 
 from collections import Counter
 from os import getcwd

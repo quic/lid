@@ -5,7 +5,7 @@ from collections import Counter, defaultdict
 import pprint
 import sys
 
-import location_identifier as loc_id
+from . import location_identifier as loc_id
 
 
 class NGramBuilder:

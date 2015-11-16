@@ -3,7 +3,7 @@
 #
 from collections import Counter
 
-from license_identifier import n_grams as ng
+from . import n_grams as ng
 
 
 text_list = ['one', 'two', 'three', 'four']

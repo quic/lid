@@ -1,6 +1,6 @@
 import pytest
 
-import license_identifier
+from . import license_identifier
 
 
 @pytest.fixture()

@@ -4,9 +4,9 @@ from collections import Counter, defaultdict
 import sys
 import argparse
 
-from license_identifier import license_match
-from license_identifier import n_grams as ng
-import location_identifier as loc_id
+from . import license_match
+from . import n_grams as ng
+from . import location_identifier as loc_id
 
 
 DEFAULT_THRESH_HOLD=0.02
