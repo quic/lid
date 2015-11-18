@@ -49,5 +49,21 @@ def test_analyze_file():
 
 
 def test_find_license_region():
-    pass
+    lcs_id_obj = lcs_id.license_identifier(get_license_dir())
+    fp = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
+    license_name = 'test_license'
+    test1_loc_result = lcs_id_obj.find_license_region(license_name, fp)
+    assert test1_loc_result == (1, 2, 5, 24, 1.0)
 
+def test_get_str_from_file():
+    lcs_id_obj = lcs_id.license_identifier(get_license_dir())
+    fp = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
+    list_of_str = lcs_id_obj.get_str_from_file(fp)
+    assert list_of_str == ['zero\n', 'one two three four\n', 'five\n', 'six\n', 'seven']
+    fp = "what"
+    list_of_str = lcs_id_obj.get_str_from_file(fp)
+    assert list_of_str == None
+
+
+def test_main():
+    pass

@@ -13,9 +13,12 @@ DEFAULT_THRESH_HOLD=0.02
 DEFAULT_LICENSE_DIR=join(getcwd(), "..", 'data','license_dir')
 
 class license_identifier:
-    def __init__(self, license_dir=DEFAULT_LICENSE_DIR):
-        if license_dir != None:
-            self.license_dir = license_dir
+    def __init__(self, license_dir=DEFAULT_LICENSE_DIR,
+                 threshold=DEFAULT_THRESH_HOLD,
+                 input_path=None,
+                 output_format=None,
+                 output_path=None):
+        self.license_dir = license_dir
         # holds n gram models for each license type
         #  used for matching input vs. each license
         self.license_n_grams = defaultdict()
@@ -27,6 +30,17 @@ class license_identifier:
                                        self.license_n_grams,
                                        self.license_dir,
                                        self.license_file_name_list)
+        if input_path:
+            result_obj = self.analyze_input_path(input_path, threshold)
+            self.format_output(result_obj, output_format, output_path=output_path)
+
+    def format_output(self, result_obj, output_format, output_path):
+        if output_format == 'csv':
+            pass
+        elif output_format == 'license_match':
+            pass
+        elif output_format == 'easy_read':
+            pass
 
     def _get_license_file_names(self):
         file_fp_list = [ f for f in listdir(self.license_dir) \
@@ -93,7 +107,7 @@ class license_identifier:
         elif isfile(input_path):
             return self.analyze_file(input_path)
         else:
-            raise OSError('Neither file nor directory')
+            raise OSError('Neither file nor directory{}'.format(input_path))
 
     def apply_function_on_all_files(self, function_ptr, top_dir_name, *args, **kwargs):
         list_of_result =[]
@@ -131,11 +145,13 @@ class license_identifier:
             fp.close()
         except OSError as err:
             print('OS error: {0}'.format(err))
+            list_of_str = None
         except:
             print (fp)
             print (sys.exc_info()[0])
             print (sys.exc_info())
             print ()
+            list_of_str = None
         return list_of_str
 
 def main():
@@ -147,21 +163,23 @@ def main():
                         help="threshold hold for similarity measure (ranging from 0 to 1)")
     aparse.add_argument("-L", "--license_folder",
                         help="Specify directory path where the license text files are",
-                        default=join(getcwd(), '..', 'data', 'license'),
-                        )
+                        default=join(getcwd(), 'data', 'license_dir'))
     aparse.add_argument("-I", "--input_path",
                         help="Specify directory or file path where the input source code files are",
-                        default=join(getcwd(), '..', 'data', 'test', 'data'),
+                        default=join(getcwd(), 'data', 'test', 'data'),
                         required=True)
-    aparse.add_argument("-O", "--output_format",
+    aparse.add_argument("-O", "--output_path",
+                        help="Specify a file name path where the result will be saved for csv file.",
+                        default=join(getcwd(), 'output.csv'))
+    aparse.add_argument("-F", "--output_format",
         help="Format the output accordingly", action="append",
         choices=["csv", "license_match", "easy_read"])
     args = aparse.parse_args()
-    # obj = license_identifier(args.threhold, args.license, args.input_path, args.license_folder,
-    #                          args.output_format)
-    lobj = license_identifier()
-    result = lobj.analyze_input_path(join(getcwd(), '../data/scanner_evaluation_files-1.0.0/open_source/BSD'))
-    import pdb; pdb.set_trace()
+    li_obj = license_identifier(license_dir=args.license_folder,
+                                threshold=args.threshold,
+                                input_path=args.input_path,
+                                output_format=args.output_format,
+                                output_path=args.output_path)
 
 if __name__ == "__main__":
     main()
