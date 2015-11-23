@@ -3,6 +3,7 @@ from os.path import isfile, join, isdir, dirname
 from collections import Counter, defaultdict
 import sys
 import argparse
+import csv
 
 from . import license_match
 from . import n_grams as ng
@@ -35,12 +36,22 @@ class license_identifier:
             self.format_output(result_obj, output_format, output_path=output_path)
 
     def format_output(self, result_obj, output_format, output_path):
+        print('we are in this output format:{}'.format(output_format))
+        import pdb; pdb.set_trace()
         if output_format == 'csv':
-            pass
+            self.write_csv_file(result_obj, output_path)
         elif output_format == 'license_match':
             pass
         elif output_format == 'easy_read':
             pass
+
+    # TODO: add unicode output from unicode input (if necessary).
+    def write_csv_file(self, result_obj_list, output_path):
+        with open(output_path, 'wb') as f:
+            writer = csv.writer(f)
+            for (lm_res, sum_list_res) in result_obj_list:
+                writer.writerows(lm_res)
+        f.close()
 
     def _get_license_file_names(self):
         file_fp_list = [ f for f in listdir(self.license_dir) \
@@ -99,7 +110,7 @@ class license_identifier:
                         end_offset,
                         region_score,
                         found_region]
-        return lcs_match, summary_list
+        return [(lcs_match, summary_list)]
 
     def analyze_input_path(self, input_path, threshold=DEFAULT_THRESH_HOLD):
         if isdir(input_path):
@@ -110,7 +121,7 @@ class license_identifier:
             raise OSError('Neither file nor directory{}'.format(input_path))
 
     def apply_function_on_all_files(self, function_ptr, top_dir_name, *args, **kwargs):
-        list_of_result =[]
+        list_of_result = []
         for root, dirs, files in walk(top_dir_name):
             for file in files:
                 list_of_result.append(function_ptr(join(root, file), *args, **kwargs))
@@ -134,8 +145,8 @@ class license_identifier:
         return similarity_dict
 
     def find_best_match(self, scores):
-        license_found = max (scores, key=scores.get)
-        max_val = scores[max (scores, key=scores.get)]
+        license_found = max(scores, key=scores.get)
+        max_val = scores[max(scores, key=scores.get)]
         return license_found, max_val
 
     def get_str_from_file(self, file_path):
@@ -147,10 +158,10 @@ class license_identifier:
             print('OS error: {0}'.format(err))
             list_of_str = None
         except:
-            print (fp)
-            print (sys.exc_info()[0])
-            print (sys.exc_info())
-            print ()
+            print(fp)
+            print(sys.exc_info()[0])
+            print(sys.exc_info())
+            print()
             list_of_str = None
         return list_of_str
 
@@ -178,7 +189,7 @@ def main():
     li_obj = license_identifier(license_dir=args.license_folder,
                                 threshold=args.threshold,
                                 input_path=args.input_path,
-                                output_format=args.output_format,
+                                output_format=args.output_format[0],
                                 output_path=args.output_path)
 
 if __name__ == "__main__":

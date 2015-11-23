@@ -123,7 +123,7 @@ class Location_Finder:
 
     def print_license (self, src_lines, start_ind, end_ind):
         for line in src_lines[start_ind:end_ind]:
-            print (line)
+            print(line)
 
     def expand_window(self, license_n_grams, src_lines, start_ind, window_size):
 
@@ -132,7 +132,6 @@ class Location_Finder:
         score_to_keep = self.measure_similarity(license_n_grams, src_lines,
                                                      start_ind, end_ind)
         # TODO: possibly use regular expression to find the start and end
-
         start_ind, end_ind, score_to_keep = self.expand_to_top(license_n_grams, src_lines, start_ind, end_ind, score_to_keep, 3)
         start_ind, end_ind, score_to_keep = self.expand_to_top(license_n_grams, src_lines, start_ind, end_ind, score_to_keep, 2)
         start_ind, end_ind, score_to_keep = self.expand_to_top(license_n_grams, src_lines, start_ind, end_ind, score_to_keep, 1)
@@ -141,14 +140,11 @@ class Location_Finder:
         start_ind, end_ind, score_to_keep = self.expand_to_bottom(license_n_grams, src_lines, start_ind, end_ind, score_to_keep, 3)
         start_ind, end_ind, score_to_keep = self.expand_to_bottom(license_n_grams, src_lines, start_ind, end_ind, score_to_keep, 2)
         start_ind, end_ind, score_to_keep = self.expand_to_bottom(license_n_grams, src_lines, start_ind, end_ind, score_to_keep, 1)
-
         return start_ind, end_ind, score_to_keep
 
     def expand_to_top(self, license_n_grams, src_lines, start_ind, end_ind, score_to_keep, increment ):
         # expand to the lower area
         while True:
-            # increment by 1
-            # TODO: might want to consider 2 for skipping a blank line
             start_ind -= increment
 
             if start_ind >= 0:

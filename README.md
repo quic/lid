@@ -38,4 +38,5 @@ If you want to add more licenses, please create a text file with the license tex
 Then, save it into the ./data/license_dir folder.
 
 Note for the developers who want to integrate this module into their code.
-The program is
+The program reads all the license files when it begins - it takes a few seconds.  For efficiency gain,
+I would recommend instantiating one instance, and running analyze_input_path method.
