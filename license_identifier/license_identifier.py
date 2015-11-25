@@ -189,7 +189,7 @@ def main():
     li_obj = license_identifier(license_dir=args.license_folder,
                                 threshold=args.threshold,
                                 input_path=args.input_path,
-                                output_format=args.output_format[0],
+                                output_format=args.output_format,
                                 output_path=args.output_path)
 
 if __name__ == "__main__":
