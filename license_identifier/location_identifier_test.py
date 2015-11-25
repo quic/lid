@@ -90,7 +90,7 @@ def test_find_max_score_ind():
 
 def test_split_and_measure_similarities():
     lcs_file = join(get_license_dir(), 'test_license.txt')
-    input_file = join(BASE_DIR, 'data', 'test', 'data', 'subdir', 'subdir2', 'test3.py')
+    input_file = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
     loc_id_obj = loc_id.Location_Finder()
 
     [license_lines, license_offsets]= util.read_lines_offsets(lcs_file)
@@ -111,11 +111,76 @@ def test_split_and_measure_similarities():
 
 
 def test_expand_window():
+    lcs_file = join(get_license_dir(), 'test_license.txt')
+    input_file = join(BASE_DIR, 'data', 'test', 'data', 'subdir', 'subdir2', 'test3.py')
+    loc_id_obj = loc_id.Location_Finder()
 
-    pass
+    [license_lines, license_offsets]= util.read_lines_offsets(lcs_file)
+    [src_lines, src_offsets] = util.read_lines_offsets(input_file)
+
+    window_size = len(license_lines)
+    src_size = len(src_lines)
+
+    license_n_grams = ng.n_grams(list_text_line=license_lines)
+
+    [similarity_scores, window_start_index] = loc_id_obj.split_and_measure_similarities(src_size=src_size,
+                                                            src_offsets=src_offsets,
+                                                            src_lines=src_lines,
+                                                            window_size=window_size,
+                                                            license_n_grams=license_n_grams)
+    [max_score, max_index] = loc_id_obj.find_max_score_ind(similarity_scores=similarity_scores)
+
+    # for maximum scores that share the same value
+    final_score = []
+    start_index = []
+    end_index =[]
+
+    for max_ind in max_index:
+        [s_ind, e_ind, final_s] = loc_id_obj.expand_window(license_n_grams,
+                                                  src_lines,
+                                                  window_start_index[max_ind],
+                                                  window_size)
+        start_index.append(s_ind)
+        end_index.append(e_ind)
+        final_score.append(final_s)
+    max_score = max(final_score)
+    max_index = [i for i, j in enumerate(final_score) if j == max_score]
+    first_max_ind = max_index[0]
+    assert start_index == [2, 0, 1, 2]
+    assert end_index == []
+    assert s_ind == 2
+    assert e_ind == 6
+    assert final_s == 1.0
+    assert max_score == 1.0
+    assert max_index == 3
+
 
 def test_expand_to_top():
-    pass
+    lcs_file = join(get_license_dir(), 'test_license.txt')
+    input_file = join(BASE_DIR, 'data', 'test', 'data', 'subdir', 'subdir2', 'test3.py')
+    loc_id_obj = loc_id.Location_Finder()
+
+    [license_lines, license_offsets]= util.read_lines_offsets(lcs_file)
+    [src_lines, src_offsets] = util.read_lines_offsets(input_file)
+
+    window_size = len(license_lines)
+    src_size = len(src_lines)
+
+    license_n_grams = ng.n_grams(list_text_line=license_lines)
+
+    [similarity_scores, window_start_index] = loc_id_obj.split_and_measure_similarities(src_size=src_size,
+                                                            src_offsets=src_offsets,
+                                                            src_lines=src_lines,
+                                                            window_size=window_size,
+                                                            license_n_grams=license_n_grams)
+    [max_score, max_index] = loc_id_obj.find_max_score_ind(similarity_scores=similarity_scores)
+
+    # for maximum scores that share the same value
+    final_score = []
+    start_index = []
+    end_index =[]
+
+
 
 def test_expand_to_bottom():
     pass
