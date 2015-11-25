@@ -1,5 +1,5 @@
 from . import util
-from . import os
+import os
 
 def test_read_lines_offsets():
     assert util.read_lines_offsets(os.path.join(os.getcwd(), '../data/test/data/test1.py'))[0] == ["zero",
