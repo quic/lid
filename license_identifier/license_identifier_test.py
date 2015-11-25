@@ -44,7 +44,7 @@ def test_get_license_name():
 def test_analyze_file():
     lcs_id_obj = lcs_id.license_identifier(get_license_dir())
     fp = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
-    [lcs_match, summary_list] = lcs_id_obj.analyze_file(input_fp=fp)
+    lcs_match, summary_list = lcs_id_obj.analyze_file(input_fp=fp)
     assert summary_list[2] == 1.0
 
 

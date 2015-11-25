@@ -110,7 +110,7 @@ class license_identifier:
                         end_offset,
                         region_score,
                         found_region]
-        return [(lcs_match, summary_list)]
+        return lcs_match, summary_list
 
     def analyze_input_path(self, input_path, threshold=DEFAULT_THRESH_HOLD):
         if isdir(input_path):
