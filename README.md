@@ -8,7 +8,22 @@ identify the license text region and the type of license.
 Installation
 ===
 
-Please install python3.  Download the source code from this repository. 
+Please use virtual env:
+```
+virtualenv ENV
+source ENV/bin/activate
+```
+
+To install dependencies:
+```
+make deps
+```
+
+To run tests:
+
+```
+make test
+```
 
 Status
 ===
