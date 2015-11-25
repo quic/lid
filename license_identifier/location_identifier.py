@@ -191,8 +191,3 @@ class Location_Finder:
         list_text = src_lines[start_ind:end_ind]
         this_n_grams = ng.n_grams(list_text_line=list_text)
         return other_n_grams.measure_similarity(this_n_grams)
-
-license_file_path = '/Users/phshin/work/git/phshin/analysis/license/data/license_dir/LGPL-2.0-license-PS.txt'
-src_file_path = '/Users/phshin/work/git/phshin/analysis/license/data/scanner_evaluation_files-1.0.0/open_source/GNU_2.0/aswp401.qualcomm.com_deploy_qcom_qct_platform_wpci_prod_woa_performance_main_latest_Applications_Native_Spec2K_Spec2000_src_177.mesa_feedback.c'
-lf = Location_Finder()
-print ((lf.main_process(license_file_path, src_file_path)))
