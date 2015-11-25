@@ -33,4 +33,10 @@ run.wsgi
 frontend/views/generated
 frontend/css
 tags
-data/
+data/jporter
+data/license_dir
+data/licenses-1.18
+data/scanner_evaluation_files-1.0.0
+
+
+
