@@ -1,7 +1,7 @@
 import math
 
-import n_grams as ng
-import util
+from . import n_grams as ng
+from . import util
 
 
 DEFAULT_THRESHOLD = 0.02
