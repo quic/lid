@@ -15,12 +15,12 @@ class file_with_pos(object):
 def read_lines_offsets(file_name):
     fp = codecs.open(file_name, 'r', encoding='ISO-8859-1')
     lines =[]
-    line_offsets=[]
+    line_offsets=[0]
     while True:
-        line_offsets.append(fp.tell())
         line = fp.readline()
         if not line:
             break
+        line_offsets.append(line_offsets[-1] + len(line))
         line = line.rstrip('\n')
         lines.append(line)
     return lines, line_offsets
