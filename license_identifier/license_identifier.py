@@ -157,19 +157,9 @@ class license_identifier:
         return license_found, max_val
 
     def get_str_from_file(self, file_path):
-        try:
-            fp = open(file_path, encoding='ascii', errors='surrogateescape')
-            list_of_str = fp.readlines()
-            fp.close()
-        except OSError as err:
-            print('OS error: {0}'.format(err))
-            list_of_str = None
-        except:
-            print(fp)
-            print(sys.exc_info()[0])
-            print(sys.exc_info())
-            print()
-            list_of_str = None
+        fp = codecs.open(file_path, encoding='ascii', errors='surrogateescape')
+        list_of_str = fp.readlines()
+        fp.close()
         return list_of_str
 
 def main():

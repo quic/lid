@@ -9,6 +9,8 @@ from os import getcwd
 from os.path import join
 
 
+import pytest
+
 
 text_list = ['one', 'two', 'three', 'four']
 text_line = 'one\ntwo\nthree\nfour'
@@ -61,8 +63,8 @@ def test_get_str_from_file():
     list_of_str = lcs_id_obj.get_str_from_file(fp)
     assert list_of_str == ['zero\n', 'one two three four\n', 'five\n', 'six\n', 'seven']
     fp = "what"
-    list_of_str = lcs_id_obj.get_str_from_file(fp)
-    assert list_of_str == None
+    with pytest.raises(IOError):
+        lcs_id_obj.get_str_from_file(fp)
 
 
 def test_main():
