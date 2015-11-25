@@ -1,3 +1,4 @@
+import codecs
 
 class file_with_pos(object):
     def __init__(self, fp):
@@ -12,7 +13,7 @@ class file_with_pos(object):
 
 
 def read_lines_offsets(file_name):
-    fp = open(file_name, 'r', encoding='ISO-8859-1')
+    fp = codecs.open(file_name, 'r', encoding='ISO-8859-1')
     lines =[]
     line_offsets=[]
     while True:
