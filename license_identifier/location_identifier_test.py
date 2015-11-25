@@ -147,12 +147,12 @@ def test_expand_window():
     max_index = [i for i, j in enumerate(final_score) if j == max_score]
     first_max_ind = max_index[0]
     assert start_index == [2, 0, 1, 2]
-    assert end_index == []
+    assert end_index == [8,9,8,6]
     assert s_ind == 2
     assert e_ind == 6
     assert final_s == 1.0
     assert max_score == 1.0
-    assert max_index == 3
+    assert max_index == [3]
 
 
 def test_expand_to_top():
