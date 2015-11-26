@@ -24,18 +24,12 @@ class Location_Finder:
         # 2. split up the window and loop over the windows
         # for small source file case
         # TODO: check if they match & score
-        if (src_size <= window_size):
-            return 0, src_size, \
-                   src_offsets[0], src_offsets[src_size-1],\
-                   self.measure_similarity(license_n_grams,
-                                           src_lines, 0, src_size)
-        else:
-            [similarity_scores, window_start_index] = \
-                self.split_and_measure_similarities(src_size=src_size,
-                                                    src_offsets=src_offsets,
-                                                    src_lines=src_lines,
-                                                    window_size=window_size,
-                                                    license_n_grams=license_n_grams)
+        [similarity_scores, window_start_index] = self.split_and_measure_similarities(src_size=src_size,
+                                                                src_offsets=src_offsets,
+                                                                src_lines=src_lines,
+                                                                window_size=window_size,
+                                                                license_n_grams=license_n_grams)
+
         # Find the window with maximum scores.
         [max_score, max_index] = self.find_max_score_ind(similarity_scores=similarity_scores)
 
