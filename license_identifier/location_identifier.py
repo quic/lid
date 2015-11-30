@@ -24,12 +24,18 @@ class Location_Finder:
         # 2. split up the window and loop over the windows
         # for small source file case
         # TODO: check if they match & score
-        [similarity_scores, window_start_index] = self.split_and_measure_similarities(src_size=src_size,
-                                                                src_offsets=src_offsets,
-                                                                src_lines=src_lines,
-                                                                window_size=window_size,
-                                                                license_n_grams=license_n_grams)
-
+        if (src_size <= window_size):
+            return 0, src_size, \
+                   src_offsets[0], src_offsets[src_size-1],\
+                   self.measure_similarity(license_n_grams,
+                                           src_lines, 0, src_size)
+        else:
+            [similarity_scores, window_start_index] = \
+                self.split_and_measure_similarities(src_size=src_size,
+                                                    src_offsets=src_offsets,
+                                                    src_lines=src_lines,
+                                                    window_size=window_size,
+                                                    license_n_grams=license_n_grams)
         # Find the window with maximum scores.
         [max_score, max_index] = self.find_max_score_ind(similarity_scores=similarity_scores)
 
@@ -87,37 +93,31 @@ class Location_Finder:
         for small source file case
         TODO: check if they match & score
         '''
-        if (src_size <= window_size):
-            return 0, src_size, \
-                   src_offsets[0], src_offsets[src_size-1],\
-                   self.measure_similarity(license_n_grams,
-                                           src_lines, 0, src_size)
-        else:
-            window_start_ind = 0
-            window_end_ind = window_size
+        window_start_ind = 0
+        window_end_ind = window_size
 
-            similarity_scores = []
-            window_start_index = []
+        similarity_scores = []
+        window_start_index = []
 
-            index_increment = math.floor(window_size / 2)
+        index_increment = math.floor(window_size / 2)
 
-            if index_increment == 0:
-                index_increment = 1
-            while (window_start_ind < src_size):
-                # create the sliding window
-                # 3. find the similarity measure for each window
-                similarity_score = self.measure_similarity(license_n_grams,
-                                  src_lines, window_start_ind, window_end_ind)
+        if index_increment == 0:
+            index_increment = 1
+        while (window_start_ind < src_size):
+            # create the sliding window
+            # 3. find the similarity measure for each window
+            similarity_score = self.measure_similarity(license_n_grams,
+                              src_lines, window_start_ind, window_end_ind)
 
-                # keep track of the scores
-                similarity_scores.append(similarity_score)
+            # keep track of the scores
+            similarity_scores.append(similarity_score)
 
-                # bookkeeping of the indices
-                window_start_index.append(window_start_ind)
+            # bookkeeping of the indices
+            window_start_index.append(window_start_ind)
 
-                # increment the indices for the next window
-                window_start_ind += index_increment
-                window_end_ind += index_increment
+            # increment the indices for the next window
+            window_start_ind += index_increment
+            window_end_ind += index_increment
         return similarity_scores, window_start_index
 
 
