@@ -34,7 +34,8 @@ frontend/views/generated
 frontend/css
 tags
 data/jporter
-data/license_dir
+data/license_dir/*
+!data/license_dir/custom
 data/licenses-1.18
 data/scanner_evaluation_files-1.0.0
 

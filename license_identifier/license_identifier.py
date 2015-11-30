@@ -4,11 +4,16 @@ from collections import Counter, defaultdict
 import sys
 import argparse
 import csv
+import codecs
 
 from . import license_match
 from . import n_grams as ng
 from . import location_identifier as loc_id
 
+
+from future.utils.surrogateescape import register_surrogateescape
+
+register_surrogateescape()
 
 DEFAULT_THRESH_HOLD=0.02
 DEFAULT_LICENSE_DIR=join(getcwd(), "..", 'data','license_dir')
@@ -20,17 +25,16 @@ class license_identifier:
                  output_format=None,
                  output_path=None):
         self.license_dir = license_dir
+        self.custom_license_dir = join(self.license_dir, 'custom')
         # holds n gram models for each license type
         #  used for matching input vs. each license
         self.license_n_grams = defaultdict()
+        self.license_file_name_list = []
         # holds n-gram models for all license types
         #  used for parsing input file words (only consider known words)
         self._universe_n_grams = ng.n_grams()
-        self.license_file_name_list = self._get_license_file_names()
-        self._build_n_gram_univ_license(self._universe_n_grams,
-                                       self.license_n_grams,
-                                       self.license_dir,
-                                       self.license_file_name_list)
+        self._build_n_gram_univ_license(self.license_dir)    
+        self._build_n_gram_univ_license(self.custom_license_dir)    
         if input_path:
             result_obj = self.analyze_input_path(input_path, threshold)
             self.format_output(result_obj, output_format, output_path=output_path)
@@ -53,28 +57,30 @@ class license_identifier:
                 writer.writerows(lm_res)
         f.close()
 
-    def _get_license_file_names(self):
-        file_fp_list = [ f for f in listdir(self.license_dir) \
-                           if isfile(join(self.license_dir,f)) and \
+    def _get_license_file_names(self, directory):
+        file_fp_list = [ f for f in join(listdir(directory)) \
+                           if isfile(join(directory,f)) and \
                            '.txt' in f ]
         return file_fp_list
 
     def _get_license_name(self, file_name):
         return file_name.split('.txt')[0]
 
-    def _build_n_gram_univ_license(self, univ_ng, license_ng, license_dir, license_file_list):
+    def _build_n_gram_univ_license(self, license_dir):
         '''
-        parses the license text file and builds n_gram models
+        parses the license text files and build n_gram models
         for each license type
           and
         for all license corpus combined
         '''
-        for license_file_name in license_file_list:
+        license_file_name_list = self._get_license_file_names(license_dir)
+        for license_file_name in license_file_name_list:
             list_of_license_str = self.get_str_from_file(join(license_dir, license_file_name))
             license_name = self._get_license_name(license_file_name)
-            univ_ng.parse_text_list_items(list_of_license_str)
+            self._universe_n_grams.parse_text_list_items(list_of_license_str)
             new_license_ng = ng.n_grams(list_text_line=list_of_license_str)
-            license_ng[license_name] = new_license_ng
+            self.license_n_grams[license_name] = (new_license_ng, license_dir)
+        self.license_file_name_list.extend(license_file_name_list)
 
     def analyze_file(self, input_fp, threshold=DEFAULT_THRESH_HOLD):
         input_dir = dirname(input_fp)
@@ -128,7 +134,8 @@ class license_identifier:
         return list_of_result
 
     def find_license_region(self, license_name, input_fp):
-        license_fp = self.license_dir + '/' + license_name + '.txt'
+        n_gram, license_dir = self.license_n_grams[license_name]
+        license_fp = join(license_dir, license_name + '.txt')
         loc_finder = loc_id.Location_Finder()
         return loc_finder.main_process(license_fp, input_fp)
 
@@ -139,7 +146,7 @@ class license_identifier:
         """
         similarity_dict = Counter()
         for license_name in self.license_n_grams:
-            license_ng = self.license_n_grams[license_name]
+            license_ng, license_dir = self.license_n_grams[license_name]
             similarity_score = license_ng.measure_similarity(input_ng)
             similarity_dict[license_name] = similarity_score
         return similarity_dict
@@ -150,19 +157,9 @@ class license_identifier:
         return license_found, max_val
 
     def get_str_from_file(self, file_path):
-        try:
-            fp = open(file_path, encoding='ascii', errors='surrogateescape')
-            list_of_str = fp.readlines()
-            fp.close()
-        except OSError as err:
-            print('OS error: {0}'.format(err))
-            list_of_str = None
-        except:
-            print(fp)
-            print(sys.exc_info()[0])
-            print(sys.exc_info())
-            print()
-            list_of_str = None
+        fp = codecs.open(file_path, encoding='ascii', errors='surrogateescape')
+        list_of_str = fp.readlines()
+        fp.close()
         return list_of_str
 
 def main():
