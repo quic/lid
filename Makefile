@@ -14,7 +14,7 @@ install: deps license_identifier/licenses.py
 	python setup.py install
 
 clean:
-	cd license_identifier && rm -f *.pyc
+	cd license_identifier && rm -f *.pyc && rm -f licenses.py
 
 git-clean:
 	git clean -Xdf
