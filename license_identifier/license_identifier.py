@@ -1,5 +1,5 @@
 from os import listdir, walk, getcwd
-from os.path import isfile, join, isdir, dirname
+from os.path import isfile, join, isdir, dirname, exists
 from collections import Counter, defaultdict
 import sys
 import argparse
@@ -26,6 +26,7 @@ class license_identifier:
                  output_path=None):
         self.license_dir = license_dir
         self.custom_license_dir = join(self.license_dir, 'custom')
+
         # holds n gram models for each license type
         #  used for matching input vs. each license
         self.license_n_grams = defaultdict()
@@ -34,7 +35,8 @@ class license_identifier:
         #  used for parsing input file words (only consider known words)
         self._universe_n_grams = ng.n_grams()
         self._build_n_gram_univ_license(self.license_dir)    
-        self._build_n_gram_univ_license(self.custom_license_dir)    
+        if exists(self.custom_license_dir):
+            self._build_n_gram_univ_license(self.custom_license_dir)    
         if input_path:
             result_obj = self.analyze_input_path(input_path, threshold)
             self.format_output(result_obj, output_format, output_path=output_path)
