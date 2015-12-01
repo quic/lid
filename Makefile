@@ -2,7 +2,7 @@ all: test
 
 
 license_identifier/licenses.py:
-	python update_license.py
+	python update_licenses.py
 
 deps: requirements.txt
 	pip install -r $<
