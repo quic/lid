@@ -49,6 +49,11 @@ def test_analyze_file():
     lcs_match, summary_list = lcs_id_obj.analyze_file(input_fp=fp)
     assert summary_list[2] == 1.0
 
+def test_analyze_input_path():
+    lcs_id_obj = lcs_id.license_identifier(get_license_dir())
+    fp = join(BASE_DIR, 'data', 'test', 'data')
+    list_of_result_obj = lcs_id_obj.analyze_input_path(input_path=fp)
+    assert list_of_result_obj == 1
 
 def test_find_license_region():
     lcs_id_obj = lcs_id.license_identifier(get_license_dir())

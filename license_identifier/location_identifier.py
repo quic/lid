@@ -66,8 +66,8 @@ class Location_Finder:
         if end_index[first_max_ind] > len(src_lines):
             end_index[first_max_ind] = len(src_lines)
 
-        if max_score > threshold: # 0.02 is just randomly chosen low number
-            self.print_license(src_lines, start_index[first_max_ind], end_index[first_max_ind])
+        # if max_score > threshold: # 0.02 is just randomly chosen low number
+        #     self.print_license(src_lines, start_index[first_max_ind], end_index[first_max_ind])
 
         return start_index[first_max_ind],\
                end_index[first_max_ind], \
