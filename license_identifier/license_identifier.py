@@ -1,4 +1,4 @@
-from os import listdir, walk, getcwd
+from os import listdir, walk, getcwd, linesep
 from os.path import isfile, join, isdir, dirname, exists
 from collections import Counter, defaultdict
 import sys
@@ -43,21 +43,33 @@ class license_identifier:
 
     def format_output(self, result_obj, output_format, output_path):
         print('we are in this output format:{}'.format(output_format))
-        import pdb; pdb.set_trace()
-        if output_format == 'csv':
+        if output_format == ['csv']:
             self.write_csv_file(result_obj, output_path)
-        elif output_format == 'license_match':
-            pass
-        elif output_format == 'easy_read':
-            pass
+        elif output_format == ['easy_read']:
+            self.display_easy_read(result_obj)
 
     # TODO: add unicode output from unicode input (if necessary).
     def write_csv_file(self, result_obj_list, output_path):
-        with open(output_path, 'wb') as f:
-            writer = csv.writer(f)
-            for (lm_res, sum_list_res) in result_obj_list:
-                writer.writerows(lm_res)
+        if sys.version_info >= (3,0,0):
+            f = open(output_path, 'w', newline='')
+        else:
+            f = open(output_path, 'wb')
+        field_names = ['input file name',
+                       "matched license type",
+                       "Score using whole input test",
+                       "Start line number",
+                       "End line number",
+                       "Start byte offset",
+                       "End byte offset",
+                       "Score using only the license text portion",
+                       "Found license text"]
+        writer = csv.writer(f)
+        writer.writerow(field_names)
+        for result_obj in result_obj_list:
+            summary_obj = result_obj[1]
+            writer.writerow(summary_obj)
         f.close()
+
 
     def _get_license_file_names(self, directory):
         file_fp_list = [ f for f in join(listdir(directory)) \
@@ -84,6 +96,27 @@ class license_identifier:
             self.license_n_grams[license_name] = (new_license_ng, license_dir)
         self.license_file_name_list.extend(license_file_name_list)
 
+    def display_easy_read(self, result_obj_list):
+        for result_obj in result_obj_list:
+            print(self.build_summary_list_str(result_obj[1]))
+
+
+    def build_summary_list_str(self, summary_list):
+        output_str = "Summary of the analysis" + linesep + linesep\
+            + "Name of the input file: {}".format(summary_list[0]) + linesep\
+            + "Matched license type is {}".format(summary_list[1]) + linesep\
+            + "Score for the match is {:.3}".format(summary_list[2]) + linesep\
+            + "License text beings at line {}.".format(summary_list[3]) + linesep\
+            + "License text ends at line {}.".format(summary_list[4]) + linesep\
+            + "Start byte offset for the license text is {}.".format(summary_list[5]) + linesep\
+            + "End byte offset for the license text is {}.".format(summary_list[6]) +linesep\
+            + "The found license text has the score of {:.3}".format(summary_list[7]) + linesep\
+            + "The following text is found to be license text " + linesep\
+            + "-----BEGIN-----" + linesep\
+            + summary_list[8]\
+            + "-----END-----" + linesep + linesep
+        return output_str
+
     def analyze_file(self, input_fp, threshold=DEFAULT_THRESH_HOLD):
         input_dir = dirname(input_fp)
         list_of_src_str = self.get_str_from_file(input_fp)
@@ -97,6 +130,7 @@ class license_identifier:
             [start_ind, end_ind, start_offset, end_offset, region_score] = \
                 self.find_license_region(matched_license, input_fp)
             found_region = list_of_src_str[start_ind:end_ind]
+            found_region = ''.join(found_region)
             length = end_offset - start_offset + 1
             if region_score < threshold:
                 matched_license = start_ind = start_offset = ''
@@ -183,7 +217,7 @@ def main():
                         default=join(getcwd(), 'output.csv'))
     aparse.add_argument("-F", "--output_format",
         help="Format the output accordingly", action="append",
-        choices=["csv", "license_match", "easy_read"])
+        choices=["csv", "easy_read"])
     args = aparse.parse_args()
     li_obj = license_identifier(license_dir=args.license_folder,
                                 threshold=args.threshold,

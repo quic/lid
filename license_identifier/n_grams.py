@@ -80,16 +80,16 @@ class n_grams:
         tri_union = other_n_grams.trigram_count | self.trigram_count
 
         if (sum(uni_union.values()) > 0):
-            uni_score = float(sum(uni_intersect.values())) / sum(uni_union.values())
+            uni_score = (1.0*sum(uni_intersect.values())) / sum(uni_union.values())
         else:
             uni_score = 0.0
 
         if (sum(bi_union.values()) > 0):
-            bi_score = float(sum(bi_intersect.values())) / sum(bi_union.values())
+            bi_score = (1.0* sum(bi_intersect.values())) / sum(bi_union.values())
         else:
             bi_score = 0.0
         if (sum(tri_union.values()) > 0):
-            tri_score = float(sum(tri_intersect.values())) / sum(tri_union.values())
+            tri_score = (1.0*sum(tri_intersect.values())) / sum(tri_union.values())
         else:
             tri_score = 0.0
 

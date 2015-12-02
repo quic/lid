@@ -45,7 +45,7 @@ optional arguments:
 -T, --threshold     Set the threshold for similarity measure (ranging from 0 to 1)
 -L, --license_folder    Specify the directory where the license text files are.
 -I, --input_path    Specify the input path - to a file or a directory (when pointed to a directory, it considers subdirectories recursively)
--F, --output_format Specify the output format (options are 'csv', 'license_match', 'easy_read')
+-F, --output_format Specify the output format (options are 'csv', 'easy_read')
 -O, --output_filepath Specify the output files (for 'csv' file format option)
 ```
 
