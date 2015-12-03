@@ -253,7 +253,7 @@ def main():
         choices=["csv", "easy_read"])
     args = aparse.parse_args()
     li_obj = license_identifier(license_dir=args.license_folder,
-                                threshold=args.threshold,
+                                threshold=float(args.threshold),
                                 input_path=args.input_path,
                                 output_format=args.output_format,
                                 output_path=args.output_path)
