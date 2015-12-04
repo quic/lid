@@ -4,6 +4,7 @@ license_identifier
 The purpose of this program 'license_identifier' is to scan the source code files and
 identify the license text region and the type of license.
 
+[![Build Status](https://jenkins.open.qualcomm.com/buildStatus/icon?job=license_identifier)](https://jenkins.open.qualcomm.com/job/license_identifier/)
 
 Installation
 ===
