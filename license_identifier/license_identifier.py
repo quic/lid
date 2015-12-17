@@ -15,7 +15,7 @@ from future.utils.surrogateescape import register_surrogateescape
 
 register_surrogateescape()
 
-DEFAULT_THRESH_HOLD=0.02
+DEFAULT_THRESH_HOLD=0.04
 DEFAULT_LICENSE_DIR=join(getcwd(), "..", 'data','license_dir')
 
 class license_identifier:
