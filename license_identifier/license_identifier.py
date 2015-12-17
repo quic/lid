@@ -67,6 +67,9 @@ class license_identifier:
         writer.writerow(field_names)
         for result_obj in result_obj_list:
             summary_obj = result_obj[1]
+            c1, c2, c3, c4, c5, c6, c7, c8, c9 = summary_obj
+            summary_obj = c1.encode('utf8', 'surrogateescape'), c2, c3, c4, \
+                          c5, c6, c7, c8, c9.encode('utf8', 'surrogateescape')
             writer.writerow(summary_obj)
         f.close()
 
