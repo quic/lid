@@ -17,6 +17,7 @@ source ENV/bin/activate
 To install dependencies:
 ```
 make deps
+make test-deps
 ```
 
 To run tests:
@@ -42,7 +43,7 @@ Please specify the input directory when running the program.
 usage: python3 license_identifier.license_identifer -I '/your/input/file/dir_or_file'
 
 optional arguments:
--T, --threshold     Set the threshold for similarity measure (ranging from 0 to 1)
+-T, --threshold     Set the threshold for similarity measure (ranging from 0 to 1, default value is 0.04)
 -L, --license_folder    Specify the directory where the license text files are.
 -I, --input_path    Specify the input path - to a file or a directory (when pointed to a directory, it considers subdirectories recursively)
 -F, --output_format Specify the output format (options are 'csv', 'easy_read')
