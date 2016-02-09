@@ -134,7 +134,7 @@ class Location_Finder:
         start_ind, end_ind, score_to_keep = self.expand_to_bottom(license_n_grams, src_lines, start_ind, end_ind, score_to_keep, 3)
         start_ind, end_ind, score_to_keep = self.expand_to_bottom(license_n_grams, src_lines, start_ind, end_ind, score_to_keep, 2)
         start_ind, end_ind, score_to_keep = self.expand_to_bottom(license_n_grams, src_lines, start_ind, end_ind, score_to_keep, 1)
-        return start_ind, end_ind, score_to_keep
+        return int(start_ind), int(end_ind), score_to_keep
 
     def expand_to_top(self, license_n_grams, src_lines, start_ind, end_ind, score_to_keep, increment ):
         # expand to the lower area
@@ -142,7 +142,6 @@ class Location_Finder:
             start_ind -= increment
 
             if start_ind >= 0:
-                import pdb; pdb.set_trace()
 
                 score = self.measure_similarity(license_n_grams, src_lines,
                                                 start_ind, end_ind)
@@ -158,7 +157,7 @@ class Location_Finder:
             else:
                 start_ind += increment # end_ind = src_size
                 break
-        return start_ind, end_ind, score_to_keep
+        return int(start_ind), int(end_ind), score_to_keep
 
 
     def expand_to_bottom(self, license_n_grams, src_lines, start_ind, end_ind, score_to_keep, increment ):
@@ -181,7 +180,7 @@ class Location_Finder:
             else:
                 end_ind -= increment # end_ind = src_size
                 break
-        return start_ind, end_ind, score_to_keep
+        return int(start_ind), int(end_ind), score_to_keep
 
     def measure_similarity(self, other_n_grams, src_lines, start_ind, end_ind):
         list_text = src_lines[int(start_ind):int(end_ind)]
