@@ -142,6 +142,8 @@ class Location_Finder:
             start_ind -= increment
 
             if start_ind >= 0:
+                import pdb; pdb.set_trace()
+
                 score = self.measure_similarity(license_n_grams, src_lines,
                                                 start_ind, end_ind)
                 if (score <= score_to_keep):
@@ -182,6 +184,6 @@ class Location_Finder:
         return start_ind, end_ind, score_to_keep
 
     def measure_similarity(self, other_n_grams, src_lines, start_ind, end_ind):
-        list_text = src_lines[start_ind:end_ind]
+        list_text = src_lines[int(start_ind):int(end_ind)]
         this_n_grams = ng.n_grams(list_text_line=list_text)
         return other_n_grams.measure_similarity(this_n_grams)
