@@ -7,7 +7,6 @@ from . import license_match as l_match
 from collections import Counter
 from os import getcwd
 from os.path import join
-from mock import MagicMock
 from mock import mock_open
 from mock import patch, Mock
 import csv
