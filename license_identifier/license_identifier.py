@@ -37,7 +37,6 @@ class LicenseIdentifier:
         # _universe_n_grams
 
 
-
         # holds n gram models for each license type
         #  used for matching input vs. each license
         self.license_n_grams = defaultdict()
@@ -233,7 +232,7 @@ class LicenseIdentifier:
         list_of_result = []
         for root, dirs, files in walk(top_dir_name):
             for file in files:
-                if isfile(file):
+                if isfile(join(root, file)):
                     list_of_result.append(function_ptr(join(root, file), *args, **kwargs))
         return list_of_result
 
