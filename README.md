@@ -41,7 +41,7 @@ Usage
 ```
 Please specify the input directory when running the program.
 
-usage: python3 license_identifier.license_identifier -I '/your/input/file/dir_or_file'
+usage: python -m license_identifier.license_identifier -I '/your/input/file/dir_or_file'
 
 optional arguments:
 -T, --threshold     Set the threshold for similarity measure (ranging from 0 to 1, default value is 0.04)
