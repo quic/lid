@@ -7,6 +7,9 @@ license_identifier/licenses.py:
 deps: requirements.txt
 	pip install -r $<
 
+test-deps: test-requirements.txt
+	pip install -r $<
+
 test: deps license_identifier/licenses.py
 	cd license_identifier && python -B -m pytest --cov=. --cov-report=term-missing --pdb *_test.py
 

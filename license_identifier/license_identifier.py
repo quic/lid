@@ -15,11 +15,14 @@ from future.utils.surrogateescape import register_surrogateescape
 
 register_surrogateescape()
 
-DEFAULT_THRESH_HOLD=0.02
-DEFAULT_LICENSE_DIR=join(getcwd(), "..", 'data','license_dir')
+DEFAULT_THRESH_HOLD = 0.04
+DEFAULT_LICENSE_DIR = join(getcwd(), "..", 'data', 'license_dir')
+DEFAULT_UNIVERSE_N_GRAM = join(getcwd(), 'license_identifier',
+                               'license_n_gram_lib.pckl')
 
-class license_identifier:
+class LicenseIdentifier:
     def __init__(self, license_dir=DEFAULT_LICENSE_DIR,
+
                  threshold=DEFAULT_THRESH_HOLD,
                  input_path=None,
                  output_format=None,
@@ -27,19 +30,45 @@ class license_identifier:
         self.license_dir = license_dir
         self.custom_license_dir = join(self.license_dir, 'custom')
 
+
+        # pickled object should hold
+        # license_n_grams
+        # license_file_name_list
+        # _universe_n_grams
+
+
         # holds n gram models for each license type
         #  used for matching input vs. each license
         self.license_n_grams = defaultdict()
         self.license_file_name_list = []
         # holds n-gram models for all license types
         #  used for parsing input file words (only consider known words)
+
+
         self._universe_n_grams = ng.n_grams()
-        self._build_n_gram_univ_license(self.license_dir)    
-        if exists(self.custom_license_dir):
-            self._build_n_gram_univ_license(self.custom_license_dir)    
+        self._universe_n_grams = self._build_n_gram_univ_license(self.license_dir,\
+                                                                 self.custom_license_dir,\
+                                                                 self._universe_n_grams)
+
         if input_path:
             result_obj = self.analyze_input_path(input_path, threshold)
             self.format_output(result_obj, output_format, output_path=output_path)
+
+    # build n-gram universe
+    def build_known_license_n_grams(self):
+        return
+
+    # load pre-built n-gram universe
+    def load_pickled_file(self, pickled_file_path):
+        return
+
+
+
+    def _build_n_gram_univ_license(self, license_dir, custom_license_dir, universal_n_grams):
+        universal_n_grams = self._add_to_n_gram_univ_license(license_dir, universal_n_grams)
+        if exists(custom_license_dir):
+            universal_n_grams = self._add_to_n_gram_univ_license(custom_license_dir, universal_n_grams)
+        return universal_n_grams
 
     def format_output(self, result_obj, output_format, output_path):
         print('we are in this output format:{}'.format(output_format))
@@ -67,6 +96,9 @@ class license_identifier:
         writer.writerow(field_names)
         for result_obj in result_obj_list:
             summary_obj = result_obj[1]
+            c1, c2, c3, c4, c5, c6, c7, c8, c9 = summary_obj
+            summary_obj = c1.encode('utf8', 'surrogateescape'), c2, c3, c4, \
+                          c5, c6, c7, c8, c9.encode('utf8', 'surrogateescape')
             writer.writerow(summary_obj)
         f.close()
 
@@ -80,7 +112,7 @@ class license_identifier:
     def _get_license_name(self, file_name):
         return file_name.split('.txt')[0]
 
-    def _build_n_gram_univ_license(self, license_dir):
+    def _add_to_n_gram_univ_license(self, license_dir, universal_n_grams):
         '''
         parses the license text files and build n_gram models
         for each license type
@@ -91,10 +123,11 @@ class license_identifier:
         for license_file_name in license_file_name_list:
             list_of_license_str = self.get_str_from_file(join(license_dir, license_file_name))
             license_name = self._get_license_name(license_file_name)
-            self._universe_n_grams.parse_text_list_items(list_of_license_str)
+            universal_n_grams.parse_text_list_items(list_of_license_str)
             new_license_ng = ng.n_grams(list_text_line=list_of_license_str)
             self.license_n_grams[license_name] = (new_license_ng, license_dir)
         self.license_file_name_list.extend(license_file_name_list)
+        return universal_n_grams
 
     def display_easy_read(self, result_obj_list):
         for result_obj in result_obj_list:
@@ -199,7 +232,8 @@ class license_identifier:
         list_of_result = []
         for root, dirs, files in walk(top_dir_name):
             for file in files:
-                list_of_result.append(function_ptr(join(root, file), *args, **kwargs))
+                if isfile(join(root, file)):
+                    list_of_result.append(function_ptr(join(root, file), *args, **kwargs))
         return list_of_result
 
     def find_license_region(self, license_name, input_fp):
@@ -252,7 +286,7 @@ def main():
         help="Format the output accordingly", action="append",
         choices=["csv", "easy_read"])
     args = aparse.parse_args()
-    li_obj = license_identifier(license_dir=args.license_folder,
+    li_obj = LicenseIdentifier(license_dir=args.license_folder,
                                 threshold=float(args.threshold),
                                 input_path=args.input_path,
                                 output_format=args.output_format,

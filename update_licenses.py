@@ -26,7 +26,7 @@ def get_license_text(licenseId):
     return objs.next()[1].value.encode('utf-8')
 
 def write_licenses_dir(ids):
-    licenseDir = 'data/license_dir'
+    licenseDir = '../data/license_dir'
     if not os.path.exists(licenseDir):
         os.makedirs(licenseDir)
 
@@ -39,7 +39,7 @@ def write_licenses_dir(ids):
         with open('{}/{}.txt'.format(licenseDir, licenseId), 'w') as hdl:
             hdl.write(text)
 
-with open('license_identifier/licenses.py', 'w') as out:
+with open('./licenses.py', 'w') as out:
     ids = get_license_ids()
     ids.sort()
     out.write('license_ids = ')
