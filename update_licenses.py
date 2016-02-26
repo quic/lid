@@ -26,7 +26,7 @@ def get_license_text(licenseId):
     return objs.next()[1].value.encode('utf-8')
 
 def write_licenses_dir(ids):
-    licenseDir = '../data/license_dir'
+    licenseDir = './data/license_dir'
     if not os.path.exists(licenseDir):
         os.makedirs(licenseDir)
 
