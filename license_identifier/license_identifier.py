@@ -18,7 +18,7 @@ register_surrogateescape()
 
 DEFAULT_THRESH_HOLD = 0.04
 DEFAULT_LICENSE_DIR = join(getcwd(), "..", 'data', 'license_dir')
-DEFAULT_PICKLED_LIBRARY_FILE = join(getcwd(), 'license_identifier',
+DEFAULT_PICKLED_LIBRARY_FILE = join(getcwd(), 'license_identifier', 'data',
                                'license_n_gram_lib.pickle')
 
 class LicenseIdentifier:
