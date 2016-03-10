@@ -72,13 +72,11 @@ class LicenseIdentifier:
         return universal_n_grams
 
     def format_output(self, result_obj, output_format, output_path):
-        print('we are in this output format:{}'.format(output_format))
         if output_format == ['csv']:
             self.write_csv_file(result_obj, output_path)
         elif output_format == ['easy_read']:
             self.display_easy_read(result_obj)
 
-    # TODO: add unicode output from unicode input (if necessary).
     def write_csv_file(self, result_obj_list, output_path):
         if sys.version_info >= (3,0,0):
             f = open(output_path, 'w', newline='')
@@ -99,10 +97,9 @@ class LicenseIdentifier:
             summary_obj = result_obj[1]
             c1, c2, c3, c4, c5, c6, c7, c8, c9 = summary_obj
             summary_obj = c1.encode('utf8', 'surrogateescape'), c2, c3, c4, \
-                          c5, c6, c7, c8, c9.encode('utf8', 'surrogateescape')
+                          c5, c6, c7, c8, c9.encode('utf8', 'surrogateescape')[:32000]
             writer.writerow(summary_obj)
         f.close()
-
 
     def _get_license_file_names(self, directory):
         file_fp_list = [ f for f in join(listdir(directory)) \
