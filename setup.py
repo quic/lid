@@ -9,5 +9,5 @@ setup(name='license_identifier',
             author_email='phshin@qti.qualcomm.com',
             url='https://www.python.org/sigs/distutils-sig/',
             packages=['license_identifier'],
-            package_data={'license_identifier': ['data/license_dir/*.txt']}
+            package_data={'license_identifier': ['data/license_n_gram_lib.pickle']}
            )
