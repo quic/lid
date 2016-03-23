@@ -15,10 +15,11 @@ from future.utils.surrogateescape import register_surrogateescape
 
 register_surrogateescape()
 
+base_dir = dirname(__file__)
+
 DEFAULT_THRESH_HOLD = 0.04
-DEFAULT_LICENSE_DIR = join(getcwd(), "..", 'data', 'license_dir')
-DEFAULT_UNIVERSE_N_GRAM = join(getcwd(), 'license_identifier',
-                               'license_n_gram_lib.pckl')
+DEFAULT_LICENSE_DIR = join(base_dir, "..", 'data', 'license_dir')
+DEFAULT_UNIVERSE_N_GRAM = join(base_dir, 'license_n_gram_lib.pckl')
 
 class LicenseIdentifier:
     def __init__(self, license_dir=DEFAULT_LICENSE_DIR,
@@ -274,10 +275,10 @@ def main():
                         help="threshold hold for similarity measure (ranging from 0 to 1)")
     aparse.add_argument("-L", "--license_folder",
                         help="Specify directory path where the license text files are",
-                        default=join(getcwd(), 'data', 'license_dir'))
+                        default=DEFAULT_LICENSE_DIR),
     aparse.add_argument("-I", "--input_path",
                         help="Specify directory or file path where the input source code files are",
-                        default=join(getcwd(), 'data', 'test', 'data'),
+                        default=join(getcwd()),
                         required=True)
     aparse.add_argument("-O", "--output_path",
                         help="Specify a file name path where the result will be saved for csv file.",

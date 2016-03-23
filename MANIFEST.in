@@ -1,0 +1,5 @@
+include bin *
+recursive-include data/license_dir *.txt
+recursive-include license_identifier *.py
+include MANIFEST.in
+include requirements.txt
