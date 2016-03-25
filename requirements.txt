@@ -1,2 +1,5 @@
-future
+future==0.15.2
+isodate==0.5.4
+license-identifier==1.0
+pyparsing==2.1.1
 rdflib==4.2.1
