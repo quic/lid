@@ -20,6 +20,13 @@ base_dir = dirname(__file__)
 DEFAULT_THRESH_HOLD = 0.04
 DEFAULT_LICENSE_DIR = join(base_dir, "..", 'data', 'license_dir')
 DEFAULT_UNIVERSE_N_GRAM = join(base_dir, 'license_n_gram_lib.pckl')
+COLUMN_LIMIT = 32767
+
+def truncate_column(column):
+    if isinstance(column, str) or isinstance(column, unicode):
+        return column[0:COLUMN_LIMIT]
+    else:
+        return column
 
 class LicenseIdentifier:
     def __init__(self, license_dir=DEFAULT_LICENSE_DIR,
@@ -97,6 +104,7 @@ class LicenseIdentifier:
         writer.writerow(field_names)
         for result_obj in result_obj_list:
             summary_obj = result_obj[1]
+            summary_obj = map(truncate_column, summary_obj)
             c1, c2, c3, c4, c5, c6, c7, c8, c9 = summary_obj
             summary_obj = c1.encode('utf8', 'surrogateescape'), c2, c3, c4, \
                           c5, c6, c7, c8, c9.encode('utf8', 'surrogateescape')

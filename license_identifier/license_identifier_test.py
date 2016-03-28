@@ -10,6 +10,8 @@ from os.path import join
 from mock import mock_open
 from mock import patch, Mock
 import csv
+import random
+import string
 
 import pytest
 from StringIO import StringIO
@@ -130,7 +132,10 @@ def test_get_str_from_file():
     with pytest.raises(IOError):
         lcs_id_obj.get_str_from_file(fp)
 
-
+def test_truncate_column():
+    data = ''.join(random.choice(string.lowercase) for x in range(40000))
+    assert len(license_identifier.truncate_column(data)) == license_identifier.COLUMN_LIMIT
+    assert license_identifier.truncate_column(3.0) == 3.0
 
 def test_main():
     pass
