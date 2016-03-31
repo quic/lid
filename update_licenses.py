@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import rdflib
+import urllib
 from collections import OrderedDict
 from pprint import pprint
 import os
@@ -13,17 +14,26 @@ def get_license_ids():
     objs = graph.subject_objects(ref)
     return map(lambda x: x[1].value, objs)
 
-def get_license_text(licenseId):
+def get_license_text_and_header(licenseId):
     graph = rdflib.Graph()
 
     try:
-        graph.parse('http://spdx.org/licenses/' + licenseId + '.html')
+        graph.parse('http://spdx.org/licenses/' + urllib.quote(licenseId) + '.html')
     except:
-        return None
+        return (None, None)
 
-    ref = rdflib.URIRef("http://spdx.org/rdf/terms#licenseText")
+    text = get_sub_objs("http://spdx.org/rdf/terms#licenseText", graph)
+    header = get_sub_objs("http://spdx.org/rdf/terms#standardLicenseHeader", graph)
+    return (text, header)
+
+def get_sub_objs(uri, graph):
+    ref = rdflib.URIRef(uri)
     objs = graph.subject_objects(ref)
-    return xml_to_text(objs.next()[1])
+    try:
+        value = objs.next()
+        return xml_to_text(value[1])
+    except StopIteration:
+        return None
 
 def xml_to_text(literal):
     # appears to be a series of <p> elements under the top level node
@@ -51,12 +61,15 @@ def write_licenses_dir(ids):
 
     for licenseId in ids:
         sys.stdout.write("Updating license text for '{}'\n".format(licenseId))
-        text = get_license_text(licenseId)
+        text, header = get_license_text_and_header(licenseId)
         if text is None:
             continue
 
         with open('{}/{}.txt'.format(licenseDir, licenseId), 'w') as hdl:
             hdl.write(text)
+        if header and "There is no standard license header for the license" not in header:
+            with open('{}/{}-header.txt'.format(licenseDir, licenseId), 'w') as hdl:
+                hdl.write(header)
 
 with open('./license_identifier/licenses.py', 'w') as out:
     ids = get_license_ids()
