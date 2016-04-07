@@ -35,6 +35,10 @@ def test_main_process():
     loc_id_obj = loc_id.Location_Finder()
     loc_result = loc_id_obj.main_process(lcs_file, input_file)
     assert loc_result==(1, 2, 5, 24, 1.0)
+    loc_id_obj = loc_id.Location_Finder(1)
+    loc_result = loc_id_obj.main_process(lcs_file, input_file)
+    assert loc_result==(0, 3, 0, 29, 1.0)
+
 
 def test_find_best_region():
     lcs_file = join(get_license_dir(), 'test_license.txt')
@@ -179,6 +183,23 @@ def test_expand_to_top():
     start_index = []
     end_index =[]
 
+
+def test_determine_offsets():
+    start_index = [0, 2, 3, 4]
+    end_index = [2, 3, 5, 5]
+    src_lines = ["", "", "", "", ""]
+    src_offsets = [0, 10, 20, 30, 40, 50]
+
+    loc_id_obj = loc_id.Location_Finder(0)
+    assert loc_id_obj.determine_offsets(start_index, end_index, 0, src_lines, src_offsets) == (0, 2, 0, 20)
+    assert loc_id_obj.determine_offsets(start_index, end_index, 1, src_lines, src_offsets) == (2, 3, 20, 30)
+    assert loc_id_obj.determine_offsets(start_index, end_index, 2, src_lines, src_offsets) == (3, 5, 30, 50)
+    assert loc_id_obj.determine_offsets(start_index, end_index, 3, src_lines, src_offsets) == (4, 5, 40, 50)
+    loc_id_obj = loc_id.Location_Finder(1)
+    assert loc_id_obj.determine_offsets(start_index, end_index, 0, src_lines, src_offsets) == (0, 3, 0, 30)
+    assert loc_id_obj.determine_offsets(start_index, end_index, 1, src_lines, src_offsets) == (1, 4, 10, 40)
+    assert loc_id_obj.determine_offsets(start_index, end_index, 2, src_lines, src_offsets) == (2, 5, 20, 50)
+    assert loc_id_obj.determine_offsets(start_index, end_index, 3, src_lines, src_offsets) == (3, 5, 30, 50)
 
 
 def test_expand_to_bottom():

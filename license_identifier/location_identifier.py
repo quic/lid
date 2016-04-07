@@ -4,12 +4,13 @@ from . import n_grams as ng
 from . import util
 
 
+DEFAULT_CONTEXT = 0
 DEFAULT_THRESHOLD = 0.02
 
 class Location_Finder:
 
-    def __init__(self):
-        pass
+    def __init__(self, context_lines=DEFAULT_CONTEXT):
+        self.context_lines=context_lines
 
     def main_process(self, license_file, input_src_file, threshold=DEFAULT_THRESHOLD):
         # 1. configure the text window size
@@ -63,18 +64,37 @@ class Location_Finder:
         max_index = [i for i, j in enumerate(final_score) if j == max_score]
         first_max_ind = max_index[0]
 
-        if end_index[first_max_ind] > len(src_lines):
-            end_index[first_max_ind] = len(src_lines)
 
         # if max_score > threshold: # 0.02 is just randomly chosen low number
         #     self.print_license(src_lines, start_index[first_max_ind], end_index[first_max_ind])
+        start_line, end_line, start_offset, end_offset = self.determine_offsets(start_index, end_index,
+                                                                                first_max_ind, src_lines,
+                                                                                src_offsets)
 
-        return start_index[first_max_ind],\
-               end_index[first_max_ind], \
-               src_offsets[start_index[first_max_ind]], \
-               src_offsets[end_index[first_max_ind]], \
+        return start_line,\
+               end_line, \
+               start_offset, \
+               end_offset, \
                final_score[first_max_ind]
 
+    def determine_offsets(self, start_index, end_index, first_max_ind, src_lines, src_offsets):
+        end_line = end_index[first_max_ind]
+        start_line = start_index[first_max_ind]
+
+        if self.context_lines:
+            end_line = end_line + self.context_lines
+            start_line -= self.context_lines
+            if start_line < 0:
+                start_line = 0
+
+        # use the start of the next line as the offset, unless it's the last line
+        if end_line >= len(src_offsets):
+            end_line = len(src_lines)
+            end_offset = src_offsets[-1]
+        else:
+            end_offset = src_offsets[end_line]
+
+        return start_line, end_line, src_offsets[start_line], end_offset
 
     def find_max_score_ind(self, similarity_scores):
         max_score = max(similarity_scores)
