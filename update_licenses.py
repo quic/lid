@@ -39,7 +39,7 @@ def write_licenses_dir(ids):
         with open('{}/{}.txt'.format(licenseDir, licenseId), 'w') as hdl:
             hdl.write(text)
 
-with open('./licenses.py', 'w') as out:
+with open('./license_identifier/licenses.py', 'w') as out:
     ids = get_license_ids()
     ids.sort()
     out.write('license_ids = ')
