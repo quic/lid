@@ -1,7 +1,8 @@
+.PHONY: deps test-deps test install clean git-clean, all
+
 all: test
 
-
-license_identifier/licenses.py:
+license_identifier/licenses.py: update_licenses.py
 	python update_licenses.py
 
 deps: requirements.txt
