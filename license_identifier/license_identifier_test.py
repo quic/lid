@@ -39,6 +39,11 @@ lcs_id_obj = license_identifier.LicenseIdentifier(license_dir=license_dir,
                                           threshold=threshold,
                                           input_path=input_dir,
                                           output_format='easy_read')
+lcs_id_obj_context = license_identifier.LicenseIdentifier(license_dir=license_dir,
+                                          threshold=threshold,
+                                          input_path=input_dir,
+                                          output_format='easy_read',
+                                          context_length=1)
 result_obj = lcs_id_obj.analyze_input_path(input_path=input_dir,
                                            threshold=threshold)
 l_match_obj = l_match.LicenseMatch(file_name='f_name',
@@ -123,6 +128,9 @@ def test_find_license_region():
     license_name = 'test_license'
     test1_loc_result = lcs_id_obj.find_license_region(license_name, fp)
     assert test1_loc_result == (1, 2, 5, 24, 1.0)
+    test1_loc_result = lcs_id_obj_context.find_license_region(license_name, fp)
+    assert test1_loc_result == (0, 3, 0, 29, 1.0)
+
 
 def test_get_str_from_file():
     fp = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')

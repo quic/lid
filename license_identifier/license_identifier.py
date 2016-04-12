@@ -34,10 +34,11 @@ class LicenseIdentifier:
                  threshold=DEFAULT_THRESH_HOLD,
                  input_path=None,
                  output_format=None,
-                 output_path=None):
+                 output_path=None,
+                 context_length=0):
         self.license_dir = license_dir
         self.custom_license_dir = join(self.license_dir, 'custom')
-
+        self.context_length = context_length
 
         # pickled object should hold
         # license_n_grams
@@ -248,7 +249,7 @@ class LicenseIdentifier:
     def find_license_region(self, license_name, input_fp):
         n_gram, license_dir = self.license_n_grams[license_name]
         license_fp = join(license_dir, license_name + '.txt')
-        loc_finder = loc_id.Location_Finder()
+        loc_finder = loc_id.Location_Finder(self.context_length)
         return loc_finder.main_process(license_fp, input_fp)
 
     def measure_similarity(self, input_ng):
@@ -294,12 +295,16 @@ def main():
     aparse.add_argument("-F", "--output_format",
         help="Format the output accordingly", action="append",
         choices=["csv", "easy_read"])
+    aparse.add_argument("-C", "--context",
+                        help="Specify an amount of context to add to the license text output",
+                        default=0, type=int)
     args = aparse.parse_args()
     li_obj = LicenseIdentifier(license_dir=args.license_folder,
                                 threshold=float(args.threshold),
                                 input_path=args.input_path,
                                 output_format=args.output_format,
-                                output_path=args.output_path)
+                                output_path=args.output_path,
+                                context_length=args.context)
 
 if __name__ == "__main__":
     main()
