@@ -27,42 +27,47 @@ class LicenseIdentifier:
                  input_path=None,
                  output_format=None,
                  output_path=None,
-                 flag_pickle=False,
-                 pickle_create_path=None,
-                 pickle_load_path=DEFAULT_PICKLED_LIBRARY_FILE):
+                 pickle_file_path=None):
         self.license_dir = license_dir
         self.custom_license_dir = join(self.license_dir, 'custom')
 
-        if flag_pickle:
-            self._init_library(pickle_load_path)
-            self._create_pickled_library(pickle_create_path)
-            pickle_load_path=pickle_create_path
+        # Use pickled library
+        if license_dir is None:
+            if pickle_file_path is None:
+                pickle_file_path = DEFAULT_PICKLED_LIBRARY_FILE
+            self._init_pickled_library(pickle_file_path)
+        else:
+            # Use license directory
+            self._init_using_lic_dir(license_dir)
+            if pickle_file_path is not None:
+                self._create_pickled_library(license_dir, pickle_file_path)
+
         if input_path is not None:
-            self._init_library(pickle_load_path)
             result_obj = self.analyze_input_path(input_path, threshold)
             self.format_output(result_obj, output_format, output_path=output_path)
 
-    def _create_pickled_library(self, pickle_file):
-        with open(pickle_file, 'wb') as f:
-            pickle.dump([self.license_file_name_list, self.license_n_grams, self._universe_n_grams], f)
+    def _init_pickled_library(self, pickle_file_path):
+        if exists(pickle_file_path):
+            with open(pickle_file_path, 'rb') as f:
+                self.license_file_name_list, self.license_n_grams, self._universe_n_grams =\
+                pickle.load(f)
         return
 
-    def _init_library(self, pickle_load_path):
-        if pickle_load_path is None:
-            # holds n gram models for each license type
-            #  used for matching input vs. each license
-            self.license_n_grams = defaultdict()
-            self.license_file_name_list = []
-            # holds n-gram models for all license types
-            #  used for parsing input file words (only consider known words)
-            self._universe_n_grams = ng.n_grams()
-            self._universe_n_grams = self._build_n_gram_univ_license(self.license_dir,\
-                                                                     self.custom_license_dir,\
-                                                                     self._universe_n_grams)
-        elif exists(pickle_load_path):
-            with open(pickle_load_path, 'rb') as f:
-                 self.license_file_name_list, self.license_n_grams, self._universe_n_grams =\
-                pickle.load(f)
+    def _init_using_lic_dir(self, license_dir):
+        # holds n gram models for each license type
+        #  used for matching input vs. each license
+        self.license_n_grams = defaultdict()
+        self.license_file_name_list = []
+        # holds n-gram models for all license types
+        #  used for parsing input file words (only consider known words)
+        self._universe_n_grams = ng.n_grams()
+        self._universe_n_grams = self._build_n_gram_univ_license(self.license_dir,\
+                                                                 self.custom_license_dir,\
+                                                                 self._universe_n_grams)
+
+    def _create_pickled_library(self, license_dir, pickle_file):
+        with open(pickle_file, 'wb') as f:
+            pickle.dump([self.license_file_name_list, self.license_n_grams, self._universe_n_grams], f)
         return
 
     def _build_n_gram_univ_license(self, license_dir, custom_license_dir, universal_n_grams):
@@ -271,35 +276,26 @@ def main():
                         help="threshold hold for similarity measure (ranging from 0 to 1)")
     aparse.add_argument("-L", "--license_folder",
                         help="Specify directory path where the license text files are",
-                        default=join(getcwd(), 'data', 'license_dir'))
+                        default=None)
+    aparse.add_argument("-P", "--pickle_file_path",
+                        help="Specify the name of the pickle file where license template library will be saved.",
+                        default=None)
     aparse.add_argument("-I", "--input_path",
                         help="Specify directory or file path where the input source code files are",
-                        #default=join(getcwd(), 'data', 'test', 'data'),
                         required=False)
     aparse.add_argument("-F", "--output_format",
                         help="Format the output accordingly", action="append",
                         choices=["csv", "easy_read"])
-    aparse.add_argument("-O", "--output_path",
+    aparse.add_argument("-O", "--output_file_path",
                         help="Specify a file name path where the result will be saved for csv file.",
                         default=join(getcwd(), 'output.csv'))
-    aparse.add_argument("-C", "--create_pickle_flag",
-                        help="Flag to pickle license template libraries.",
-                        default=False)
-    aparse.add_argument("-P", "--pickle_create_file_path",
-                        help="Specify the name of the pickle file where license template library will be saved.",
-                        default=None)
-    aparse.add_argument("-Q", "--pickle_load_file_path",
-                        help="Specify the name of the pickle file that will load as a license template library.",
-                        default=DEFAULT_PICKLED_LIBRARY_FILE)
     args = aparse.parse_args()
     li_obj = LicenseIdentifier(license_dir=args.license_folder,
                                 threshold=float(args.threshold),
                                 input_path=args.input_path,
                                 output_format=args.output_format,
                                 output_path=args.output_path,
-                                flag_pickle=args.create_pickle_flag,
-                                pickle_create_path=args.pickle_create_file_path,
-                                pickle_load_path=args.pickle_load_file_path)
+                                pickle_file_path=args.pickle_file_path)
 
 if __name__ == "__main__":
     main()
