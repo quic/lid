@@ -53,21 +53,23 @@ def test_find_best_region():
 
     license_n_grams = ng.n_grams(list_text_line=license_lines)
 
-    [similarity_scores, window_start_index] = loc_id_obj.split_and_measure_similarities(src_size=src_size,
-                                                            src_offsets=src_offsets,
-                                                            src_lines=src_lines,
-                                                            window_size=window_size,
-                                                            license_n_grams=license_n_grams)
+    [similarity_scores, window_start_index] = loc_id_obj.split_and_measure_similarities(
+        src_size=src_size,
+        src_offsets=src_offsets,
+        src_lines=src_lines,
+        window_size=window_size,
+        license_n_grams=license_n_grams)
     [max_score, max_index] = loc_id_obj.find_max_score_ind(similarity_scores=similarity_scores)
 
-    loc_result = loc_id_obj.find_best_region(threshold=0.02,
-                                             max_index = max_index,
-                                             license_n_grams = license_n_grams,
-                                             src_lines = src_lines,
-                                             src_offsets = src_offsets,
-                                             window_start_index = window_start_index,
-                                             window_size = window_size)
-    assert loc_result==(1, 2, 5, 24, 1.0)
+    loc_result = loc_id_obj.find_best_region(
+        threshold=0.02,
+        max_index=max_index,
+        license_n_grams=license_n_grams,
+        src_lines=src_lines,
+        src_offsets=src_offsets,
+        window_start_index=window_start_index,
+        window_size=window_size)
+    assert loc_result == (1, 2, 5, 24, 1.0)
 
 def test_find_max_score_ind():
     lcs_file = join(get_license_dir(), 'test_license.txt')

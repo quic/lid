@@ -19,6 +19,7 @@ register_surrogateescape()
 base_dir = dirname(__file__)
 
 DEFAULT_THRESH_HOLD = 0.04
+<<<<<<< HEAD
 DEFAULT_LICENSE_DIR = join(base_dir, "..", 'data', 'license_dir')
 DEFAULT_UNIVERSE_N_GRAM = join(base_dir, 'license_n_gram_lib.pckl')
 COLUMN_LIMIT = 32767 - 10 # 10 for \'b and other formatting characters
@@ -28,6 +29,7 @@ def truncate_column(column):
         return column[0:COLUMN_LIMIT]
     else:
         return column
+DEFAULT_LICENSE_DIR = join(getcwd(), "..", 'data', 'license_dir')
 DEFAULT_PICKLED_LIBRARY_FILE = join(based_dir, 'license_identifier',
                                'license_n_gram_lib.pickle')
 
@@ -37,39 +39,65 @@ class LicenseIdentifier:
                  input_path=None,
                  output_format=None,
                  output_path=None,
+<<<<<<< HEAD
                  context_length=0):
         self.license_dir = license_dir
         self.custom_license_dir = join(self.license_dir, 'custom')
         self.context_length = context_length
+=======
+                 pickle_file_path=None):
+        self.license_dir = license_dir
+        self.custom_license_dir = join(self.license_dir, 'custom')
 
-        # pickled object should hold
-        # license_n_grams
-        # license_file_name_list
-        # _universe_n_grams
+        # Use pickled library
+        if license_dir is None:
+            if pickle_file_path is None:
+                pickle_file_path = DEFAULT_PICKLED_LIBRARY_FILE
+            self._init_pickled_library(pickle_file_path)
+        else:
+            # Use license directory
+            self._init_using_lic_dir(license_dir)
+            if pickle_file_path is not None:
+                self._create_pickled_library(license_dir, pickle_file_path)
+>>>>>>> 3eb31f12efd02bf7e59e43a8f0db06a4ab9ddbb3
 
+        if input_path is not None:
+            result_obj = self.analyze_input_path(input_path, threshold)
+            self.format_output(result_obj, output_format, output_path=output_path)
 
+    def _init_pickled_library(self, pickle_file_path):
+        if exists(pickle_file_path):
+            with open(pickle_file_path, 'rb') as f:
+                self.license_file_name_list, self.license_n_grams, self._universe_n_grams =\
+                pickle.load(f)
+        return
+
+    def _init_using_lic_dir(self, license_dir):
         # holds n gram models for each license type
         #  used for matching input vs. each license
         self.license_n_grams = defaultdict()
         self.license_file_name_list = []
         # holds n-gram models for all license types
         #  used for parsing input file words (only consider known words)
-
-
         self._universe_n_grams = ng.n_grams()
         self._universe_n_grams = self._build_n_gram_univ_license(self.license_dir,\
                                                                  self.custom_license_dir,\
                                                                  self._universe_n_grams)
 
+<<<<<<< HEAD
         if input_path:
             result_obj = self.analyze_input_path(input_path, threshold)
             self.format_output(result_obj, output_format, output_path=output_path)
 
     def _create_pickled_library(self, pickle_file):
+=======
+    def _create_pickled_library(self, license_dir, pickle_file):
+>>>>>>> 3eb31f12efd02bf7e59e43a8f0db06a4ab9ddbb3
         with open(pickle_file, 'wb') as f:
             pickle.dump([self.license_file_name_list, self.license_n_grams, self._universe_n_grams], f)
         return
 
+<<<<<<< HEAD
     def _init_library(self, pickle_load_path):
         if pickle_load_path is None:
             # holds n gram models for each license type
@@ -88,6 +116,8 @@ class LicenseIdentifier:
                 pickle.load(f)
         return
 
+=======
+>>>>>>> 3eb31f12efd02bf7e59e43a8f0db06a4ab9ddbb3
     def _build_n_gram_univ_license(self, license_dir, custom_license_dir, universal_n_grams):
         universal_n_grams = self._add_to_n_gram_univ_license(license_dir, universal_n_grams)
         if exists(custom_license_dir):
@@ -95,13 +125,11 @@ class LicenseIdentifier:
         return universal_n_grams
 
     def format_output(self, result_obj, output_format, output_path):
-        print('we are in this output format:{}'.format(output_format))
         if output_format == ['csv']:
             self.write_csv_file(result_obj, output_path)
         elif output_format == ['easy_read']:
             self.display_easy_read(result_obj)
 
-    # TODO: add unicode output from unicode input (if necessary).
     def write_csv_file(self, result_obj_list, output_path):
         if sys.version_info >= (3,0,0):
             f = open(output_path, 'w', newline='')
@@ -123,10 +151,9 @@ class LicenseIdentifier:
             summary_obj = map(truncate_column, summary_obj)
             c1, c2, c3, c4, c5, c6, c7, c8, c9 = summary_obj
             summary_obj = c1.encode('utf8', 'surrogateescape'), c2, c3, c4, \
-                          c5, c6, c7, c8, c9.encode('utf8', 'surrogateescape')
+                          c5, c6, c7, c8, c9.encode('utf8', 'surrogateescape')[:32000]
             writer.writerow(summary_obj)
         f.close()
-
 
     def _get_license_file_names(self, directory):
         file_fp_list = [ f for f in join(listdir(directory)) \
@@ -298,6 +325,7 @@ def main():
                         help="threshold hold for similarity measure (ranging from 0 to 1)")
     aparse.add_argument("-L", "--license_folder",
                         help="Specify directory path where the license text files are",
+<<<<<<< HEAD
                         default=DEFAULT_LICENSE_DIR),
     aparse.add_argument("-I", "--input_path",
                         help="Specify directory or file path where the input source code files are",
@@ -318,13 +346,31 @@ def main():
     aparse.add_argument("-P", "--pickle_create_file_path",
                         help="Specify the name of the pickle file where license template library will be saved.",
                         default=None)
+=======
+                        default=None)
+    aparse.add_argument("-P", "--pickle_file_path",
+                        help="Specify the name of the pickle file where license template library will be saved.",
+                        default=None)
+    aparse.add_argument("-I", "--input_path",
+                        help="Specify directory or file path where the input source code files are",
+                        required=False)
+    aparse.add_argument("-F", "--output_format",
+                        help="Format the output accordingly", action="append",
+                        choices=["csv", "easy_read"])
+    aparse.add_argument("-O", "--output_file_path",
+                        help="Specify a file name path where the result will be saved for csv file.",
+                        default=join(getcwd(), 'output.csv'))
+>>>>>>> 3eb31f12efd02bf7e59e43a8f0db06a4ab9ddbb3
     args = aparse.parse_args()
     li_obj = LicenseIdentifier(license_dir=args.license_folder,
                                 threshold=float(args.threshold),
                                 input_path=args.input_path,
                                 output_format=args.output_format,
                                 output_path=args.output_path,
+<<<<<<< HEAD
                                 context_length=args.context,
+=======
+>>>>>>> 3eb31f12efd02bf7e59e43a8f0db06a4ab9ddbb3
                                 pickle_file_path=args.pickle_file_path)
 
 if __name__ == "__main__":
