@@ -56,7 +56,7 @@ If you want to add more licenses, please create a text file with the license tex
 Then, save it into the ./data/license_dir/custom folder.
 Then, build the n-gram license library using the following command.
 
-usage: python license_identifier.license_identifer -L 'data/license_dir' -P 'license_dir/n_gram_lcs.pickle'
+usage: python -m license_identifier.license_identifier -L 'my_license_dir/license_dir' -P 'my_pickle_file.pickle'
 
 For advanced user, there are three modes of running the tool:
 1. Use the pickled libary file.

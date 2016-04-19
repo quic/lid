@@ -6,7 +6,7 @@ from . import license_identifier
 from . import license_match as l_match
 from collections import Counter
 from os import getcwd
-from os.path import join
+from os.path import join, dirname, exists
 from mock import mock_open
 from mock import patch, Mock
 import csv
@@ -28,7 +28,8 @@ bigram_counter = Counter([('two', 'one'),
 trigram_counter = Counter([('three', 'two', 'one'),
                           ('four', 'three', 'two')])
 n_gram_obj = ng.n_grams(text_list)
-BASE_DIR = join(getcwd(), "..")
+curr_dir = dirname(__file__)
+BASE_DIR = join(curr_dir, "..")
 license_dir = join(BASE_DIR, 'data', 'test', 'license')
 input_dir = join(BASE_DIR, 'data', 'test', 'data')
 
@@ -65,6 +66,17 @@ def test_init():
     assert 'test_license.txt' in lcs_id_obj.license_file_name_list
     assert lcs_id_obj._universe_n_grams.measure_similarity(n_gram_obj) > 0.5
 
+def test_init_pickle():
+    test_pickle_file = join(BASE_DIR, "test.pickle")
+    lcs_id_obj._create_pickled_library(pickle_file=test_pickle_file)
+    assert exists(test_pickle_file)==True
+    lcs_id_pickle_obj = license_identifier.LicenseIdentifier(
+        threshold=threshold,
+        input_path=input_dir,
+        pickle_file_path=test_pickle_file,
+        output_format='easy_read')
+    sim_score = lcs_id_obj._universe_n_grams.measure_similarity(lcs_id_pickle_obj._universe_n_grams)
+    assert sim_score == 1.0
 
 def test_write_csv_file():
     # def format_output(self, result_obj, output_format, output_path):
@@ -96,19 +108,6 @@ def test_analyze_file_lcs_match_output():
     test_file_path2 = join(input_dir, 'subdir', 'subdir2', 'test3.py')
     lcs_match_obj2 = lcs_id_obj.analyze_file_lcs_match_output(test_file_path2)
     assert lcs_match_obj2.license == ''
-
-
-# def test_analyze_file_lcs_match_output():
-#     # input_fp, threshold=DEFAULT_THRESH_HOLD
-#     test_file_path = join(input_dir, 'test1.py')
-#     lcs_match_obj = lcs_id_obj.analyze_file_lcs_match_output(test_file_path)
-#     assert lcs_match_obj.length == 20
-#
-#     test_file_path2 = join(input_dir, 'subdir/test2.py')
-#     lcs_match_obj2 = lcs_id_obj.analyze_file_lcs_match_output(test_file_path2)
-#     assert lcs_match_obj2.license == ''
-#
-
 
 def test_get_license_name():
     assert lcs_id_obj._get_license_name('myname.txt') == 'myname'

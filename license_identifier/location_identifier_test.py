@@ -39,7 +39,6 @@ def test_main_process():
     loc_result = loc_id_obj.main_process(lcs_file, input_file)
     assert loc_result==(0, 3, 0, 29, 1.0)
 
-
 def test_find_best_region():
     lcs_file = join(get_license_dir(), 'test_license.txt')
     input_file = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
