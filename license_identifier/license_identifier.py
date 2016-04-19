@@ -28,7 +28,7 @@ def truncate_column(column):
     else:
         return column
 
-DEFAULT_PICKLED_LIBRARY_FILE = join(base_dir, 'license_identifier',
+DEFAULT_PICKLED_LIBRARY_FILE = join(base_dir, 'data',
                                'license_n_gram_lib.pickle')
 
 class LicenseIdentifier:
