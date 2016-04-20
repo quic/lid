@@ -20,6 +20,8 @@ base_dir = dirname(__file__)
 
 DEFAULT_THRESH_HOLD = 0.04
 DEFAULT_LICENSE_DIR = join(base_dir, "..", 'data', 'license_dir')
+DEFAULT_PICKLED_LIBRARY_FILE = join(base_dir, 'data',
+                               'license_n_gram_lib.pickle')
 COLUMN_LIMIT = 32767 - 10 # padding 10 for \'b and other formatting characters
 
 def truncate_column(column):
@@ -27,9 +29,6 @@ def truncate_column(column):
         return column[0:COLUMN_LIMIT]
     else:
         return column
-
-DEFAULT_PICKLED_LIBRARY_FILE = join(base_dir, 'data',
-                               'license_n_gram_lib.pickle')
 
 class LicenseIdentifier:
     def __init__(
@@ -51,7 +50,7 @@ class LicenseIdentifier:
                 pickle_file_path = DEFAULT_PICKLED_LIBRARY_FILE
             self._init_pickled_library(pickle_file_path)
         else:
-            self.custom_license_dir = join(self.license_dir, 'custom')
+            self.custom_license_dir = join(license_dir, 'custom')
             self._init_using_lic_dir(license_dir)
             if pickle_file_path is not None:
 <<<<<<< HEAD
@@ -80,7 +79,7 @@ class LicenseIdentifier:
         # holds n-gram models for all license types
         #  used for parsing input file words (only consider known words)
         self._universe_n_grams = ng.n_grams()
-        self._universe_n_grams = self._build_n_gram_univ_license(self.license_dir,\
+        self._universe_n_grams = self._build_n_gram_univ_license(license_dir,\
                                                                  self.custom_license_dir,\
                                                                  self._universe_n_grams)
 
@@ -152,7 +151,7 @@ class LicenseIdentifier:
             summary_obj = map(truncate_column, summary_obj)
             c1, c2, c3, c4, c5, c6, c7, c8, c9 = summary_obj
             summary_obj = c1.encode('utf8', 'surrogateescape'), c2, c3, c4, \
-                          c5, c6, c7, c8, c9.encode('utf8', 'surrogateescape')[:32000]
+                          c5, c6, c7, c8, c9.encode('utf8', 'surrogateescape')
             writer.writerow(summary_obj)
         f.close()
 

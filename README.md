@@ -59,11 +59,11 @@ Then, build the n-gram license library using the following command.
 usage: python -m license_identifier.license_identifier -L 'my_license_dir/license_dir' -P 'my_pickle_file.pickle'
 
 For advanced user, there are three modes of running the tool:
-1. Use the pickled libary file.
+1. Use the pickled library file.
 By default, if the -P or -L are not set, it will use default pickled file.  If the user wants to specify
 the pickled file, please use -P option.
 
-2. Use licesne directory without building a pickled file.
+2. Use license directory without building a pickled file.
 Please use -L to specify the location of the license file directory.
 
 3. Build a pickled file from the specified license directory.
