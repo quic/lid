@@ -23,7 +23,26 @@ def get_license_text(licenseId):
 
     ref = rdflib.URIRef("http://spdx.org/rdf/terms#licenseText")
     objs = graph.subject_objects(ref)
-    return objs.next()[1].encode('utf-8')
+    return xml_to_text(objs.next()[1])
+
+def xml_to_text(literal):
+    # appears to be a series of <p> elements under the top level node
+    if isinstance(literal.value, unicode):
+        return literal.value.encode('utf-8')
+    output = ""
+    for child in literal.value.firstChild.childNodes:
+        if child.nodeValue:
+            output += child.nodeValue.encode('utf-8')
+        output += output_tree(child)
+    return output
+
+def output_tree(parent):
+    output = ""
+    for node in parent.childNodes:
+        if node.nodeValue:
+            output += node.nodeValue.encode('utf-8')
+        output += output_tree(node)
+    return output
 
 def write_licenses_dir(ids):
     licenseDir = './data/license_dir'
