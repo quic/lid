@@ -6,6 +6,7 @@ import argparse
 import csv
 import codecs
 import pickle
+import getpass
 
 from . import license_match
 from . import n_grams as ng
@@ -42,7 +43,6 @@ class LicenseIdentifier:
             pickle_file_path=None):
 
         self.context_length = context_length
-        self.license_dir = license_dir
 
         # Use pickled library
         if license_dir is None:
@@ -50,8 +50,8 @@ class LicenseIdentifier:
                 pickle_file_path = DEFAULT_PICKLED_LIBRARY_FILE
             self._init_pickled_library(pickle_file_path)
         else:
-            self.custom_license_dir = join(license_dir, 'custom')
-            self._init_using_lic_dir(license_dir)
+            custom_license_dir = join(license_dir, 'custom')
+            self._init_using_lic_dir(license_dir, custom_license_dir)
             if pickle_file_path is not None:
 <<<<<<< HEAD
                 self._create_pickled_library(license_dir, pickle_file_path)
@@ -71,7 +71,7 @@ class LicenseIdentifier:
                 pickle.load(f)
         return
 
-    def _init_using_lic_dir(self, license_dir):
+    def _init_using_lic_dir(self, license_dir, custom_license_dir):
         # holds n gram models for each license type
         #  used for matching input vs. each license
         self.license_n_grams = defaultdict()
@@ -80,7 +80,7 @@ class LicenseIdentifier:
         #  used for parsing input file words (only consider known words)
         self._universe_n_grams = ng.n_grams()
         self._universe_n_grams = self._build_n_gram_univ_license(license_dir,\
-                                                                 self.custom_license_dir,\
+                                                                 custom_license_dir,\
                                                                  self._universe_n_grams)
 
     def _create_pickled_library(self, pickle_file):
