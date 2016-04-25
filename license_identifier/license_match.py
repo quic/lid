@@ -6,7 +6,6 @@ class LicenseMatch(object):
 
     def __init__(self, file_name, file_path, license, start_byte, length,
                  full_text=False, scan_error=False):
-
         self.file_name = file_name
         self.file_path = file_path
         self.license = license

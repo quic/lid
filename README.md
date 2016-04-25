@@ -48,17 +48,28 @@ optional arguments:
 -L, --license_folder    Specify the directory where the license text files are.
 -I, --input_path    Specify the input path that needs scanning - to a file or a directory (when pointed to a directory, it considers subdirectories recursively)
 -F, --output_format Specify the output format (options are 'csv', 'easy_read')
--O, --output_filepath Specify the output files (a must for 'csv' file format option)
--P, --pickle_filepath Specify the file where all the n-gram objects will be stored for the future runs
+-O, --output_file_path Specify the output files (a must for 'csv' file format option)
+-P, --pickle_file_path Specify the file where all the n-gram objects will be stored for the future runs
 ```
 
 If you want to add more licenses, please create a text file with the license text.
 Then, save it into the ./data/license_dir/custom folder.
 Then, build the n-gram license library using the following command.
 
-usage: python3 license_identifier.license_identifer -L 'data/license_dir' -P 'license_dir/n_gram_lcs.pickle'
+usage: python -m license_identifier.license_identifier -L 'my_license_dir/license_dir' -P 'my_pickle_file.pickle'
 
+For advanced user, there are three modes of running the tool:
+1. Use the pickled library file.
+By default, if the -P or -L are not set, it will use default pickled file.  If the user wants to specify
+the pickled file, please use -P option.
+
+2. Use license directory without building a pickled file.
+Please use -L to specify the location of the license file directory.
+
+3. Build a pickled file from the specified license directory.
+Please name the new pickled file using -P option, and use -L option to specify where the directory where the license template files are.
 
 Note for the developers who want to integrate this module into their code.
 The program reads all the license files when it begins - it takes a few seconds.  For efficiency gain,
 I would recommend instantiating one instance, and running analyze_input_path method.
+
