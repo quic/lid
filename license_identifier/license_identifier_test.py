@@ -87,6 +87,7 @@ def test_write_csv_file():
                                           output_path=output_path)
 
     result_obj = lid_obj.analyze_input_path(input_path=input_dir, threshold=threshold)
+    lid_obj.output(result_obj)
     m = Mock(spec=csv.writer)
     with patch('csv.writer', m, create=True):
         lid_obj.write_csv_file(result_obj, output_path)
