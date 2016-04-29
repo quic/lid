@@ -6,9 +6,9 @@ from collections import Counter
 from . import n_grams as ng
 
 
-text_list = ['one', 'two', 'three', 'four']
-text_line = 'one\ntwo\nthree\nfour'
-text_line_crlf = 'one\r\ntwo\r\nthree\r\nfour'
+text_list = ['#', 'one', 'two', 'three', 'four']
+text_line = '# one\ntwo\nthree\nfour'
+text_line_crlf = '# one\r\ntwo\r\nthree\r\nfour'
 
 unigram_counter = Counter(['one', 'two', 'three', 'four'])
 bigram_counter = Counter([('two', 'one'),
