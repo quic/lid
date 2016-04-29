@@ -6,8 +6,6 @@ import argparse
 import csv
 import codecs
 import pickle
-import getpass
-import datetime
 
 from . import license_match
 from . import n_grams as ng
