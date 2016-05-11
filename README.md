@@ -48,7 +48,7 @@ optional arguments:
 -L, --license_folder    Specify the directory where the license text files are.
 -I, --input_path    Specify the input path that needs scanning - to a file or a directory (when pointed to a directory, it considers subdirectories recursively)
 -F, --output_format Specify the output format (options are 'csv', 'easy_read')
--O, --output_file_path Specify the output files (a must for 'csv' file format option)
+-O, --output_file_path Specify the output directory and prefix of the file name.  User name, date, time and '.csv' will be added to the file name automatically.  (a must for 'csv' file format option)
 -P, --pickle_file_path Specify the file where all the n-gram objects will be stored for the future runs
 ```
 

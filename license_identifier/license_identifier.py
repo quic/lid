@@ -6,12 +6,11 @@ import argparse
 import csv
 import codecs
 import pickle
-import getpass
 
 from . import license_match
 from . import n_grams as ng
 from . import location_identifier as loc_id
-
+from . import util
 
 from future.utils.surrogateescape import register_surrogateescape
 
@@ -37,7 +36,7 @@ class LicenseIdentifier:
             threshold=DEFAULT_THRESH_HOLD,
             input_path=None,
             output_format=None,
-            output_path=None,
+            output_path='',
             license_dir = None,
             context_length = 0,
             pickle_file_path=None):
@@ -45,8 +44,9 @@ class LicenseIdentifier:
         self.threshold = threshold
         self.context_length = context_length
         self.input_path = input_path
-        self.output_path = output_path
         self.output_format = output_format
+
+        self.output_path = output_path + '_' + util.get_user_date_time_str() + '.csv'
 
         # Use pickled library
         if license_dir is None:
@@ -58,6 +58,7 @@ class LicenseIdentifier:
             self._init_using_lic_dir(license_dir, custom_license_dir)
             if pickle_file_path is not None:
                 self._create_pickled_library(license_dir, pickle_file_path)
+
 
     def analyze(self):
         if self.input_path is not None:
@@ -334,24 +335,10 @@ def main():
         "-F", "--output_format",
         help="Format the output accordingly", action="append",
         choices=["csv", "easy_read"])
-    aparse.add_argument("-C", "--context",
-                        help="Specify an amount of context to add to the license text output",
-                        default=0, type=int)
-    aparse.add_argument("-O", "--output_path",
-                        help="Specify a file name path where the result will be saved for csv file.",
-                        default=join(getcwd(), 'output.csv'))
-    aparse.add_argument("-P", "--pickle_create_file_path",
-                        help="Specify the name of the pickle file where license template library will be saved.",
-                        default=None)
-    aparse.add_argument("-I", "--input_path",
-                        help="Specify directory or file path where the input source code files are",
-                        required=False)
-    aparse.add_argument("-F", "--output_format",
-                        help="Format the output accordingly", action="append",
-                        choices=["csv", "easy_read"])
-    aparse.add_argument("-O", "--output_file_path",
-                        help="Specify a file name path where the result will be saved for csv file.",
-                        default=join(getcwd(), 'output.csv'))
+    aparse.add_argument(
+        "-O", "--output_file_path",
+        help="Specify a output path with data info (user name, date, time and .csv info will be automatically added).",
+        default=None)
     args = aparse.parse_args()
     li_obj = LicenseIdentifier(license_dir=args.license_folder,
                                 threshold=float(args.threshold),
