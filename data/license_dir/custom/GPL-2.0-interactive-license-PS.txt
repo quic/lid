@@ -1,5 +1,0 @@
-Gnomovision version 69, Copyright (C) year name of author
-Gnomovision comes with ABSOLUTELY NO WARRANTY; for details
-type `show w'.  This is free software, and you are welcome
-to redistribute it under certain conditions; type `show c'
-for details.
