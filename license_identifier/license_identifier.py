@@ -283,7 +283,7 @@ class LicenseIdentifier:
 
     def find_license_region(self, license_name, input_fp):
         n_gram, license_dir = self.license_n_grams[license_name]
-        license_fp = join(license_dir, license_name + '.txt')
+        license_fp = join(base_dir, "../", license_dir, license_name + '.txt')
         loc_finder = loc_id.Location_Finder(self.context_length)
         return loc_finder.main_process(license_fp, input_fp)
 
