@@ -19,7 +19,7 @@ register_surrogateescape()
 base_dir = dirname(__file__)
 
 DEFAULT_THRESH_HOLD = 0.04
-DEFAULT_LICENSE_DIR = join(base_dir, "..", 'data', 'license_dir')
+DEFAULT_LICENSE_DIR = join(base_dir, 'data', 'license_dir')
 DEFAULT_PICKLED_LIBRARY_FILE = join(base_dir, 'data',
                                'license_n_gram_lib.pickle')
 COLUMN_LIMIT = 32767 - 10 # padding 10 for \'b and other formatting characters
@@ -46,7 +46,10 @@ class LicenseIdentifier:
         self.input_path = input_path
         self.output_format = output_format
 
-        self.output_path = output_path + '_' + util.get_user_date_time_str() + '.csv'
+        if output_path:
+            self.output_path = output_path + '_' + util.get_user_date_time_str() + '.csv'
+        else:
+            self.output_path = None
 
         # Use pickled library
         if license_dir is None:
