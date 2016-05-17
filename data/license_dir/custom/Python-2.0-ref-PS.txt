@@ -1,2 +1,0 @@
-Copyright (c) <year>, <your name>
-Licensed to PSF under a Contributor Agreement.
