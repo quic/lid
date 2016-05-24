@@ -39,12 +39,14 @@ output_path = 'test_path'
 lcs_id_obj = license_identifier.LicenseIdentifier(license_dir=license_dir,
                                           threshold=threshold,
                                           input_path=input_dir,
-                                          output_format='easy_read')
+                                          output_format='easy_read',
+                                          run_in_parellal=False)
 lcs_id_obj_context = license_identifier.LicenseIdentifier(license_dir=license_dir,
                                           threshold=threshold,
                                           input_path=input_dir,
                                           output_format='easy_read',
-                                          context_length=1)
+                                          context_length=1,
+                                          run_in_parellal=False)
 result_obj = lcs_id_obj.analyze_input_path(input_path=input_dir,
                                            threshold=threshold)
 l_match_obj = l_match.LicenseMatch(file_name='f_name',
@@ -64,7 +66,7 @@ field_names = ['input file name',
 
 def test_init():
     assert 'test_license.txt' in lcs_id_obj.license_file_name_list
-    assert lcs_id_obj._universe_n_grams.measure_similarity(n_gram_obj) > 0.5
+    assert license_identifier._universe_n_grams.measure_similarity(n_gram_obj) > 0.5
 
 def test_init_pickle():
     test_pickle_file = join(BASE_DIR, "test.pickle")
@@ -75,7 +77,8 @@ def test_init_pickle():
         input_path=input_dir,
         pickle_file_path=test_pickle_file,
         output_format='easy_read')
-    sim_score = lcs_id_obj._universe_n_grams.measure_similarity(lcs_id_pickle_obj._universe_n_grams)
+    sim_score = license_identifier._universe_n_grams.measure_similarity(license_identifier._universe_n_grams)
+
     assert sim_score == 1.0
 
 def test_write_csv_file():

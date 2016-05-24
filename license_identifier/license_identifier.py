@@ -1,6 +1,8 @@
 from os import listdir, walk, getcwd, linesep
 from os.path import isfile, join, isdir, dirname, exists
 from collections import Counter, defaultdict
+from contextlib import closing
+import multiprocessing
 import sys
 import argparse
 import csv
@@ -24,6 +26,9 @@ DEFAULT_PICKLED_LIBRARY_FILE = join(base_dir, 'data',
                                'license_n_gram_lib.pickle')
 COLUMN_LIMIT = 32767 - 10 # padding 10 for \'b and other formatting characters
 
+license_n_grams = defaultdict()
+_universe_n_grams = None
+
 def truncate_column(column):
     if isinstance(column, str) or isinstance(column, unicode):
         return column[0:COLUMN_LIMIT]
@@ -39,12 +44,14 @@ class LicenseIdentifier:
             output_path='',
             license_dir = None,
             context_length = 0,
-            pickle_file_path=None):
+            pickle_file_path=None,
+            run_in_parellal=True):
 
         self.threshold = threshold
         self.context_length = context_length
         self.input_path = input_path
         self.output_format = output_format
+        self.run_in_parellal = run_in_parellal
 
         if output_path:
             self.output_path = output_path + '_' + util.get_user_date_time_str() + '.csv'
@@ -73,25 +80,26 @@ class LicenseIdentifier:
     def _init_pickled_library(self, pickle_file_path):
         if exists(pickle_file_path):
             with open(pickle_file_path, 'rb') as f:
-                self.license_file_name_list, self.license_n_grams, self._universe_n_grams =\
+                self.license_file_name_list, license_n_grams, _universe_n_grams =\
                 pickle.load(f)
         return
 
     def _init_using_lic_dir(self, license_dir, custom_license_dir):
         # holds n gram models for each license type
         #  used for matching input vs. each license
-        self.license_n_grams = defaultdict()
+        global license_n_grams, _universe_n_grams
+        license_n_grams = defaultdict()
         self.license_file_name_list = []
         # holds n-gram models for all license types
         #  used for parsing input file words (only consider known words)
-        self._universe_n_grams = ng.n_grams()
-        self._universe_n_grams = self._build_n_gram_univ_license(license_dir,\
+        _universe_n_grams = ng.n_grams()
+        _universe_n_grams = self._build_n_gram_univ_license(license_dir,\
                                                                  custom_license_dir,\
-                                                                 self._universe_n_grams)
+                                                                 _universe_n_grams)
 
     def _create_pickled_library(self, pickle_file):
         with open(pickle_file, 'wb') as f:
-            pickle.dump([self.license_file_name_list, self.license_n_grams, self._universe_n_grams], f)
+            pickle.dump([self.license_file_name_list, license_n_grams, _universe_n_grams], f)
         return
 
     def _init_library(self, pickle_load_path):
@@ -171,7 +179,7 @@ class LicenseIdentifier:
             license_name = self._get_license_name(license_file_name)
             universal_n_grams.parse_text_list_items(list_of_license_str)
             new_license_ng = ng.n_grams(list_text_line=list_of_license_str)
-            self.license_n_grams[license_name] = (new_license_ng, license_dir)
+            license_n_grams[license_name] = (new_license_ng, license_dir)
         self.license_file_name_list.extend(license_file_name_list)
         return universal_n_grams
 
@@ -200,7 +208,7 @@ class LicenseIdentifier:
         list_of_src_str = self.get_str_from_file(input_fp)
         my_file_ng = ng.n_grams()
         my_file_ng.parse_text_list_items(list_text_line=list_of_src_str,
-                                         universe_ng=self._universe_n_grams)
+                                         universe_ng=_universe_n_grams)
         similarity_score_dict = self.measure_similarity(my_file_ng)
         [matched_license, score] = self.find_best_match(similarity_score_dict)
 
@@ -237,7 +245,7 @@ class LicenseIdentifier:
         list_of_src_str = self.get_str_from_file(input_fp)
         my_file_ng = ng.n_grams()
         my_file_ng.parse_text_list_items(list_text_line=list_of_src_str,
-                                         universe_ng=self._universe_n_grams)
+                                         universe_ng=_universe_n_grams)
         similarity_score_dict = self.measure_similarity(my_file_ng)
         [matched_license, score] = self.find_best_match(similarity_score_dict)
 
@@ -258,31 +266,36 @@ class LicenseIdentifier:
 
     def analyze_input_path(self, input_path, threshold=DEFAULT_THRESH_HOLD):
         if isdir(input_path):
-            return self.apply_function_on_all_files(self.analyze_file, input_path, threshold=threshold)
+            return self.apply_function_on_all_files(analyze, input_path, threshold)
         elif isfile(input_path):
-            return [self.analyze_file(input_path)]
+            return [self.analyze_file(input_path, threshold)]
         else:
             raise OSError('Neither file nor directory{}'.format(input_path))
 
     def analyze_input_path_lcs_match_output(self, input_path, threshold=DEFAULT_THRESH_HOLD):
         if isdir(input_path):
-            return self.apply_function_on_all_files(self.analyze_file_lcs_match_output, input_path, threshold=threshold)
+            return self.apply_function_on_all_files(analyze_lcs_match, input_path, threshold)
         elif isfile(input_path):
-            return [self.analyze_file_lcs_match_output(input_path)]
+            return [self.analyze_file_lcs_match_output(input_path, threshold)]
         else:
             raise OSError('Neither file nor directory{}'.format(input_path))
 
 
-    def apply_function_on_all_files(self, function_ptr, top_dir_name, *args, **kwargs):
+    def apply_function_on_all_files(self, function_ptr, top_dir_name, threshold):
         list_of_result = []
-        for root, dirs, files in walk(top_dir_name):
-            for file in files:
-                if isfile(join(root, file)):
-                    list_of_result.append(function_ptr(join(root, file), *args, **kwargs))
-        return list_of_result
+        with closing(multiprocessing.Pool()) as pool:
+            apply_func = self.run_in_parellal and pool.apply_async or apply_sync
+            for root, dirs, files in walk(top_dir_name):
+                for file in files:
+                    if isfile(join(root, file)):
+                        list_of_result.append(apply_func(function_ptr, [self, join(root, file), threshold]))
+        output = []
+        for entry in list_of_result:
+            output += entry.get()
+        return output
 
     def find_license_region(self, license_name, input_fp):
-        n_gram, license_dir = self.license_n_grams[license_name]
+        n_gram, license_dir = license_n_grams[license_name]
         license_fp = join(base_dir, "../", license_dir, license_name + '.txt')
         loc_finder = loc_id.Location_Finder(self.context_length)
         return loc_finder.main_process(license_fp, input_fp)
@@ -293,8 +306,8 @@ class LicenseIdentifier:
         Assume that the license lookup is available.
         """
         similarity_dict = Counter()
-        for license_name in self.license_n_grams:
-            license_ng, license_dir = self.license_n_grams[license_name]
+        for license_name in license_n_grams:
+            license_ng, license_dir = license_n_grams[license_name]
             similarity_score = license_ng.measure_similarity(input_ng)
             similarity_dict[license_name] = similarity_score
         return similarity_dict
@@ -342,6 +355,11 @@ def main():
         "-O", "--output_file_path",
         help="Specify a output path with data info (user name, date, time and .csv info will be automatically added).",
         default=None)
+    aparse.add_argument(
+        "-S", "--single_thread",
+        help="Run as a single thread",
+        action='store_true',
+        default=False)
     args = aparse.parse_args()
     li_obj = LicenseIdentifier(license_dir=args.license_folder,
                                 threshold=float(args.threshold),
@@ -349,9 +367,28 @@ def main():
                                 output_format=args.output_format,
                                 output_path=args.output_file_path,
                                 context_length=args.context,
-                                pickle_file_path=args.pickle_file_path)
+                                pickle_file_path=args.pickle_file_path,
+                                run_in_parellal=not args.single_thread)
     results = li_obj.analyze()
     li_obj.output(results)
+
+def analyze(lid_obj, input_path, threshold):
+    return lid_obj.analyze_input_path(input_path, threshold)
+
+def analyze_lcs_match(lid_obj, input_path, threshold):
+    return lid_obj.analyze_file_lcs_match_output(input_path, threshold)
+
+class SyncResult(object):
+    """Mimic the interface of multiprocessing.pool.AsyncResult"""
+    def __init__(self, value):
+        self.value = value
+
+    def get(self):
+        return self.value
+
+def apply_sync(f, args):
+    """Behave like multiprocessing.pool.apply_async, but run synchronously"""
+    return SyncResult(f(*args))
 
 if __name__ == "__main__":
     main()
