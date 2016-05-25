@@ -78,6 +78,7 @@ class LicenseIdentifier:
         self.format_output(result_obj, self.output_format, output_path=self.output_path)
 
     def _init_pickled_library(self, pickle_file_path):
+        global license_n_grams, _universe_n_grams
         if exists(pickle_file_path):
             with open(pickle_file_path, 'rb') as f:
                 self.license_file_name_list, license_n_grams, _universe_n_grams =\
