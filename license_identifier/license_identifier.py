@@ -179,7 +179,7 @@ class LicenseIdentifier:
             list_of_license_str = self.get_str_from_file(join(license_dir, license_file_name))
             license_name = self._get_license_name(license_file_name)
             universal_n_grams.parse_text_list_items(list_of_license_str)
-            new_license_ng = ng.n_grams(list_text_line=list_of_license_str)
+            new_license_ng = ng.n_grams(list_of_license_str)
             license_n_grams[license_name] = (new_license_ng, license_dir)
         self.license_file_name_list.extend(license_file_name_list)
         return universal_n_grams
@@ -208,7 +208,7 @@ class LicenseIdentifier:
         input_dir = dirname(input_fp)
         list_of_src_str = self.get_str_from_file(input_fp)
         my_file_ng = ng.n_grams()
-        my_file_ng.parse_text_list_items(list_text_line=list_of_src_str,
+        my_file_ng.parse_text_list_items(list_of_src_str,
                                          universe_ng=_universe_n_grams)
         similarity_score_dict = self.measure_similarity(my_file_ng)
         [matched_license, score] = self.find_best_match(similarity_score_dict)

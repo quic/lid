@@ -19,7 +19,7 @@ class Location_Finder:
         window_size = len(license_lines)
         src_size = len(src_lines)
 
-        license_n_grams = ng.n_grams(list_text_line=license_lines)
+        license_n_grams = ng.n_grams(license_lines)
 
         # 2. split up the window and loop over the windows
         # for small source file case
@@ -200,5 +200,5 @@ class Location_Finder:
 
     def measure_similarity(self, other_n_grams, src_lines, start_ind, end_ind):
         list_text = src_lines[int(start_ind):int(end_ind)]
-        this_n_grams = ng.n_grams(list_text_line=list_text)
+        this_n_grams = ng.n_grams(list_text)
         return other_n_grams.measure_similarity(this_n_grams)

@@ -50,7 +50,7 @@ def test_find_best_region():
     window_size = len(license_lines)
     src_size = len(src_lines)
 
-    license_n_grams = ng.n_grams(list_text_line=license_lines)
+    license_n_grams = ng.n_grams(license_lines)
 
     [similarity_scores, window_start_index] = loc_id_obj.split_and_measure_similarities(
         src_size=src_size,
@@ -80,7 +80,7 @@ def test_find_max_score_ind():
     window_size = len(license_lines)
     src_size = len(src_lines)
 
-    license_n_grams = ng.n_grams(list_text_line=license_lines)
+    license_n_grams = ng.n_grams(license_lines)
 
     [similarity_scores, window_start_index] = loc_id_obj.split_and_measure_similarities(src_size=src_size,
                                                             src_offsets=src_offsets,
@@ -103,7 +103,7 @@ def test_split_and_measure_similarities():
     window_size = len(license_lines)
     src_size = len(src_lines)
 
-    license_n_grams = ng.n_grams(list_text_line=license_lines)
+    license_n_grams = ng.n_grams(license_lines)
 
     [similarity_scores, window_start_index] = loc_id_obj.split_and_measure_similarities(src_size=src_size,
                                                             src_offsets=src_offsets,
@@ -125,7 +125,7 @@ def test_expand_window():
     window_size = len(license_lines)
     src_size = len(src_lines)
 
-    license_n_grams = ng.n_grams(list_text_line=license_lines)
+    license_n_grams = ng.n_grams(license_lines)
 
     [similarity_scores, window_start_index] = loc_id_obj.split_and_measure_similarities(src_size=src_size,
                                                             src_offsets=src_offsets,
@@ -169,7 +169,7 @@ def test_expand_to_top():
     window_size = len(license_lines)
     src_size = len(src_lines)
 
-    license_n_grams = ng.n_grams(list_text_line=license_lines)
+    license_n_grams = ng.n_grams(license_lines)
 
     [similarity_scores, window_start_index] = loc_id_obj.split_and_measure_similarities(src_size=src_size,
                                                             src_offsets=src_offsets,
