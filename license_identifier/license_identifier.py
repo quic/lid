@@ -242,27 +242,7 @@ class LicenseIdentifier:
         return lcs_match, summary_list
 
     def analyze_file_lcs_match_output(self, input_fp, threshold=DEFAULT_THRESH_HOLD):
-        input_dir = dirname(input_fp)
-        list_of_src_str = self.get_str_from_file(input_fp)
-        my_file_ng = ng.n_grams()
-        my_file_ng.parse_text_list_items(list_text_line=list_of_src_str,
-                                         universe_ng=_universe_n_grams)
-        similarity_score_dict = self.measure_similarity(my_file_ng)
-        [matched_license, score] = self.find_best_match(similarity_score_dict)
-
-        if score >= threshold:
-            [start_ind, end_ind, start_offset, end_offset, region_score] = \
-                self.find_license_region(matched_license, input_fp)
-            length = end_offset - start_offset + 1
-            if region_score < threshold:
-                matched_license = length = start_offset = ''
-        else:
-            matched_license = length = start_offset = ''
-        lcs_match = license_match.LicenseMatch(file_name=input_fp,
-                                file_path=input_fp,
-                                license=matched_license,
-                                start_byte=start_offset,
-                                length=length)
+        lcs_match, summary_obj = self.analyze_file(input_fp, threshold)
         return lcs_match
 
     def analyze_input_path(self, input_path, threshold=DEFAULT_THRESH_HOLD):
