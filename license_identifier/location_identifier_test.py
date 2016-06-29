@@ -52,22 +52,21 @@ def test_find_best_region():
 
     license_n_grams = ng.n_grams(license_lines)
 
-    [similarity_scores, window_start_index] = loc_id_obj.split_and_measure_similarities(
-        src_size=src_size,
-        src_offsets=src_offsets,
-        src_lines=src_lines,
-        window_size=window_size,
-        license_n_grams=license_n_grams)
+    [similarity_scores, window_start_index] = \
+        loc_id_obj.split_and_measure_similarities(
+            src_size = src_size,
+            src_lines = src_lines,
+            window_size = window_size,
+            license_n_grams = license_n_grams)
     [max_score, max_index] = loc_id_obj.find_max_score_ind(similarity_scores=similarity_scores)
 
     loc_result = loc_id_obj.find_best_region(
-        max_index=max_index,
-        license_n_grams=license_n_grams,
-        src_lines=src_lines,
-        src_offsets=src_offsets,
-        window_start_index=window_start_index,
-        window_size=window_size)
-    assert loc_result == (1, 2, 5, 24, 1.0)
+        max_index = max_index,
+        license_n_grams = license_n_grams,
+        src_lines = src_lines,
+        window_start_index = window_start_index,
+        window_size = window_size)
+    assert loc_result == (1, 2, 1.0)
 
 def test_find_max_score_ind():
     lcs_file = join(get_license_dir(), 'test_license.txt')
@@ -82,11 +81,12 @@ def test_find_max_score_ind():
 
     license_n_grams = ng.n_grams(license_lines)
 
-    [similarity_scores, window_start_index] = loc_id_obj.split_and_measure_similarities(src_size=src_size,
-                                                            src_offsets=src_offsets,
-                                                            src_lines=src_lines,
-                                                            window_size=window_size,
-                                                            license_n_grams=license_n_grams)
+    [similarity_scores, window_start_index] = \
+        loc_id_obj.split_and_measure_similarities(
+            src_size = src_size,
+            src_lines = src_lines,
+            window_size = window_size,
+            license_n_grams = license_n_grams)
     [max_score, max_index] = loc_id_obj.find_max_score_ind(similarity_scores=similarity_scores)
     assert max_score == 1.0
     assert max_index[0] == 1
@@ -105,11 +105,12 @@ def test_split_and_measure_similarities():
 
     license_n_grams = ng.n_grams(license_lines)
 
-    [similarity_scores, window_start_index] = loc_id_obj.split_and_measure_similarities(src_size=src_size,
-                                                            src_offsets=src_offsets,
-                                                            src_lines=src_lines,
-                                                            window_size=window_size,
-                                                            license_n_grams=license_n_grams)
+    [similarity_scores, window_start_index] = \
+        loc_id_obj.split_and_measure_similarities(
+            src_size = src_size,
+            src_lines = src_lines,
+            window_size = window_size,
+            license_n_grams = license_n_grams)
     assert similarity_scores == [0.0, 1.0, 0.0, 0.0, 0.0]
     assert window_start_index == [0, 1, 2, 3, 4]
 
@@ -127,11 +128,12 @@ def test_expand_window():
 
     license_n_grams = ng.n_grams(license_lines)
 
-    [similarity_scores, window_start_index] = loc_id_obj.split_and_measure_similarities(src_size=src_size,
-                                                            src_offsets=src_offsets,
-                                                            src_lines=src_lines,
-                                                            window_size=window_size,
-                                                            license_n_grams=license_n_grams)
+    [similarity_scores, window_start_index] = \
+        loc_id_obj.split_and_measure_similarities(
+            src_size = src_size,
+            src_lines = src_lines,
+            window_size = window_size,
+            license_n_grams = license_n_grams)
     [max_score, max_index] = loc_id_obj.find_max_score_ind(similarity_scores=similarity_scores)
 
     # for maximum scores that share the same value
@@ -140,10 +142,11 @@ def test_expand_window():
     end_index =[]
 
     for max_ind in max_index:
-        [s_ind, e_ind, final_s] = loc_id_obj.expand_window(license_n_grams,
-                                                  src_lines,
-                                                  window_start_index[max_ind],
-                                                  window_size)
+        [s_ind, e_ind, final_s] = loc_id_obj.expand_window(
+            license_n_grams = license_n_grams,
+            src_lines = src_lines,
+            start_ind = window_start_index[max_ind],
+            window_size = window_size)
         start_index.append(s_ind)
         end_index.append(e_ind)
         final_score.append(final_s)
@@ -171,11 +174,12 @@ def test_expand_to_top():
 
     license_n_grams = ng.n_grams(license_lines)
 
-    [similarity_scores, window_start_index] = loc_id_obj.split_and_measure_similarities(src_size=src_size,
-                                                            src_offsets=src_offsets,
-                                                            src_lines=src_lines,
-                                                            window_size=window_size,
-                                                            license_n_grams=license_n_grams)
+    [similarity_scores, window_start_index] = \
+        loc_id_obj.split_and_measure_similarities(
+            src_size = src_size,
+            src_lines = src_lines,
+            window_size = window_size,
+            license_n_grams = license_n_grams)
     [max_score, max_index] = loc_id_obj.find_max_score_ind(similarity_scores=similarity_scores)
 
     # for maximum scores that share the same value
@@ -184,22 +188,74 @@ def test_expand_to_top():
     end_index =[]
 
 
+def test_measure_similarity_difflib():
+    loc_id_obj = loc_id.Location_Finder(
+        penalty_only_source = 2.0,
+        penalty_only_license = 3.0)
+    assert loc_id_obj.measure_similarity_difflib(["a"], ["a"], 0, 1) == 1.0
+    assert loc_id_obj.measure_similarity_difflib([""], ["a"], 0, 1) == 0.0
+    assert loc_id_obj.measure_similarity_difflib(["a"], [""], 0, 1) == 0.0
+    assert loc_id_obj.measure_similarity_difflib(["a b"], ["a"], 0, 1) == 1/4.
+    assert loc_id_obj.measure_similarity_difflib(["a"], ["a b"], 0, 1) == 1/3.
+    assert loc_id_obj.measure_similarity_difflib(["a b"], ["a c"], 0, 1) == 1/6.
+
+
+def test_one_line_then_expand():
+    loc_id_obj = loc_id.Location_Finder(
+        overshoot = 5,
+        penalty_only_source = 2.0,
+        penalty_only_license = 3.0)
+    license_lines = ["a b c", "d e f"]
+    src_lines = ["x", "x", "a", "x", "x",
+                 "b y d e", "x", "f", "x", "x"]
+    result = loc_id_obj.one_line_then_expand(license_lines, src_lines)
+    expected_score = 5.0 / (5.0 + 2.0 * 4 + 3.0 * 1)
+    assert result == (2, 8, expected_score)
+
+    # Test without any overshoot
+    loc_id_obj = loc_id.Location_Finder(
+        overshoot = 0,
+        penalty_only_source = 2.0,
+        penalty_only_license = 3.0)
+    result = loc_id_obj.one_line_then_expand(license_lines, src_lines)
+    expected_score = 3.0 / (3.0 + 2.0 * 1 + 3.0 * 3)
+    assert result == (5, 6, expected_score)
+
+    # Test case where this heuristic fails to find the global optimum
+    license_lines = ["a b c", "d e f"]
+    src_lines = ["x", "x", "b c d e", "x", "x",
+                 "a b", "c d", "e f", "x", "x"]
+    result = loc_id_obj.one_line_then_expand(license_lines, src_lines)
+    expected_score = 4.0 / (4.0 + 3.0 * 2)
+    assert result == (2, 3, expected_score)
+
+
+def test_exhaustive():
+    loc_id_obj = loc_id.Location_Finder(
+        overshoot = 5,
+        penalty_only_source = 2.0,
+        penalty_only_license = 3.0)
+    license_lines = ["a b c", "d e f"]
+    src_lines = ["x", "x", "b c d e", "x", "x",
+                 "a b", "c d", "e f", "x", "x"]
+    result = loc_id_obj.best_region_exhaustive(license_lines, src_lines)
+    assert result == (5, 8, 1.0)
+
+
 def test_determine_offsets():
-    start_index = [0, 2, 3, 4]
-    end_index = [2, 3, 5, 5]
     src_lines = ["", "", "", "", ""]
     src_offsets = [0, 10, 20, 30, 40, 50]
 
     loc_id_obj = loc_id.Location_Finder(0)
-    assert loc_id_obj.determine_offsets(start_index, end_index, 0, src_lines, src_offsets) == (0, 2, 0, 20)
-    assert loc_id_obj.determine_offsets(start_index, end_index, 1, src_lines, src_offsets) == (2, 3, 20, 30)
-    assert loc_id_obj.determine_offsets(start_index, end_index, 2, src_lines, src_offsets) == (3, 5, 30, 50)
-    assert loc_id_obj.determine_offsets(start_index, end_index, 3, src_lines, src_offsets) == (4, 5, 40, 50)
+    assert loc_id_obj.determine_offsets(0, 2, src_lines, src_offsets) == (0, 2, 0, 20)
+    assert loc_id_obj.determine_offsets(2, 3, src_lines, src_offsets) == (2, 3, 20, 30)
+    assert loc_id_obj.determine_offsets(3, 5, src_lines, src_offsets) == (3, 5, 30, 50)
+    assert loc_id_obj.determine_offsets(4, 5, src_lines, src_offsets) == (4, 5, 40, 50)
     loc_id_obj = loc_id.Location_Finder(1)
-    assert loc_id_obj.determine_offsets(start_index, end_index, 0, src_lines, src_offsets) == (0, 3, 0, 30)
-    assert loc_id_obj.determine_offsets(start_index, end_index, 1, src_lines, src_offsets) == (1, 4, 10, 40)
-    assert loc_id_obj.determine_offsets(start_index, end_index, 2, src_lines, src_offsets) == (2, 5, 20, 50)
-    assert loc_id_obj.determine_offsets(start_index, end_index, 3, src_lines, src_offsets) == (3, 5, 30, 50)
+    assert loc_id_obj.determine_offsets(0, 2, src_lines, src_offsets) == (0, 3, 0, 30)
+    assert loc_id_obj.determine_offsets(2, 3, src_lines, src_offsets) == (1, 4, 10, 40)
+    assert loc_id_obj.determine_offsets(3, 5, src_lines, src_offsets) == (2, 5, 20, 50)
+    assert loc_id_obj.determine_offsets(4, 5, src_lines, src_offsets) == (3, 5, 30, 50)
 
 
 def test_expand_to_bottom():
