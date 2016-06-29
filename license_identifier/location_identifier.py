@@ -5,14 +5,13 @@ from . import util
 
 
 DEFAULT_CONTEXT = 0
-DEFAULT_THRESHOLD = 0.02
 
 class Location_Finder:
 
     def __init__(self, context_lines=DEFAULT_CONTEXT):
         self.context_lines=context_lines
 
-    def main_process(self, license_file, input_src_file, threshold=DEFAULT_THRESHOLD):
+    def main_process(self, license_file, input_src_file):
         # 1. configure the text window size
         [license_lines, license_offsets]= util.read_lines_offsets(license_file)
         [src_lines, src_offsets] = util.read_lines_offsets(input_src_file)
@@ -35,15 +34,14 @@ class Location_Finder:
         [max_score, max_index] = self.find_max_score_ind(similarity_scores=similarity_scores)
 
         # Expand and find the region with maximum score
-        return self.find_best_region(threshold= threshold,
-                                     max_index = max_index,
+        return self.find_best_region(max_index = max_index,
                                      license_n_grams = license_n_grams,
                                      src_lines = src_lines,
                                      src_offsets = src_offsets,
                                      window_start_index = window_start_index,
                                      window_size = window_size)
 
-    def find_best_region(self, threshold, max_index, license_n_grams,
+    def find_best_region(self, max_index, license_n_grams,
                          src_lines, src_offsets, window_start_index, window_size):
         # for maximum scores that share the same value
         final_score = []
@@ -65,8 +63,6 @@ class Location_Finder:
         first_max_ind = max_index[0]
 
 
-        # if max_score > threshold: # 0.02 is just randomly chosen low number
-        #     self.print_license(src_lines, start_index[first_max_ind], end_index[first_max_ind])
         start_line, end_line, start_offset, end_offset = self.determine_offsets(start_index, end_index,
                                                                                 first_max_ind, src_lines,
                                                                                 src_offsets)

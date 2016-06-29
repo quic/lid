@@ -61,7 +61,6 @@ def test_find_best_region():
     [max_score, max_index] = loc_id_obj.find_max_score_ind(similarity_scores=similarity_scores)
 
     loc_result = loc_id_obj.find_best_region(
-        threshold=0.02,
         max_index=max_index,
         license_n_grams=license_n_grams,
         src_lines=src_lines,
