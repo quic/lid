@@ -73,6 +73,9 @@ class LicenseIdentifier:
     def analyze(self):
         if self.input_path is not None:
             return self.analyze_input_path(self.input_path, self.threshold)
+        else:
+            print "No input path; no analysis to perform"
+            return None
 
     def output(self, result_obj):
         self.format_output(result_obj, self.output_format, output_path=self.output_path)
