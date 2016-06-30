@@ -131,10 +131,14 @@ class LicenseIdentifier:
         return universal_n_grams
 
     def format_output(self, result_obj, output_format, output_path):
-        if output_format == ['csv']:
+        if output_format == 'csv':
             self.write_csv_file(result_obj, output_path)
-        elif output_format == ['easy_read']:
+        elif output_format == 'easy_read':
             self.display_easy_read(result_obj)
+        elif output_format is None:
+            pass
+        else:
+            raise Exception("Unrecognized output format: {}".format(output_format))
 
     def write_csv_file(self, result_obj_list, output_path):
         if sys.version_info >= (3,0,0):
@@ -333,7 +337,7 @@ def main():
         required=False)
     aparse.add_argument(
         "-F", "--output_format",
-        help="Format the output accordingly", action="append",
+        help="Format the output accordingly",
         choices=["csv", "easy_read"])
     aparse.add_argument(
         "-O", "--output_file_path",
@@ -345,6 +349,10 @@ def main():
         action='store_true',
         default=False)
     args = aparse.parse_args()
+    if args.input_path is not None and args.output_format is None:
+        # Use easy_read as the default output format, but only
+        # if a source-code analysis will be run
+        args.output_format = 'easy_read'
     li_obj = LicenseIdentifier(license_dir=args.license_folder,
                                 threshold=float(args.threshold),
                                 input_path=args.input_path,
