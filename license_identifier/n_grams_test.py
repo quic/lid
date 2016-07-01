@@ -6,9 +6,9 @@ from collections import Counter
 from . import n_grams as ng
 
 
-text_list = ['one', 'two', 'three', 'four']
-text_line = 'one\ntwo\nthree\nfour'
-text_line_crlf = 'one\r\ntwo\r\nthree\r\nfour'
+text_list = ['#', 'one', 'two', 'three', 'four']
+text_line = '# one\ntwo\nthree\nfour'
+text_line_crlf = '# one\r\ntwo\r\nthree\r\nfour'
 
 unigram_counter = Counter(['one', 'two', 'three', 'four'])
 bigram_counter = Counter([('two', 'one'),
@@ -16,6 +16,14 @@ bigram_counter = Counter([('two', 'one'),
                           ('four', 'three')])
 trigram_counter = Counter([('three', 'two', 'one'),
                           ('four', 'three', 'two')])
+
+def test_is_punctuation():
+    assert ng.is_punctuation("#")
+    assert ng.is_punctuation("//")
+    assert ng.is_punctuation("/*")
+    assert ng.is_punctuation("*")
+    assert ng.is_punctuation("1.0") == False
+    assert ng.is_punctuation("abc123") == False
 
 def test_init_list_input():
     n_grams_obj = ng.n_grams(list_text_line = text_list)
