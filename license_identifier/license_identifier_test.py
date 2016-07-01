@@ -5,6 +5,7 @@ from . import n_grams as ng
 from . import license_identifier
 from . import license_match as l_match
 from . import match_summary
+from . import location_identifier
 from collections import Counter
 from os import getcwd
 from os.path import join, dirname, exists
@@ -110,6 +111,21 @@ def test_build_summary_list_str(mock_stdout):
     display_str = lcs_id_obj.display_easy_read(result_obj)
     assert mock_stdout.getvalue().find('Summary of the analysis') >= 0
 
+def test_forward_args_to_loc_id():
+    test_file_path = join(input_dir, 'test1.py')
+    lid_obj = license_identifier.LicenseIdentifier(
+        license_dir = license_dir,
+        location_strategy = "exhaustive",
+        penalty_only_license = 3.0,
+        penalty_only_source = 4.0)
+    with patch.object(location_identifier, 'Location_Finder') as m:
+        m.return_value.main_process.return_value = (0, 0, 0, 0, 0)
+        lcs_match_obj = lid_obj.analyze_file(test_file_path)
+        m.assert_called_with(
+            context_lines = 0,
+            strategy = "exhaustive",
+            penalty_only_license = 3.0,
+            penalty_only_source = 4.0)
 
 def test_analyze_file_lcs_match_output():
     # input_fp, threshold=DEFAULT_THRESH_HOLD

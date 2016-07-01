@@ -38,6 +38,9 @@ class LicenseIdentifier:
             output_path='',
             license_dir = None,
             context_length = 0,
+            location_strategy=None,
+            penalty_only_source=None,
+            penalty_only_license=None,
             pickle_file_path=None,
             run_in_parellal=True):
 
@@ -46,6 +49,9 @@ class LicenseIdentifier:
         self.input_path = input_path
         self.output_format = output_format
         self.run_in_parellal = run_in_parellal
+        self.location_strategy = location_strategy
+        self.penalty_only_source = penalty_only_source
+        self.penalty_only_license = penalty_only_license
 
         if output_path:
             self.output_path = output_path + '_' + util.get_user_date_time_str() + '.csv'
@@ -251,7 +257,17 @@ class LicenseIdentifier:
     def find_license_region(self, license_name, input_fp):
         n_gram, license_dir = license_n_grams[license_name]
         license_fp = join(base_dir, "../", license_dir, license_name + '.txt')
-        loc_finder = loc_id.Location_Finder(self.context_length)
+
+        # Pass along only the location args that were explicitly specified
+        loc_args_raw = dict(
+            context_lines = self.context_length,
+            strategy = self.location_strategy,
+            penalty_only_source = self.penalty_only_source,
+            penalty_only_license = self.penalty_only_license,
+        )
+        loc_args = { k: v for k, v in loc_args_raw.items() if v is not None }
+
+        loc_finder = loc_id.Location_Finder(**loc_args)
         return loc_finder.main_process(license_fp, input_fp)
 
     def measure_similarity(self, input_ng):
@@ -314,6 +330,14 @@ def main():
         help="Run as a single thread",
         action='store_true',
         default=False)
+    aparse.add_argument("--location_strategy",
+        help=argparse.SUPPRESS)
+    aparse.add_argument("--penalty_only_source",
+        help=argparse.SUPPRESS,
+        type=float)
+    aparse.add_argument("--penalty_only_license",
+        help=argparse.SUPPRESS,
+        type=float)
     args = aparse.parse_args()
     if args.input_path is not None and args.output_format is None:
         # Use easy_read as the default output format, but only
@@ -325,6 +349,9 @@ def main():
                                 output_format=args.output_format,
                                 output_path=args.output_file_path,
                                 context_length=args.context,
+                                location_strategy=args.location_strategy,
+                                penalty_only_source=args.penalty_only_source,
+                                penalty_only_license=args.penalty_only_license,
                                 pickle_file_path=args.pickle_file_path,
                                 run_in_parellal=not args.single_thread)
     results = li_obj.analyze()
