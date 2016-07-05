@@ -12,6 +12,7 @@ from mock import patch, Mock
 import csv
 import random
 import string
+import six
 
 import pytest
 from StringIO import StringIO
@@ -90,12 +91,18 @@ def test_write_csv_file():
                                           output_path=output_path)
 
     result_obj = lid_obj.analyze_input_path(input_path=input_dir, threshold=threshold)
-    lid_obj.output(result_obj)
-    m = Mock(spec=csv.writer)
-    with patch('csv.writer', m, create=True):
-        lid_obj.write_csv_file(result_obj, output_path)
-    handle = m()
-    handle.writerow.assert_any_call(field_names)
+
+    mock_open_name = '{}.open'.format(six.moves.builtins.__name__)
+    with patch(mock_open_name, mock_open()) as mo:
+        with patch('csv.writer', Mock(spec=csv.writer)) as m:
+            lid_obj.output(result_obj)
+            handle = m()
+            handle.writerow.assert_any_call(field_names)
+
+            m.reset_mock()
+            lid_obj.write_csv_file(result_obj, output_path)
+            handle = m()
+            handle.writerow.assert_any_call(field_names)
 
 @patch('sys.stdout', new_callable=StringIO)
 def test_build_summary_list_str(mock_stdout):
