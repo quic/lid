@@ -1,4 +1,4 @@
-.PHONY: deps test-deps test install clean git-clean, all
+.PHONY: deps test-deps test install clean git-clean, all, pickle
 
 all: test
 
@@ -19,6 +19,9 @@ install: deps license_identifier/licenses.py
 
 clean:
 	cd license_identifier && rm -f *.pyc && rm -f licenses.py
+
+pickle: deps license_identifier/licenses.py
+	python -m license_identifier.license_identifier -L license_identifier/data/license_dir/ -P license_identifier/data/license_n_gram_lib.pickle
 
 git-clean:
 	git clean -Xdf
