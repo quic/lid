@@ -4,6 +4,7 @@
 from . import n_grams as ng
 from . import license_identifier
 from . import license_match as l_match
+from . import match_summary
 from collections import Counter
 from os import getcwd
 from os.path import join, dirname, exists
@@ -152,8 +153,8 @@ def test_get_str_from_file():
 
 def test_truncate_column():
     data = ''.join(random.choice(string.lowercase) for x in range(40000))
-    assert len(license_identifier.truncate_column(data)) == license_identifier.COLUMN_LIMIT
-    assert license_identifier.truncate_column(3.0) == 3.0
+    assert len(match_summary.truncate_column(data)) == match_summary.COLUMN_LIMIT
+    assert match_summary.truncate_column(3.0) == 3.0
 
 def test_main():
     pass

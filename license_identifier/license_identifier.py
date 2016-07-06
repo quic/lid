@@ -10,6 +10,7 @@ import codecs
 import pickle
 
 from . import license_match
+from . import match_summary
 from . import n_grams as ng
 from . import location_identifier as loc_id
 from . import util
@@ -24,16 +25,9 @@ DEFAULT_THRESH_HOLD = 0.04
 DEFAULT_LICENSE_DIR = join(base_dir, 'data', 'license_dir')
 DEFAULT_PICKLED_LIBRARY_FILE = join(base_dir, 'data',
                                'license_n_gram_lib.pickle')
-COLUMN_LIMIT = 32767 - 10 # padding 10 for \'b and other formatting characters
 
 license_n_grams = defaultdict()
 _universe_n_grams = None
-
-def truncate_column(column):
-    if isinstance(column, str) or isinstance(column, unicode):
-        return column[0:COLUMN_LIMIT]
-    else:
-        return column
 
 class LicenseIdentifier:
     def __init__(
@@ -145,24 +139,11 @@ class LicenseIdentifier:
             f = open(output_path, 'w', newline='')
         else:
             f = open(output_path, 'wb')
-        field_names = ['input file name',
-                       "matched license type",
-                       "Score using whole input test",
-                       "Start line number",
-                       "End line number",
-                       "Start byte offset",
-                       "End byte offset",
-                       "Score using only the license text portion",
-                       "Found license text"]
         writer = csv.writer(f)
-        writer.writerow(field_names)
+        writer.writerow(match_summary.MatchSummary.field_names())
         for result_obj in result_obj_list:
-            summary_obj = result_obj[1]
-            summary_obj = map(truncate_column, summary_obj)
-            c1, c2, c3, c4, c5, c6, c7, c8, c9 = summary_obj
-            summary_obj = c1.encode('utf8', 'surrogateescape'), c2, c3, c4, \
-                          c5, c6, c7, c8, c9.encode('utf8', 'surrogateescape')
-            writer.writerow(summary_obj)
+            row = result_obj[1].to_csv_row()
+            writer.writerow(row)
         f.close()
 
     def _get_license_file_names(self, directory):
@@ -193,23 +174,7 @@ class LicenseIdentifier:
 
     def display_easy_read(self, result_obj_list):
         for result_obj in result_obj_list:
-            print(self.build_summary_list_str(result_obj[1]))
-
-    def build_summary_list_str(self, summary_list):
-        output_str = "Summary of the analysis" + linesep + linesep\
-            + "Name of the input file: {}".format(summary_list[0]) + linesep\
-            + "Matched license type is {}".format(summary_list[1]) + linesep\
-            + "Score for the match is {:.3}".format(summary_list[2]) + linesep\
-            + "License text beings at line {}.".format(summary_list[3]) + linesep\
-            + "License text ends at line {}.".format(summary_list[4]) + linesep\
-            + "Start byte offset for the license text is {}.".format(summary_list[5]) + linesep\
-            + "End byte offset for the license text is {}.".format(summary_list[6]) +linesep\
-            + "The found license text has the score of {:.3}".format(summary_list[7]) + linesep\
-            + "The following text is found to be license text " + linesep\
-            + "-----BEGIN-----" + linesep\
-            + summary_list[8]\
-            + "-----END-----" + linesep + linesep
-        return output_str
+            print(result_obj[1].to_display_format())
 
     def analyze_file(self, input_fp, threshold=DEFAULT_THRESH_HOLD):
         input_dir = dirname(input_fp)
@@ -221,32 +186,33 @@ class LicenseIdentifier:
         [matched_license, score] = self.find_best_match(similarity_score_dict)
 
         if score >= threshold:
-            [start_ind, end_ind, start_offset, end_offset, region_score] = \
+            [start_line_ind, end_line_ind, start_offset, end_offset, region_score] = \
                 self.find_license_region(matched_license, input_fp)
-            found_region = list_of_src_str[start_ind:end_ind]
+            found_region = list_of_src_str[start_line_ind:end_line_ind]
             found_region = ''.join(found_region)
             length = end_offset - start_offset + 1
             if region_score < threshold:
-                matched_license = start_ind = start_offset = ''
-                end_ind = end_offset = region_score = found_region = length = ''
+                matched_license = start_line_ind = start_offset = ''
+                end_line_ind = end_offset = region_score = found_region = length = ''
         else:
-            matched_license = start_ind = start_offset = ''
-            end_ind = end_offset = region_score = found_region = length = ''
+            matched_license = start_line_ind = start_offset = ''
+            end_line_ind = end_offset = region_score = found_region = length = ''
         lcs_match = license_match.LicenseMatch(file_name=input_fp,
                                 file_path=input_fp,
                                 license=matched_license,
                                 start_byte=start_offset,
                                 length = length)
-        summary_list = [input_fp,
-                        matched_license,
-                        score,
-                        start_ind,
-                        end_ind,
-                        start_offset,
-                        end_offset,
-                        region_score,
-                        found_region]
-        return lcs_match, summary_list
+        summary_obj = match_summary.MatchSummary(
+            input_fp = input_fp,
+            matched_license = matched_license,
+            score = score,
+            start_line_ind = start_line_ind,
+            end_line_ind = end_line_ind,
+            start_offset = start_offset,
+            end_offset = end_offset,
+            region_score = region_score,
+            found_region = found_region)
+        return lcs_match, summary_obj
 
     def analyze_file_lcs_match_output(self, input_fp, threshold=DEFAULT_THRESH_HOLD):
         lcs_match, summary_obj = self.analyze_file(input_fp, threshold)
