@@ -26,19 +26,19 @@ def test_is_punctuation():
     assert ng.is_punctuation("abc123") == False
 
 def test_init_list_input():
-    n_grams_obj = ng.n_grams(list_text_line = text_list)
+    n_grams_obj = ng.n_grams(text_list)
     assert n_grams_obj.unigram_count == unigram_counter
     assert n_grams_obj.bigram_count == bigram_counter
     assert n_grams_obj.trigram_count == trigram_counter
 
 def test_init_text_input():
-    n_grams_obj = ng.n_grams(text_str = text_line)
+    n_grams_obj = ng.n_grams(text_line)
     assert n_grams_obj.unigram_count == unigram_counter
     assert n_grams_obj.bigram_count == bigram_counter
     assert n_grams_obj.trigram_count == trigram_counter
 
 def test_init_text_input_with_crlf():
-    n_grams_obj = ng.n_grams(text_str = text_line_crlf)
+    n_grams_obj = ng.n_grams(text_line_crlf)
     assert n_grams_obj.unigram_count == unigram_counter
     assert n_grams_obj.bigram_count == bigram_counter
     assert n_grams_obj.trigram_count == trigram_counter
@@ -73,8 +73,8 @@ def test_parse_text_str():
     assert n_grams_obj.trigram_count == trigram_counter
 
 def test_measure_Jaccard_distance():
-    n_grams_obj = ng.n_grams(list_text_line = text_list)
-    n_grams_obj2 = ng.n_grams(list_text_line = text_list)
+    n_grams_obj = ng.n_grams(text_list)
+    n_grams_obj2 = ng.n_grams(text_list)
     n_grams_obj3 = ng.n_grams()
 
     assert n_grams_obj.measure_Jaccard_distance(n_grams_obj2)==1.0

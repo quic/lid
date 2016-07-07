@@ -45,7 +45,7 @@ def output_tree(parent):
     return output
 
 def write_licenses_dir(ids):
-    licenseDir = './data/license_dir'
+    licenseDir = './license_identifier/data/license_dir'
     if not os.path.exists(licenseDir):
         os.makedirs(licenseDir)
 

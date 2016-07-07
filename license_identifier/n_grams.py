@@ -1,19 +1,21 @@
 from collections import Counter, defaultdict
 import string
+import six
 
 def is_punctuation(input_value):
     return all(c in string.punctuation for c in input_value)
 
-class n_grams:
-    def __init__(self, list_text_line=None, text_str=None):
+class n_grams(object):
+    def __init__(self, text=None):
         self.unigram_count = Counter()
         self.bigram_count = Counter()
         self.trigram_count = Counter()
 
-        if list_text_line is not None:
-            self.parse_text_list_items(list_text_line)
-        elif text_str is not None:
-            self.parse_text_str(text_str)
+        if text is not None:
+            if isinstance(text, six.string_types):
+                self.parse_text_str(text)
+            else:
+                self.parse_text_list_items(text)
 
     def __str__(self):
         return 'n_grams'
@@ -38,22 +40,7 @@ class n_grams:
                         curr_word, prev_word, prev2_word, universe_ng)
 
     def parse_text_str(self, text_str, universe_ng=None):
-        prev2_word =""
-        prev_word = ""
-        curr_word = ""
-
-        words = text_str.split()
-        for word in words:
-            if is_punctuation(word):
-                continue
-            prev2_word = prev_word
-            prev_word = curr_word
-            curr_word = word
-            if universe_ng == None:
-                self.insert_ngrams(curr_word, prev_word, prev2_word)
-            else:
-                self.insert_ng_within_universe( \
-                    curr_word, prev_word, prev2_word, universe_ng)
+        self.parse_text_list_items(text_str.split(), universe_ng)
 
     def insert_ngrams(self, first, second, third):
         if len(first) >0:

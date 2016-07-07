@@ -11,7 +11,7 @@ deps: requirements.txt
 test-deps: test-requirements.txt
 	pip install -r $<
 
-test: deps license_identifier/licenses.py
+test: deps test-deps license_identifier/licenses.py
 	cd license_identifier && python -B -m pytest --cov-config=.coveragerc --cov=. --cov-report=term-missing *_test.py
 
 install: deps license_identifier/licenses.py
