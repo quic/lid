@@ -2,6 +2,7 @@ import math
 import nltk
 import difflib
 import argparse
+import sys
 
 from . import location_result as lr
 from . import n_grams as ng
@@ -16,7 +17,7 @@ DEFAULT_STRATEGY = "one_line_then_expand"
 DEFAULT_VERBOSITY = 0
 
 
-def main():
+def main(argv = []):
     parser = argparse.ArgumentParser()
     parser.add_argument("license_file")
     parser.add_argument("input_src_file")
@@ -28,7 +29,7 @@ def main():
         default=DEFAULT_PENALTY_ONLY_SOURCE)
     parser.add_argument("--penalty_only_license", type=float,
         default=DEFAULT_PENALTY_ONLY_LICENSE)
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     loc_obj = Location_Finder(
         context_lines = args.context_lines,
         penalty_only_source = args.penalty_only_source,
@@ -36,7 +37,7 @@ def main():
         overshoot = args.overshoot,
         strategy = args.strategy,
         verbosity = args.verbosity)
-    print loc_obj.main_process(args.license_file, args.input_src_file)
+    print(loc_obj.main_process(args.license_file, args.input_src_file))
 
 
 class Location_Finder(object):
@@ -68,7 +69,7 @@ class Location_Finder(object):
         elif self.strategy == "ngram":
             start_line, end_line, best_score = \
                 self.best_region_ngram(license_lines, src_lines)
-        else:
+        else:  # pragma: no cover
             raise Exception("Unrecognized strategy: {}".format(self.strategy))
 
         start_line, end_line, start_offset, end_offset = \
@@ -92,11 +93,11 @@ class Location_Finder(object):
                     end_ind = end_line)
                 results.append((start_line, end_line, score))
 
-        if self.verbosity >= 1:
+        if self.verbosity >= 1:  # pragma: no cover
             sorted_results = sorted(results, key = lambda x: x[2])
             for r in sorted_results:
-                print "lines {}-{}: score = {:.06f}".format(*r)
-            print "=" * 40
+                print("lines {}-{}: score = {:.06f}".format(*r))
+            print("=" * 40)
 
         start_line, end_line, best_score = max(results, key = lambda x: x[2])
         return start_line, end_line, best_score
@@ -112,11 +113,11 @@ class Location_Finder(object):
                     end_ind = line + 1)
             results.append((line, line + 1, score))
 
-        if self.verbosity >= 1:
+        if self.verbosity >= 1:  # pragma: no cover
             sorted_results = sorted(results, key = lambda x: x[2])
             for r in sorted_results:
-                print "lines {}-{}: score = {:.06f}".format(*r)
-            print "=" * 40
+                print("lines {}-{}: score = {:.06f}".format(*r))
+            print("=" * 40)
 
         start_line, end_line, best_score = max(results, key = lambda x: x[2])
         prev_start_line, prev_end_line = None, None
@@ -124,16 +125,16 @@ class Location_Finder(object):
         # Alternate between expanding region upward and downward
         # until the selected region no longer changes
         while True:
-            if self.verbosity >= 1:
-                print "Current region: {}-{}".format(start_line, end_line)
+            if self.verbosity >= 1:  # pragma: no cover
+                print("Current region: {}-{}".format(start_line, end_line))
 
             # Expand region upward
             start_line, end_line, best_score = self.expand_difflib(
                 license_lines, src_lines,
                 start_line, end_line, best_score, top = True)
 
-            if self.verbosity >= 1:
-                print "Current region: {}-{}".format(start_line, end_line)
+            if self.verbosity >= 1:  # pragma: no cover
+                print("Current region: {}-{}".format(start_line, end_line))
 
             # Expand region downward
             start_line, end_line, best_score = self.expand_difflib(
@@ -175,9 +176,9 @@ class Location_Finder(object):
 
             current_result = (start_line, end_line, score)
             results.append(current_result)
-            if self.verbosity >= 1:
-                print "Considering expansion (top = {}): {}-{}: score = {}" \
-                    .format(top, *current_result)
+            if self.verbosity >= 1:  # pragma: no cover
+                print("Considering expansion (top = {}): {}-{}: score = {}" \
+                    .format(top, *current_result))
 
             if score >= best_score:
                 best_start_line = start_line
@@ -380,6 +381,6 @@ class Location_Finder(object):
         this_n_grams = ng.n_grams(list_text)
         return other_n_grams.measure_similarity(this_n_grams)
 
-if __name__ == "__main__":
-    main()
 
+if __name__ == "__main__":  # pragma: no cover
+    main(sys.argv[1:])

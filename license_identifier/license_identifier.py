@@ -67,7 +67,7 @@ class LicenseIdentifier:
             custom_license_dir = join(license_dir, 'custom')
             self._init_using_lic_dir(license_dir, custom_license_dir)
             if pickle_file_path is not None:
-                self._create_pickled_library(license_dir, pickle_file_path)
+                self._create_pickled_library(pickle_file_path)
 
 
     def analyze(self):
@@ -137,13 +137,13 @@ class LicenseIdentifier:
             self.display_easy_read(result_obj)
         elif output_format is None:
             pass
-        else:
+        else:  # pragma: no cover
             raise Exception("Unrecognized output format: {}".format(output_format))
 
     def write_csv_file(self, result_obj_list, output_path):
-        if sys.version_info >= (3,0,0):
+        if sys.version_info >= (3,0,0):  # pragma: no cover
             f = open(output_path, 'w', newline='')
-        else:
+        else:  # pragma: no cover
             f = open(output_path, 'wb')
         writer = csv.writer(f)
         writer.writerow(match_summary.MatchSummary.field_names())
@@ -229,7 +229,7 @@ class LicenseIdentifier:
             return self.apply_function_on_all_files(analyze, input_path, threshold)
         elif isfile(input_path):
             return [self.analyze_file(input_path, threshold)]
-        else:
+        else:  # pragma: no cover
             raise OSError('Neither file nor directory{}'.format(input_path))
 
     def analyze_input_path_lcs_match_output(self, input_path, threshold=DEFAULT_THRESH_HOLD):
@@ -237,7 +237,7 @@ class LicenseIdentifier:
             return self.apply_function_on_all_files(analyze_lcs_match, input_path, threshold)
         elif isfile(input_path):
             return [self.analyze_file_lcs_match_output(input_path, threshold)]
-        else:
+        else:  # pragma: no cover
             raise OSError('Neither file nor directory{}'.format(input_path))
 
 
@@ -293,7 +293,7 @@ class LicenseIdentifier:
         fp.close()
         return list_of_str
 
-def main():
+def main(argv = []):
     # threshold, license folder, input file, input folder, output format
     aparse = argparse.ArgumentParser(
         description="License text identification and license text region finder")
@@ -338,7 +338,7 @@ def main():
     aparse.add_argument("--penalty_only_license",
         help=argparse.SUPPRESS,
         type=float)
-    args = aparse.parse_args()
+    args = aparse.parse_args(argv)
     if args.input_path is not None and args.output_format is None:
         # Use easy_read as the default output format, but only
         # if a source-code analysis will be run
@@ -361,7 +361,7 @@ def analyze(lid_obj, input_path, threshold):
     return lid_obj.analyze_input_path(input_path, threshold)
 
 def analyze_lcs_match(lid_obj, input_path, threshold):
-    return lid_obj.analyze_file_lcs_match_output(input_path, threshold)
+    return lid_obj.analyze_input_path_lcs_match_output(input_path, threshold)
 
 class SyncResult(object):
     """Mimic the interface of multiprocessing.pool.AsyncResult"""
@@ -375,5 +375,5 @@ def apply_sync(f, args):
     """Behave like multiprocessing.pool.apply_async, but run synchronously"""
     return SyncResult(f(*args))
 
-if __name__ == "__main__":
-    main()
+if __name__ == "__main__":  # pragma: no cover
+    main(sys.argv[1:])

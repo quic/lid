@@ -1,14 +1,11 @@
-#
-# Unit Tests to go here
-#
 from . import n_grams as ng
 from . import license_identifier
 from . import license_match as l_match
 from . import match_summary
 from . import location_identifier
 from collections import Counter
-from os import getcwd
-from os.path import join, dirname, exists
+from os import getcwd, remove
+from os.path import join, dirname, exists, abspath
 from mock import mock_open
 from mock import patch, Mock
 import csv
@@ -73,13 +70,17 @@ def test_init():
 
 def test_init_pickle():
     test_pickle_file = join(BASE_DIR, "test.pickle")
+    if exists(test_pickle_file):
+        remove(test_pickle_file)
+    assert not exists(test_pickle_file)
     lcs_id_obj._create_pickled_library(pickle_file=test_pickle_file)
-    assert exists(test_pickle_file)==True
+    assert exists(test_pickle_file)
     lcs_id_pickle_obj = license_identifier.LicenseIdentifier(
         threshold=threshold,
         input_path=input_dir,
         pickle_file_path=test_pickle_file,
         output_format='easy_read')
+    remove(test_pickle_file)
     sim_score = license_identifier._universe_n_grams.measure_similarity(license_identifier._universe_n_grams)
 
     assert sim_score == 1.0
@@ -133,6 +134,16 @@ def test_analyze_file_lcs_match_output():
     lcs_match_obj = lcs_id_obj.analyze_file_lcs_match_output(test_file_path)
     assert lcs_match_obj.length == 20
 
+    lcs_match_obj = lcs_id_obj.analyze_input_path_lcs_match_output(test_file_path)
+    assert len(lcs_match_obj) == 1
+    assert lcs_match_obj[0].length == 20
+
+    lcs_match_obj = lcs_id_obj.analyze_input_path_lcs_match_output(input_dir)
+    assert len(lcs_match_obj) == 3
+    assert lcs_match_obj[0].length == 20
+    assert lcs_match_obj[1].length == ''
+    assert lcs_match_obj[2].length == ''
+
     test_file_path2 = join(input_dir, 'subdir', 'subdir2', 'test3.py')
     lcs_match_obj2 = lcs_id_obj.analyze_file_lcs_match_output(test_file_path2)
     assert lcs_match_obj2.license == ''
@@ -173,4 +184,26 @@ def test_truncate_column():
     assert match_summary.truncate_column(3.0) == 3.0
 
 def test_main():
-    pass
+    arg_string = "-I {} -L {}".format(input_dir, license_dir)
+    license_identifier.main(arg_string.split())
+
+def test_main_process_pickle():
+    test_pickle_file = join(BASE_DIR, "test.pickle")
+    if exists(test_pickle_file):
+        remove(test_pickle_file)
+    assert not exists(test_pickle_file)
+    license_identifier.LicenseIdentifier(
+        license_dir = license_dir,
+        pickle_file_path = test_pickle_file)
+    assert exists(test_pickle_file)
+    remove(test_pickle_file)
+
+@patch('pickle.load')
+def test_default_pickle_path(mock_pickle):
+    mock_pickle.return_value = ([], n_gram_obj, n_gram_obj)
+    lic_obj = license_identifier.LicenseIdentifier()
+    result = lic_obj.analyze()
+    lic_obj.output(result)
+    assert mock_pickle.call_count == 1
+    assert abspath(mock_pickle.call_args[0][0].name) \
+        == abspath(license_identifier.DEFAULT_PICKLED_LIBRARY_FILE)

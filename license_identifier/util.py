@@ -2,17 +2,6 @@ import codecs
 import getpass
 import datetime
 
-class file_with_pos(object):
-    def __init__(self, fp):
-        self.fp = fp
-        self.pos = 0
-    def read(self, *args):
-        data = self.fp.read(*args)
-        self.pos += len(data)
-        return data
-    def tell(self):
-        return self.pos
-
 
 def read_lines_offsets(file_name):
     fp = codecs.open(file_name, 'r', encoding='ISO-8859-1')

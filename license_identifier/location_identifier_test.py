@@ -1,6 +1,3 @@
-#
-# Unit Tests to go here
-#
 from . import n_grams as ng
 from . import license_identifier as lcs_id
 from . import location_identifier as loc_id
@@ -9,7 +6,8 @@ from . import util
 from collections import Counter
 from os import getcwd
 from os.path import join
-
+from StringIO import StringIO
+from mock import patch
 
 
 text_list = ['one', 'two', 'three', 'four']
@@ -29,10 +27,30 @@ def get_license_dir():
     license_dir = join(BASE_DIR, 'data', 'test', 'license')
     return license_dir
 
-def test_main_process():
+def test_main_process_default():
     lcs_file = join(get_license_dir(), 'test_license.txt')
     input_file = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
     loc_id_obj = loc_id.Location_Finder()
+    loc_result = loc_id_obj.main_process(lcs_file, input_file)
+    assert loc_result==(1, 2, 5, 24, 1.0)
+    loc_id_obj = loc_id.Location_Finder(1)
+    loc_result = loc_id_obj.main_process(lcs_file, input_file)
+    assert loc_result==(0, 3, 0, 29, 1.0)
+
+def test_main_process_ngram():
+    lcs_file = join(get_license_dir(), 'test_license.txt')
+    input_file = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
+    loc_id_obj = loc_id.Location_Finder(strategy = "ngram")
+    loc_result = loc_id_obj.main_process(lcs_file, input_file)
+    assert loc_result==(1, 2, 5, 24, 1.0)
+    loc_id_obj = loc_id.Location_Finder(1)
+    loc_result = loc_id_obj.main_process(lcs_file, input_file)
+    assert loc_result==(0, 3, 0, 29, 1.0)
+
+def test_main_process_exhaustive():
+    lcs_file = join(get_license_dir(), 'test_license.txt')
+    input_file = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
+    loc_id_obj = loc_id.Location_Finder(strategy = "exhaustive")
     loc_result = loc_id_obj.main_process(lcs_file, input_file)
     assert loc_result==(1, 2, 5, 24, 1.0)
     loc_id_obj = loc_id.Location_Finder(1)
@@ -258,12 +276,36 @@ def test_determine_offsets():
     assert loc_id_obj.determine_offsets(4, 5, src_lines, src_offsets) == (3, 5, 30, 50)
 
 
-def test_expand_to_bottom():
-    pass
+def test_expand_generic():
+    ng_obj = ng.n_grams("a b c d e")
+    src_lines = ["x y", "a b", "c", "d e", "x y"]
+    loc_id_obj = loc_id.Location_Finder()
 
-def test_measure_similarity():
-    pass
+    result = loc_id_obj.expand_generic(
+        license_n_grams = ng_obj,
+        src_lines = src_lines,
+        start_ind = 2,
+        end_ind = 3,
+        score_to_keep = 0.0,
+        start_increment = 1,
+        end_increment = 0)
+    assert result[:2] == (1, 3)
+
+    result = loc_id_obj.expand_generic(
+        license_n_grams = ng_obj,
+        src_lines = src_lines,
+        start_ind = 2,
+        end_ind = 3,
+        score_to_keep = 0.0,
+        start_increment = 0,
+        end_increment = 1)
+    assert result[:2] == (2, 4)
 
 
-
-
+@patch("sys.stdout", new_callable=StringIO)
+def test_top_level_main(mock_stdout):
+    lcs_file = join(get_license_dir(), 'test_license.txt')
+    input_file = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
+    loc_id.main([lcs_file, input_file])
+    expected_output = "LocationResult(start_line=1, end_line=2, start_offset=5, end_offset=24, score=1.0)\n"
+    assert mock_stdout.getvalue() == expected_output
