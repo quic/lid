@@ -3,6 +3,7 @@ import nltk
 import difflib
 import argparse
 
+from . import location_result as lr
 from . import n_grams as ng
 from . import util
 
@@ -73,11 +74,12 @@ class Location_Finder(object):
         start_line, end_line, start_offset, end_offset = \
             self.determine_offsets(start_line, end_line, src_lines, src_offsets)
 
-        return start_line, \
-               end_line, \
-               start_offset, \
-               end_offset, \
-               best_score
+        return lr.LocationResult(
+            start_line = start_line,
+            end_line = end_line,
+            start_offset = start_offset,
+            end_offset = end_offset,
+            score = best_score)
 
     def best_region_exhaustive(self, license_lines, src_lines):
         results = []
