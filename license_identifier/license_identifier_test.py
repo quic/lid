@@ -1,13 +1,11 @@
-#
-# Unit Tests to go here
-#
 from . import n_grams as ng
 from . import license_identifier
 from . import license_match as l_match
 from . import match_summary
+from . import location_identifier
 from collections import Counter
 from os import getcwd
-from os.path import join, dirname, exists
+from os.path import join, dirname, exists, abspath
 from mock import mock_open
 from mock import patch, Mock
 import csv
@@ -70,15 +68,30 @@ def test_init():
     assert 'test_license.txt' in lcs_id_obj.license_file_name_list
     assert license_identifier._universe_n_grams.measure_similarity(n_gram_obj) > 0.5
 
-def test_init_pickle():
+@patch('pickle.dump')
+@patch('pickle.load')
+def test_init_pickle(mock_pickle_load, mock_pickle_dump):
     test_pickle_file = join(BASE_DIR, "test.pickle")
     lcs_id_obj._create_pickled_library(pickle_file=test_pickle_file)
-    assert exists(test_pickle_file)==True
+
+    assert mock_pickle_dump.call_count == 1
+    dump_args = mock_pickle_dump.call_args[0]
+    assert abspath(dump_args[1].name) == abspath(test_pickle_file)
+
+    # Mock version of pickle.load will produce previous inputs to pickle.dump
+    # without touching the filesystem
+    mock_pickle_load.return_value = dump_args[0]
+
     lcs_id_pickle_obj = license_identifier.LicenseIdentifier(
         threshold=threshold,
         input_path=input_dir,
         pickle_file_path=test_pickle_file,
         output_format='easy_read')
+
+    assert mock_pickle_load.call_count == 1
+    assert abspath(mock_pickle_load.call_args[0][0].name) \
+        == abspath(test_pickle_file)
+
     sim_score = license_identifier._universe_n_grams.measure_similarity(license_identifier._universe_n_grams)
 
     assert sim_score == 1.0
@@ -110,12 +123,37 @@ def test_build_summary_list_str(mock_stdout):
     display_str = lcs_id_obj.display_easy_read(result_obj)
     assert mock_stdout.getvalue().find('Summary of the analysis') >= 0
 
+def test_forward_args_to_loc_id():
+    test_file_path = join(input_dir, 'test1.py')
+    lid_obj = license_identifier.LicenseIdentifier(
+        license_dir = license_dir,
+        location_strategy = "exhaustive",
+        penalty_only_license = 3.0,
+        penalty_only_source = 4.0)
+    with patch.object(location_identifier, 'Location_Finder') as m:
+        m.return_value.main_process.return_value = (0, 0, 0, 0, 0)
+        lcs_match_obj = lid_obj.analyze_file(test_file_path)
+        m.assert_called_with(
+            context_lines = 0,
+            strategy = "exhaustive",
+            penalty_only_license = 3.0,
+            penalty_only_source = 4.0)
 
 def test_analyze_file_lcs_match_output():
     # input_fp, threshold=DEFAULT_THRESH_HOLD
     test_file_path = join(input_dir, 'test1.py')
     lcs_match_obj = lcs_id_obj.analyze_file_lcs_match_output(test_file_path)
     assert lcs_match_obj.length == 20
+
+    lcs_match_obj = lcs_id_obj.analyze_input_path_lcs_match_output(test_file_path)
+    assert len(lcs_match_obj) == 1
+    assert lcs_match_obj[0].length == 20
+
+    lcs_match_obj = lcs_id_obj.analyze_input_path_lcs_match_output(input_dir)
+    assert len(lcs_match_obj) == 3
+    assert lcs_match_obj[0].length == 20
+    assert lcs_match_obj[1].length == ''
+    assert lcs_match_obj[2].length == ''
 
     test_file_path2 = join(input_dir, 'subdir', 'subdir2', 'test3.py')
     lcs_match_obj2 = lcs_id_obj.analyze_file_lcs_match_output(test_file_path2)
@@ -157,4 +195,26 @@ def test_truncate_column():
     assert match_summary.truncate_column(3.0) == 3.0
 
 def test_main():
-    pass
+    arg_string = "-I {} -L {}".format(input_dir, license_dir)
+    license_identifier.main(arg_string.split())
+
+@patch('pickle.dump')
+def test_main_process_pickle(mock_pickle_dump):
+    test_pickle_file = join(BASE_DIR, "test.pickle")
+    license_identifier.LicenseIdentifier(
+        license_dir = license_dir,
+        pickle_file_path = test_pickle_file)
+
+    assert mock_pickle_dump.call_count == 1
+    dump_args = mock_pickle_dump.call_args[0]
+    assert abspath(dump_args[1].name) == abspath(test_pickle_file)
+
+@patch('pickle.load')
+def test_default_pickle_path(mock_pickle):
+    mock_pickle.return_value = ([], n_gram_obj, n_gram_obj)
+    lic_obj = license_identifier.LicenseIdentifier()
+    result = lic_obj.analyze()
+    lic_obj.output(result)
+    assert mock_pickle.call_count == 1
+    assert abspath(mock_pickle.call_args[0][0].name) \
+        == abspath(license_identifier.DEFAULT_PICKLED_LIBRARY_FILE)

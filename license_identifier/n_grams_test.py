@@ -31,6 +31,10 @@ def test_init_list_input():
     assert n_grams_obj.bigram_count == bigram_counter
     assert n_grams_obj.trigram_count == trigram_counter
 
+def test_to_string():
+    n_grams_obj = ng.n_grams(text_list)
+    assert str(n_grams_obj) == 'n_grams'
+
 def test_init_text_input():
     n_grams_obj = ng.n_grams(text_line)
     assert n_grams_obj.unigram_count == unigram_counter
@@ -88,3 +92,6 @@ def test_measure_Jaccard_distance():
     # (1/4 + 0 + 0) / 15
     assert n_grams_obj.measure_Jaccard_distance(n_grams_obj3)==1.0/4/15
 
+def test_measure_Jaccard_distance_zero_denom():
+    ng0 = ng.n_grams("")
+    assert ng0.measure_Jaccard_distance(ng0) == 0.0
