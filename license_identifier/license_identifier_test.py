@@ -4,7 +4,7 @@ from . import license_match as l_match
 from . import match_summary
 from . import location_identifier
 from collections import Counter
-from os import getcwd, remove
+from os import getcwd
 from os.path import join, dirname, exists, abspath
 from mock import mock_open
 from mock import patch, Mock
@@ -68,19 +68,30 @@ def test_init():
     assert 'test_license.txt' in lcs_id_obj.license_file_name_list
     assert license_identifier._universe_n_grams.measure_similarity(n_gram_obj) > 0.5
 
-def test_init_pickle():
+@patch('pickle.dump')
+@patch('pickle.load')
+def test_init_pickle(mock_pickle_load, mock_pickle_dump):
     test_pickle_file = join(BASE_DIR, "test.pickle")
-    if exists(test_pickle_file):
-        remove(test_pickle_file)
-    assert not exists(test_pickle_file)
     lcs_id_obj._create_pickled_library(pickle_file=test_pickle_file)
-    assert exists(test_pickle_file)
+
+    assert mock_pickle_dump.call_count == 1
+    dump_args = mock_pickle_dump.call_args[0]
+    assert abspath(dump_args[1].name) == abspath(test_pickle_file)
+
+    # Mock version of pickle.load will produce previous inputs to pickle.dump
+    # without touching the filesystem
+    mock_pickle_load.return_value = dump_args[0]
+
     lcs_id_pickle_obj = license_identifier.LicenseIdentifier(
         threshold=threshold,
         input_path=input_dir,
         pickle_file_path=test_pickle_file,
         output_format='easy_read')
-    remove(test_pickle_file)
+
+    assert mock_pickle_load.call_count == 1
+    assert abspath(mock_pickle_load.call_args[0][0].name) \
+        == abspath(test_pickle_file)
+
     sim_score = license_identifier._universe_n_grams.measure_similarity(license_identifier._universe_n_grams)
 
     assert sim_score == 1.0
@@ -187,16 +198,16 @@ def test_main():
     arg_string = "-I {} -L {}".format(input_dir, license_dir)
     license_identifier.main(arg_string.split())
 
-def test_main_process_pickle():
+@patch('pickle.dump')
+def test_main_process_pickle(mock_pickle_dump):
     test_pickle_file = join(BASE_DIR, "test.pickle")
-    if exists(test_pickle_file):
-        remove(test_pickle_file)
-    assert not exists(test_pickle_file)
     license_identifier.LicenseIdentifier(
         license_dir = license_dir,
         pickle_file_path = test_pickle_file)
-    assert exists(test_pickle_file)
-    remove(test_pickle_file)
+
+    assert mock_pickle_dump.call_count == 1
+    dump_args = mock_pickle_dump.call_args[0]
+    assert abspath(dump_args[1].name) == abspath(test_pickle_file)
 
 @patch('pickle.load')
 def test_default_pickle_path(mock_pickle):
