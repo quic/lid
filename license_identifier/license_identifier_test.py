@@ -152,10 +152,11 @@ def test_analyze_file_lcs_match_output():
     assert lcs_match_obj[0].length == 20
 
     lcs_match_obj = lcs_id_obj.analyze_input_path_lcs_match_output(input_dir)
-    assert len(lcs_match_obj) == 3
-    assert lcs_match_obj[0].length == 20
-    assert lcs_match_obj[1].length == ''
+    assert len(lcs_match_obj) == 4
+    assert lcs_match_obj[0].length == 19
+    assert lcs_match_obj[1].length == 20
     assert lcs_match_obj[2].length == ''
+    assert lcs_match_obj[3].length == ''
 
     test_file_path2 = join(input_dir, 'subdir', 'subdir2', 'test3.py')
     lcs_match_obj2 = lcs_id_obj.analyze_file_lcs_match_output(test_file_path2)
@@ -169,7 +170,11 @@ def test_analyze_file():
 def test_analyze_input_path():
     fp = join(BASE_DIR, 'data', 'test', 'data')
     list_of_result_obj = lcs_id_obj.analyze_input_path(input_path=fp)
-    assert list_of_result_obj[0][1][1] == 'test_license'
+    assert len(list_of_result_obj) == 4
+    assert list_of_result_obj[0][1].matched_license == 'custom_license'
+    assert list_of_result_obj[1][1].matched_license == 'test_license'
+    assert list_of_result_obj[2][1].matched_license == ''
+    assert list_of_result_obj[3][1].matched_license == ''
 
 def test_find_license_region():
     lic = lcs_id_obj.license_library.licenses['test_license']
