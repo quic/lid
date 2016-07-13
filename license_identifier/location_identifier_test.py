@@ -1,26 +1,17 @@
-from . import n_grams as ng
 from . import license_identifier as lcs_id
 from . import location_identifier as loc_id
 from . import util
+from . import prep
+from . import scores
 
 from collections import Counter
 from os import getcwd
-from os.path import join
+from os.path import join, abspath
 from StringIO import StringIO
-from mock import patch
+from mock import patch, mock_open
+import six
 
 
-text_list = ['one', 'two', 'three', 'four']
-text_line = 'one\ntwo\nthree\nfour'
-text_line_crlf = 'one\r\ntwo\r\nthree\r\nfour'
-
-unigram_counter = Counter(['one', 'two', 'three', 'four'])
-bigram_counter = Counter([('two', 'one'),
-                          ('three', 'two'),
-                          ('four', 'three')])
-trigram_counter = Counter([('three', 'two', 'one'),
-                          ('four', 'three', 'two')])
-n_gram_obj = ng.n_grams(text_list)
 BASE_DIR = join(getcwd(), "..")
 
 def get_license_dir():
@@ -31,59 +22,60 @@ def test_main_process_default():
     lcs_file = join(get_license_dir(), 'test_license.txt')
     input_file = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
     loc_id_obj = loc_id.Location_Finder()
-    loc_result = loc_id_obj.main_process(lcs_file, input_file)
+    assert loc_id_obj.strategy == "one_line_then_expand"
+    assert loc_id_obj.similarity == "edit_weighted"
+    lic = prep.License.from_filename(lcs_file)
+    src = prep.Source.from_filename(input_file)
+    loc_result = loc_id_obj.main_process(lic, src)
     assert loc_result==(1, 2, 5, 24, 1.0)
-    loc_id_obj = loc_id.Location_Finder(1)
-    loc_result = loc_id_obj.main_process(lcs_file, input_file)
+
+    loc_id_obj = loc_id.Location_Finder(context_lines = 1)
+    loc_result = loc_id_obj.main_process(lic, src)
     assert loc_result==(0, 3, 0, 29, 1.0)
 
 def test_main_process_ngram():
     lcs_file = join(get_license_dir(), 'test_license.txt')
     input_file = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
-    loc_id_obj = loc_id.Location_Finder(strategy = "ngram")
-    loc_result = loc_id_obj.main_process(lcs_file, input_file)
+    loc_id_obj = loc_id.Location_Finder(strategy = "window_then_expand", similarity = "ngram")
+    lic = prep.License.from_filename(lcs_file)
+    src = prep.Source.from_filename(input_file)
+    loc_result = loc_id_obj.main_process(lic, src)
     assert loc_result==(1, 2, 5, 24, 1.0)
-    loc_id_obj = loc_id.Location_Finder(1)
-    loc_result = loc_id_obj.main_process(lcs_file, input_file)
+
+    loc_id_obj = loc_id.Location_Finder(context_lines = 1)
+    loc_result = loc_id_obj.main_process(lic, src)
     assert loc_result==(0, 3, 0, 29, 1.0)
 
 def test_main_process_exhaustive():
     lcs_file = join(get_license_dir(), 'test_license.txt')
     input_file = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
-    loc_id_obj = loc_id.Location_Finder(strategy = "exhaustive")
-    loc_result = loc_id_obj.main_process(lcs_file, input_file)
+    loc_id_obj = loc_id.Location_Finder(strategy = "exhaustive", similarity = "edit_weighted")
+    lic = prep.License.from_filename(lcs_file)
+    src = prep.Source.from_filename(input_file)
+    loc_result = loc_id_obj.main_process(lic, src)
     assert loc_result==(1, 2, 5, 24, 1.0)
-    loc_id_obj = loc_id.Location_Finder(1)
-    loc_result = loc_id_obj.main_process(lcs_file, input_file)
+
+    loc_id_obj = loc_id.Location_Finder(context_lines = 1)
+    loc_result = loc_id_obj.main_process(lic, src)
     assert loc_result==(0, 3, 0, 29, 1.0)
 
-def test_find_best_region():
+def test_find_best_window_expansion():
     lcs_file = join(get_license_dir(), 'test_license.txt')
     input_file = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
     loc_id_obj = loc_id.Location_Finder()
 
-    [license_lines, license_offsets]= util.read_lines_offsets(lcs_file)
-    [src_lines, src_offsets] = util.read_lines_offsets(input_file)
-
-    window_size = len(license_lines)
-    src_size = len(src_lines)
-
-    license_n_grams = ng.n_grams(license_lines)
+    lic = prep.License.from_filename(lcs_file)
+    src = prep.Source.from_filename(input_file)
 
     [similarity_scores, window_start_index] = \
-        loc_id_obj.split_and_measure_similarities(
-            src_size = src_size,
-            src_lines = src_lines,
-            window_size = window_size,
-            license_n_grams = license_n_grams)
+        loc_id_obj.split_and_measure_similarities(lic = lic, src = src)
     [max_score, max_index] = loc_id_obj.find_max_score_ind(similarity_scores=similarity_scores)
 
-    loc_result = loc_id_obj.find_best_region(
+    loc_result = loc_id_obj.find_best_window_expansion(
         max_index = max_index,
-        license_n_grams = license_n_grams,
-        src_lines = src_lines,
-        window_start_index = window_start_index,
-        window_size = window_size)
+        lic = lic,
+        src = src,
+        window_start_index = window_start_index)
     assert loc_result == (1, 2, 1.0)
 
 def test_find_max_score_ind():
@@ -91,20 +83,11 @@ def test_find_max_score_ind():
     input_file = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
     loc_id_obj = loc_id.Location_Finder()
 
-    [license_lines, license_offsets]= util.read_lines_offsets(lcs_file)
-    [src_lines, src_offsets] = util.read_lines_offsets(input_file)
-
-    window_size = len(license_lines)
-    src_size = len(src_lines)
-
-    license_n_grams = ng.n_grams(license_lines)
+    lic = prep.License.from_filename(lcs_file)
+    src = prep.Source.from_filename(input_file)
 
     [similarity_scores, window_start_index] = \
-        loc_id_obj.split_and_measure_similarities(
-            src_size = src_size,
-            src_lines = src_lines,
-            window_size = window_size,
-            license_n_grams = license_n_grams)
+        loc_id_obj.split_and_measure_similarities(lic = lic, src = src)
     [max_score, max_index] = loc_id_obj.find_max_score_ind(similarity_scores=similarity_scores)
     assert max_score == 1.0
     assert max_index[0] == 1
@@ -115,20 +98,11 @@ def test_split_and_measure_similarities():
     input_file = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
     loc_id_obj = loc_id.Location_Finder()
 
-    [license_lines, license_offsets]= util.read_lines_offsets(lcs_file)
-    [src_lines, src_offsets] = util.read_lines_offsets(input_file)
-
-    window_size = len(license_lines)
-    src_size = len(src_lines)
-
-    license_n_grams = ng.n_grams(license_lines)
+    lic = prep.License.from_filename(lcs_file)
+    src = prep.Source.from_filename(input_file)
 
     [similarity_scores, window_start_index] = \
-        loc_id_obj.split_and_measure_similarities(
-            src_size = src_size,
-            src_lines = src_lines,
-            window_size = window_size,
-            license_n_grams = license_n_grams)
+        loc_id_obj.split_and_measure_similarities(lic = lic, src = src)
     assert similarity_scores == [0.0, 1.0, 0.0, 0.0, 0.0]
     assert window_start_index == [0, 1, 2, 3, 4]
 
@@ -138,20 +112,11 @@ def test_expand_window():
     input_file = join(BASE_DIR, 'data', 'test', 'data', 'subdir', 'subdir2', 'test3.py')
     loc_id_obj = loc_id.Location_Finder()
 
-    [license_lines, license_offsets]= util.read_lines_offsets(lcs_file)
-    [src_lines, src_offsets] = util.read_lines_offsets(input_file)
-
-    window_size = len(license_lines)
-    src_size = len(src_lines)
-
-    license_n_grams = ng.n_grams(license_lines)
+    lic = prep.License.from_filename(lcs_file)
+    src = prep.Source.from_filename(input_file)
 
     [similarity_scores, window_start_index] = \
-        loc_id_obj.split_and_measure_similarities(
-            src_size = src_size,
-            src_lines = src_lines,
-            window_size = window_size,
-            license_n_grams = license_n_grams)
+        loc_id_obj.split_and_measure_similarities(lic = lic, src = src)
     [max_score, max_index] = loc_id_obj.find_max_score_ind(similarity_scores=similarity_scores)
 
     # for maximum scores that share the same value
@@ -161,10 +126,7 @@ def test_expand_window():
 
     for max_ind in max_index:
         [s_ind, e_ind, final_s] = loc_id_obj.expand_window(
-            license_n_grams = license_n_grams,
-            src_lines = src_lines,
-            start_ind = window_start_index[max_ind],
-            window_size = window_size)
+            lic = lic, src = src, start_ind = window_start_index[max_ind])
         start_index.append(s_ind)
         end_index.append(e_ind)
         final_score.append(final_s)
@@ -184,20 +146,11 @@ def test_expand_to_top():
     input_file = join(BASE_DIR, 'data', 'test', 'data', 'subdir', 'subdir2', 'test3.py')
     loc_id_obj = loc_id.Location_Finder()
 
-    [license_lines, license_offsets]= util.read_lines_offsets(lcs_file)
-    [src_lines, src_offsets] = util.read_lines_offsets(input_file)
-
-    window_size = len(license_lines)
-    src_size = len(src_lines)
-
-    license_n_grams = ng.n_grams(license_lines)
+    lic = prep.License.from_filename(lcs_file)
+    src = prep.Source.from_filename(input_file)
 
     [similarity_scores, window_start_index] = \
-        loc_id_obj.split_and_measure_similarities(
-            src_size = src_size,
-            src_lines = src_lines,
-            window_size = window_size,
-            license_n_grams = license_n_grams)
+        loc_id_obj.split_and_measure_similarities(lic = lic, src = src)
     [max_score, max_index] = loc_id_obj.find_max_score_ind(similarity_scores=similarity_scores)
 
     # for maximum scores that share the same value
@@ -206,57 +159,48 @@ def test_expand_to_top():
     end_index =[]
 
 
-def test_measure_similarity_difflib():
-    loc_id_obj = loc_id.Location_Finder(
-        penalty_only_source = 2.0,
-        penalty_only_license = 3.0)
-    assert loc_id_obj.measure_similarity_difflib(["a"], ["a"], 0, 1) == 1.0
-    assert loc_id_obj.measure_similarity_difflib([""], ["a"], 0, 1) == 0.0
-    assert loc_id_obj.measure_similarity_difflib(["a"], [""], 0, 1) == 0.0
-    assert loc_id_obj.measure_similarity_difflib(["a b"], ["a"], 0, 1) == 1/4.
-    assert loc_id_obj.measure_similarity_difflib(["a"], ["a b"], 0, 1) == 1/3.
-    assert loc_id_obj.measure_similarity_difflib(["a b"], ["a c"], 0, 1) == 1/6.
-
-
 def test_one_line_then_expand():
     loc_id_obj = loc_id.Location_Finder(
+        similarity = "edit_weighted",
         overshoot = 5,
         penalty_only_source = 2.0,
         penalty_only_license = 3.0)
-    license_lines = ["a b c", "d e f"]
-    src_lines = ["x", "x", "a", "x", "x",
-                 "b y d e", "x", "f", "x", "x"]
-    result = loc_id_obj.one_line_then_expand(license_lines, src_lines)
+    lic = prep.License.from_lines(["a b c", "d e f"])
+    src = prep.Source.from_lines(
+        ["x", "x", "a", "x", "x", "b y d e", "x", "f", "x", "x"])
+    result = loc_id_obj.one_line_then_expand(lic, src)
     expected_score = 5.0 / (5.0 + 2.0 * 4 + 3.0 * 1)
     assert result == (2, 8, expected_score)
 
     # Test without any overshoot
     loc_id_obj = loc_id.Location_Finder(
+        similarity = "edit_weighted",
         overshoot = 0,
         penalty_only_source = 2.0,
         penalty_only_license = 3.0)
-    result = loc_id_obj.one_line_then_expand(license_lines, src_lines)
+    result = loc_id_obj.one_line_then_expand(lic, src)
     expected_score = 3.0 / (3.0 + 2.0 * 1 + 3.0 * 3)
     assert result == (5, 6, expected_score)
 
     # Test case where this heuristic fails to find the global optimum
-    license_lines = ["a b c", "d e f"]
-    src_lines = ["x", "x", "b c d e", "x", "x",
-                 "a b", "c d", "e f", "x", "x"]
-    result = loc_id_obj.one_line_then_expand(license_lines, src_lines)
+    src = prep.Source.from_lines(
+        ["x", "x", "b c d e", "x", "x", "a b", "c d", "e f", "x", "x"])
+    result = loc_id_obj.one_line_then_expand(lic, src)
     expected_score = 4.0 / (4.0 + 3.0 * 2)
     assert result == (2, 3, expected_score)
 
 
 def test_exhaustive():
     loc_id_obj = loc_id.Location_Finder(
+        similarity = "edit_weighted",
         overshoot = 5,
         penalty_only_source = 2.0,
         penalty_only_license = 3.0)
-    license_lines = ["a b c", "d e f"]
-    src_lines = ["x", "x", "b c d e", "x", "x",
-                 "a b", "c d", "e f", "x", "x"]
-    result = loc_id_obj.best_region_exhaustive(license_lines, src_lines)
+    lic = prep.License.from_lines(["a b c", "d e f"])
+    src = prep.Source.from_lines(
+        ["x", "x", "b c d e", "x", "x",
+            "a b", "c d", "e f", "x", "x"])
+    result = loc_id_obj.best_region_exhaustive(lic, src)
     assert result == (5, 8, 1.0)
 
 
@@ -277,13 +221,13 @@ def test_determine_offsets():
 
 
 def test_expand_generic():
-    ng_obj = ng.n_grams("a b c d e")
-    src_lines = ["x y", "a b", "c", "d e", "x y"]
-    loc_id_obj = loc_id.Location_Finder()
+    loc_id_obj = loc_id.Location_Finder(similarity = "ngram")
+    src = prep.Source.from_lines(["x y", "a b", "c", "d e", "x y"])
+    lic = prep.License.from_lines(["a b c d e"])
 
     result = loc_id_obj.expand_generic(
-        license_n_grams = ng_obj,
-        src_lines = src_lines,
+        lic = lic,
+        src = src,
         start_ind = 2,
         end_ind = 3,
         score_to_keep = 0.0,
@@ -292,8 +236,8 @@ def test_expand_generic():
     assert result[:2] == (1, 3)
 
     result = loc_id_obj.expand_generic(
-        license_n_grams = ng_obj,
-        src_lines = src_lines,
+        lic = lic,
+        src = src,
         start_ind = 2,
         end_ind = 3,
         score_to_keep = 0.0,
@@ -309,3 +253,27 @@ def test_top_level_main(mock_stdout):
     loc_id.main([lcs_file, input_file])
     expected_output = "LocationResult(start_line=1, end_line=2, start_offset=5, end_offset=24, score=1.0)\n"
     assert mock_stdout.getvalue() == expected_output
+
+
+@patch("pickle.load")
+@patch("sys.stdout", new_callable=StringIO)
+def test_top_level_main_pickled_license_library(mock_stdout, mock_pickle_load):
+    pickle_file = join(BASE_DIR, "test.pickle")
+    mock_pickle_load.return_value = prep.LicenseLibrary(
+        licenses = dict(), universe_n_grams = None)
+
+    lcs_file = join(get_license_dir(), 'test_license.txt')
+    input_file = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
+
+    loc_id.main([lcs_file, input_file, "-P", pickle_file])
+
+    expected_output = "LocationResult(start_line=1, end_line=2, start_offset=5, end_offset=24, score=1.0)\n"
+    assert mock_stdout.getvalue() == expected_output
+    assert abspath(mock_pickle_load.call_args[0][0].name) == abspath(pickle_file)
+
+
+def mklic(lines):
+    return prep.License.from_lines(lines)
+
+def mksrc(lines):
+    return prep.Source.from_lines(lines)

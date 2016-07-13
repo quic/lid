@@ -1,6 +1,7 @@
 import codecs
 import getpass
 import datetime
+import os, os.path
 
 
 def read_lines_offsets(file_name):
@@ -17,6 +18,15 @@ def read_lines_offsets(file_name):
     return lines, line_offsets
 
 
+def get_lines_and_line_offsets(lines):
+    lines_stripped = []
+    line_offsets = [0]
+    for line in lines:
+        line_offsets.append(line_offsets[-1] + len(line))
+        lines_stripped.append(line.rstrip('\n'))
+    return lines_stripped, line_offsets
+
+
 def get_user_date_time_str():
     # add user name and date_time
     user_name = getpass.getuser()
@@ -30,3 +40,16 @@ def get_user_date_time_str():
         min = start_date_time.minute
     )
     return start_dt_str
+
+
+def files_from_path(path):
+    if os.path.isfile(path):
+        return [path]
+    elif os.path.isdir(path):
+        result = []
+        for root, dirs, files in os.walk(path):
+            for f in files:
+                result.append(os.path.join(root, f))
+        return result
+    else:  # pragma: no cover
+        raise Exception("Not a file or a directory: {}".format(path))

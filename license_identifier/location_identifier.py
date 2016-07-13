@@ -3,10 +3,13 @@ import nltk
 import difflib
 import argparse
 import sys
+import pickle
 
 from . import location_result as lr
 from . import n_grams as ng
 from . import util
+from . import scores
+from . import prep
 
 
 DEFAULT_CONTEXT = 0
@@ -14,6 +17,7 @@ DEFAULT_PENALTY_ONLY_SOURCE = 1.0
 DEFAULT_PENALTY_ONLY_LICENSE = 50.0
 DEFAULT_OVERSHOOT = 5
 DEFAULT_STRATEGY = "one_line_then_expand"
+DEFAULT_SIMILARITY = "edit_weighted"
 DEFAULT_VERBOSITY = 0
 
 
@@ -24,20 +28,36 @@ def main(argv = []):
     parser.add_argument("-v", "--verbose", action="count", dest="verbosity")
     parser.add_argument("--context_lines", type=int)
     parser.add_argument("--strategy", default=DEFAULT_STRATEGY)
+    parser.add_argument("--similarity", default=DEFAULT_SIMILARITY)
     parser.add_argument("--overshoot", type=int, default=DEFAULT_OVERSHOOT)
+    parser.add_argument("-P", "--pickled_license_library")
     parser.add_argument("--penalty_only_source", type=float,
         default=DEFAULT_PENALTY_ONLY_SOURCE)
     parser.add_argument("--penalty_only_license", type=float,
         default=DEFAULT_PENALTY_ONLY_LICENSE)
     args = parser.parse_args(argv)
+
+    if args.pickled_license_library is not None:
+        with open(args.pickled_license_library) as f:
+            license_library = pickle.load(f)
+        universe_n_grams = license_library.universe_n_grams
+    else:
+        universe_n_grams = None
+
     loc_obj = Location_Finder(
         context_lines = args.context_lines,
         penalty_only_source = args.penalty_only_source,
         penalty_only_license = args.penalty_only_license,
+        universe_n_grams = universe_n_grams,
         overshoot = args.overshoot,
+        similarity = args.similarity,
         strategy = args.strategy,
         verbosity = args.verbosity)
-    print(loc_obj.main_process(args.license_file, args.input_src_file))
+
+    lic = prep.License.from_filename(args.license_file)
+    src = prep.Source.from_filename(args.input_src_file)
+
+    print(loc_obj.main_process(lic, src))
 
 
 class Location_Finder(object):
@@ -46,34 +66,67 @@ class Location_Finder(object):
             context_lines = DEFAULT_CONTEXT,
             penalty_only_source = DEFAULT_PENALTY_ONLY_SOURCE,
             penalty_only_license = DEFAULT_PENALTY_ONLY_LICENSE,
+            universe_n_grams = None,
             overshoot = DEFAULT_OVERSHOOT,
             strategy = DEFAULT_STRATEGY,
+            similarity = DEFAULT_SIMILARITY,
             verbosity = DEFAULT_VERBOSITY):
         self.context_lines = context_lines
         self.penalty_only_source = penalty_only_source
         self.penalty_only_license = penalty_only_license
+        self.universe_n_grams = universe_n_grams
         self.overshoot = overshoot
-        self.strategy = strategy
+        self.strategy = Location_Finder._check_strategy(strategy)
+        self.similarity = Location_Finder._check_similarity(similarity)
         self.verbosity = verbosity
+        self._init_similarity_obj()
 
-    def main_process(self, license_file, input_src_file):
-        license_lines, license_offsets = util.read_lines_offsets(license_file)
-        src_lines, src_offsets = util.read_lines_offsets(input_src_file)
+    @staticmethod
+    def _check_similarity(similarity):
+        allowed_similarity_types = [
+            "edit_weighted",
+            "ngram",
+        ]
+        assert similarity in allowed_similarity_types, \
+            "Unrecognized similarity: {}".format(similarity)
+        return similarity
 
+    @staticmethod
+    def _check_strategy(strategy):
+        allowed_strategies = [
+            "exhaustive",
+            "one_line_then_expand",
+            "window_then_expand",
+        ]
+        assert strategy in allowed_strategies, \
+            "Unrecognized strategy: {}".format(strategy)
+        return strategy
+
+    def _init_similarity_obj(self):
+        if self.similarity == "edit_weighted":
+            self.similarity_obj = scores.EditWeightedSimilarity(
+                penalty_only_source = self.penalty_only_source,
+                penalty_only_license = self.penalty_only_license)
+        elif self.similarity == "ngram":
+            self.similarity_obj = scores.NgramSimilarity(
+                universe_n_grams = self.universe_n_grams)
+
+    def main_process(self, lic, src):
         if self.strategy == "exhaustive":
             start_line, end_line, best_score = \
-                self.best_region_exhaustive(license_lines, src_lines)
+                self.best_region_exhaustive(lic, src)
         elif self.strategy == "one_line_then_expand":
             start_line, end_line, best_score = \
-                self.one_line_then_expand(license_lines, src_lines)
-        elif self.strategy == "ngram":
+                self.one_line_then_expand(lic, src)
+        elif self.strategy == "window_then_expand":
             start_line, end_line, best_score = \
-                self.best_region_ngram(license_lines, src_lines)
+                self.window_then_expand(lic, src)
         else:  # pragma: no cover
             raise Exception("Unrecognized strategy: {}".format(self.strategy))
 
         start_line, end_line, start_offset, end_offset = \
-            self.determine_offsets(start_line, end_line, src_lines, src_offsets)
+            self.determine_offsets(start_line, end_line,
+            src.lines, src.offsets_by_line)
 
         return lr.LocationResult(
             start_line = start_line,
@@ -82,15 +135,12 @@ class Location_Finder(object):
             end_offset = end_offset,
             score = best_score)
 
-    def best_region_exhaustive(self, license_lines, src_lines):
+    def best_region_exhaustive(self, lic, src):
         results = []
-        for start_line in range(len(src_lines)):
-            for end_line in range(start_line + 1, len(src_lines)):
-                score = self.measure_similarity_difflib(
-                    other_lines = license_lines,
-                    src_lines = src_lines,
-                    start_ind = start_line,
-                    end_ind = end_line)
+        for start_line in range(len(src.lines)):
+            for end_line in range(start_line + 1, len(src.lines) + 1):
+                src_subset = src.subset(start_line, end_line)
+                score = self.similarity_obj.score(lic, src_subset)
                 results.append((start_line, end_line, score))
 
         if self.verbosity >= 1:  # pragma: no cover
@@ -102,16 +152,13 @@ class Location_Finder(object):
         start_line, end_line, best_score = max(results, key = lambda x: x[2])
         return start_line, end_line, best_score
 
-    def one_line_then_expand(self, license_lines, src_lines):
+    def one_line_then_expand(self, lic, src):
         # First, find best single line
         results = []
-        for line in range(len(src_lines)):
-            score = self.measure_similarity_difflib(
-                    other_lines = license_lines,
-                    src_lines = src_lines,
-                    start_ind = line,
-                    end_ind = line + 1)
-            results.append((line, line + 1, score))
+        for line_index in range(len(src.lines)):
+            src_subset = src.subset(line_index, line_index + 1)
+            score = self.similarity_obj.score(lic, src_subset)
+            results.append((line_index, line_index + 1, score))
 
         if self.verbosity >= 1:  # pragma: no cover
             sorted_results = sorted(results, key = lambda x: x[2])
@@ -129,17 +176,15 @@ class Location_Finder(object):
                 print("Current region: {}-{}".format(start_line, end_line))
 
             # Expand region upward
-            start_line, end_line, best_score = self.expand_difflib(
-                license_lines, src_lines,
-                start_line, end_line, best_score, top = True)
+            start_line, end_line, best_score = self.expand(
+                lic, src, start_line, end_line, best_score, top = True)
 
             if self.verbosity >= 1:  # pragma: no cover
                 print("Current region: {}-{}".format(start_line, end_line))
 
             # Expand region downward
-            start_line, end_line, best_score = self.expand_difflib(
-                license_lines, src_lines,
-                start_line, end_line, best_score, top = False)
+            start_line, end_line, best_score = self.expand(
+                lic, src, start_line, end_line, best_score, top = False)
 
             if start_line == prev_start_line and end_line == prev_end_line:
                 break
@@ -149,8 +194,7 @@ class Location_Finder(object):
 
         return start_line, end_line, best_score
 
-    def expand_difflib(self, license_lines, src_lines,
-            start_line, end_line, score_to_beat, top):
+    def expand(self, lic, src, start_line, end_line, score_to_beat, top):
         if top:
             update = lambda x,y: (x-1,y)
         else:
@@ -163,16 +207,14 @@ class Location_Finder(object):
         best_score = score_to_beat
 
         while True:
-            if start_line < 0: break
-            if end_line > len(src_lines): break
             if overshoot_remaining <= 0: break
 
             start_line, end_line = update(start_line, end_line)
-            score = self.measure_similarity_difflib(
-                    other_lines = license_lines,
-                    src_lines = src_lines,
-                    start_ind = start_line,
-                    end_ind = end_line)
+            if start_line < 0: break
+            if end_line > len(src.lines): break
+
+            src_subset = src.subset(start_line, end_line)
+            score = self.similarity_obj.score(lic, src_subset)
 
             current_result = (start_line, end_line, score)
             results.append(current_result)
@@ -190,36 +232,25 @@ class Location_Finder(object):
 
         return best_start_line, best_end_line, best_score
 
-    def best_region_ngram(self, license_lines, src_lines):
-        # 1. configure the text window size
-        window_size = len(license_lines)
-        src_size = len(src_lines)
-
-        license_n_grams = ng.n_grams(license_lines)
-
-        # 2. split up the window and loop over the windows
+    def window_then_expand(self, lic, src):
+        # split up the window and loop over the windows
         # for small source file case
         # TODO: check if they match & score
         [similarity_scores, window_start_index] = \
-            self.split_and_measure_similarities(
-                src_size = src_size,
-                src_lines = src_lines,
-                window_size = window_size,
-                license_n_grams = license_n_grams)
+            self.split_and_measure_similarities(lic, src)
 
         # Find the window with maximum scores.
         [max_score, max_index] = self.find_max_score_ind(similarity_scores)
 
         # Expand and find the region with maximum score
-        return self.find_best_region(
+        return self.find_best_window_expansion(
             max_index = max_index,
-            license_n_grams = license_n_grams,
-            src_lines = src_lines,
-            window_start_index = window_start_index,
-            window_size = window_size)
+            lic = lic,
+            src = src,
+            window_start_index = window_start_index)
 
-    def find_best_region(self, max_index, license_n_grams,
-                         src_lines, window_start_index, window_size):
+    def find_best_window_expansion(
+            self, max_index, lic, src, window_start_index):
         # for maximum scores that share the same value
         final_score = []
         start_index = []
@@ -229,10 +260,9 @@ class Location_Finder(object):
         for max_ind in max_index:
             # 5. Expand until the line addition does not add any gain in similarity measure
             [s_ind, e_ind, final_s] = self.expand_window(
-                license_n_grams = license_n_grams,
-                src_lines = src_lines,
-                start_ind = window_start_index[max_ind],
-                window_size = window_size)
+                lic = lic,
+                src = src,
+                start_ind = window_start_index[max_ind])
             start_index.append(s_ind)
             end_index.append(e_ind)
             final_score.append(final_s)
@@ -268,27 +298,27 @@ class Location_Finder(object):
         max_index = [i for i, j in enumerate(similarity_scores) if j == max_score]
         return max_score, max_index
 
-    def split_and_measure_similarities(self, src_size, src_lines,
-            window_size, license_n_grams):
+    def split_and_measure_similarities(self, lic, src):
         '''split up the window and loop over the windows
         for small source file case
         TODO: check if they match & score
         '''
+        window_size = len(lic.lines)
         window_start_ind = 0
         window_end_ind = window_size
 
         similarity_scores = []
         window_start_index = []
 
-        index_increment = math.floor(window_size / 2)
+        index_increment = int(math.floor(window_size / 2))
 
         if index_increment == 0:
             index_increment = 1
-        while (window_start_ind < src_size):
+        while (window_start_ind < len(src.lines)):
             # create the sliding window
-            # 3. find the similarity measure for each window
-            similarity_score = self.measure_similarity(
-                license_n_grams, src_lines, window_start_ind, window_end_ind)
+            # find the similarity measure for each window
+            src_subset = src.subset(window_start_ind, window_end_ind)
+            similarity_score = self.similarity_obj.score(lic, src_subset)
 
             # keep track of the scores
             similarity_scores.append(similarity_score)
@@ -301,25 +331,24 @@ class Location_Finder(object):
             window_end_ind += index_increment
         return similarity_scores, window_start_index
 
-
-    def expand_window(self, license_n_grams, src_lines, start_ind, window_size):
-
+    def expand_window(self, lic, src, start_ind):
         # find the baseline score
+        window_size = len(lic.lines)
         end_ind = start_ind + window_size
-        score_to_keep = self.measure_similarity(
-            license_n_grams, src_lines, start_ind, end_ind)
+        src_subset = src.subset(start_ind, end_ind)
+        score_to_keep = self.similarity_obj.score(lic, src_subset)
         # TODO: possibly use regular expression to find the start and end
         for increment in [3, 2, 1]:
             start_ind, end_ind, score_to_keep = self.expand_generic(
-                license_n_grams, src_lines, start_ind, end_ind,
+                lic, src, start_ind, end_ind,
                 score_to_keep, start_increment = increment, end_increment = 0)
         for increment in [5, 4, 3, 2, 1]:
             start_ind, end_ind, score_to_keep = self.expand_generic(
-                license_n_grams, src_lines, start_ind, end_ind,
+                lic, src, start_ind, end_ind,
                 score_to_keep, start_increment = 0, end_increment = increment)
-        return int(start_ind), int(end_ind), score_to_keep
+        return start_ind, end_ind, score_to_keep
 
-    def expand_generic(self, license_n_grams, src_lines, start_ind, end_ind,
+    def expand_generic(self, lic, src, start_ind, end_ind,
             score_to_keep, start_increment, end_increment):
         assert start_increment >= 0 and end_increment >= 0, \
             "Cannot use negative increments"
@@ -329,10 +358,9 @@ class Location_Finder(object):
             start_ind -= start_increment
             end_ind += end_increment
 
-            if start_ind >= 0 and end_ind < len(src_lines):
-
-                score = self.measure_similarity(license_n_grams, src_lines,
-                                                start_ind, end_ind)
+            if start_ind >= 0 and end_ind <= len(src.lines):
+                src_subset = src.subset(start_ind, end_ind)
+                score = self.similarity_obj.score(lic, src_subset)
                 if (score <= score_to_keep):
                     start_ind += start_increment
                     end_ind -= end_increment
@@ -346,40 +374,7 @@ class Location_Finder(object):
                 start_ind += start_increment
                 end_ind -= end_increment
                 break
-        return int(start_ind), int(end_ind), score_to_keep
-
-    def measure_similarity_difflib(self, other_lines, src_lines, start_ind, end_ind):
-        list_text = src_lines[int(start_ind):int(end_ind)]
-
-        tok = nltk.tokenize.WordPunctTokenizer()
-        this_tokens = tok.tokenize('\n'.join(list_text))
-        other_tokens = tok.tokenize('\n'.join(other_lines))
-
-        matcher = difflib.SequenceMatcher(
-            isjunk = None,
-            a = this_tokens,
-            b = other_tokens,
-            autojunk = False)
-
-        unchanged = 0.0
-        changed = 0.0
-        for op, ts1, te1, ts2, te2 in matcher.get_opcodes():
-            num_tokens_this  = te1 - ts1
-            num_tokens_other = te2 - ts2
-            if op == "equal":
-                unchanged += num_tokens_this
-            else:
-                changed += \
-                    self.penalty_only_source * num_tokens_this + \
-                    self.penalty_only_license * num_tokens_other
-
-        similarity = unchanged / (changed + unchanged)
-        return similarity
-
-    def measure_similarity(self, other_n_grams, src_lines, start_ind, end_ind):
-        list_text = src_lines[int(start_ind):int(end_ind)]
-        this_n_grams = ng.n_grams(list_text)
-        return other_n_grams.measure_similarity(this_n_grams)
+        return start_ind, end_ind, score_to_keep
 
 
 if __name__ == "__main__":  # pragma: no cover
