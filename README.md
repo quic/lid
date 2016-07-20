@@ -19,6 +19,8 @@ To install dependencies:
 ```
 make deps
 make test-deps
+
+pip install git+https://github.qualcomm.com/qosp/comment-parser.git@0.2.4
 ```
 
 To run tests:
