@@ -37,4 +37,4 @@ def test_prep_source():
 def test_license_library():
     license_dir = os.path.join(BASE_DIR, "data", "test", "license")
     license_library = prep.LicenseLibrary.from_path(license_dir)
-    assert "test_license" in license_library.licenses.keys()
+    assert set(["test_license", "custom_license"]) == set(license_library.licenses.keys())

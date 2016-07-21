@@ -101,8 +101,9 @@ class LicenseLibrary(namedtuple("LicenseLibrary",
         result = OrderedDict([])
         universe_n_grams = ng.n_grams()
         for f in filenames:
-            prepped_license = License.from_filename(f)
-            result[prepped_license.name] = prepped_license
-            universe_n_grams.parse_text_list_items(prepped_license.lines)
+            if f.endswith(".txt"):
+                prepped_license = License.from_filename(f)
+                result[prepped_license.name] = prepped_license
+                universe_n_grams.parse_text_list_items(prepped_license.lines)
 
         return LicenseLibrary(licenses = result, universe_n_grams = universe_n_grams)
