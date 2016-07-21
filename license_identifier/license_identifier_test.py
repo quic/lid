@@ -165,7 +165,9 @@ def test_analyze_file_lcs_match_output():
 def test_analyze_file():
     fp = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
     lcs_match, summary_obj = lcs_id_obj.analyze_file(input_fp=fp)
+    assert summary_obj.matched_license == 'test_license'
     assert summary_obj.score == 1.0
+    assert summary_obj.found_region == "one two three four\n"
 
 def test_analyze_input_path():
     fp = join(BASE_DIR, 'data', 'test', 'data')

@@ -128,7 +128,7 @@ class LicenseIdentifier:
             [start_line_ind, end_line_ind, start_offset, end_offset, region_score] = \
                 self.find_license_region(lic, src)
             found_region = src.lines[start_line_ind:end_line_ind]
-            found_region = ''.join(found_region)
+            found_region = '\n'.join(found_region) + '\n'
             length = end_offset - start_offset + 1
             if region_score < threshold:
                 matched_license = start_line_ind = start_offset = ''
