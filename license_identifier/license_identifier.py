@@ -26,6 +26,7 @@ base_dir = dirname(__file__)
 DEFAULT_THRESHOLD = 0.04
 DEFAULT_PICKLED_LIBRARY_FILE = join(base_dir, 'data',
                                'license_n_gram_lib.pickle')
+DEFAULT_KEEP_FRACTION_OF_BEST = 0.9
 
 # Use a global license library, as a workaround to improve multiprocessing
 # performance.
@@ -53,6 +54,7 @@ class LicenseIdentifier:
             location_similarity=None,
             penalty_only_source=None,
             penalty_only_license=None,
+            keep_fraction_of_best=DEFAULT_KEEP_FRACTION_OF_BEST,
             pickle_file_path=None,
             run_in_parellal=True):
 
@@ -65,6 +67,7 @@ class LicenseIdentifier:
         self.location_similarity = location_similarity
         self.penalty_only_source = penalty_only_source
         self.penalty_only_license = penalty_only_license
+        self.keep_fraction_of_best = self._check_keep_fraction_of_best(keep_fraction_of_best)
 
         if output_path:
             self.output_path = output_path + '_' + util.get_user_date_time_str() + '.csv'
@@ -80,6 +83,11 @@ class LicenseIdentifier:
             self._init_using_lic_dir(license_dir)
             if pickle_file_path is not None:
                 self._create_pickled_library(pickle_file_path)
+
+    def _check_keep_fraction_of_best(self, keep_fraction_of_best):
+        assert keep_fraction_of_best >= 0.0
+        assert keep_fraction_of_best <= 1.0
+        return keep_fraction_of_best
 
     def analyze(self):
         if self.input_path is not None:
@@ -132,37 +140,57 @@ class LicenseIdentifier:
             print(result_obj[1].to_display_format())
 
     def analyze_file(self, input_fp):
+        # Consider only the top matching licenses
         src = prep.Source.from_filename(input_fp)
-        similarity_score_dict = self.measure_similarity(src)
-        matched_license, score = max(similarity_score_dict.items(), key = lambda x: x[1])
-        lic = _license_library.licenses[matched_license]
+        top_candidates = self.get_top_candidates(src)
 
-        if score >= self.threshold:
-            [start_line_ind, end_line_ind, start_offset, end_offset, region_score] = \
-                self.find_license_region(lic, src)
-            found_region = src.lines[start_line_ind:end_line_ind]
-            found_region = '\n'.join(found_region) + '\n'
-            length = end_offset - start_offset + 1
-            if region_score < self.threshold:
-                matched_license = start_line_ind = start_offset = ''
-                end_line_ind = end_offset = region_score = found_region = length = ''
-        else:
-            matched_license = start_line_ind = start_offset = ''
-            end_line_ind = end_offset = region_score = found_region = length = ''
-        lcs_match = license_match.LicenseMatch(file_name=input_fp,
-                                file_path=input_fp,
-                                license=matched_license,
-                                start_byte=start_offset,
-                                length = length)
+        if len(top_candidates) == 0:
+            lcs_match = license_match.LicenseMatch(
+                file_name = input_fp,
+                file_path = input_fp,
+                license = '',
+                start_byte = '',
+                length = '')
+            summary_obj = match_summary.MatchSummary(
+                input_fp = input_fp,
+                matched_license = '',
+                score = '',
+                start_line_ind = '',
+                end_line_ind = '',
+                start_offset = '',
+                end_offset = '',
+                region_score = '',
+                found_region = '')
+            return lcs_match, summary_obj
+
+        # Search for best matching region for each of the top candidates
+        region_results = []
+        for lic_name, orig_score in top_candidates.items():
+            lic = _license_library.licenses[lic_name]
+            result = self.find_license_region(lic, src)
+            region_results.append((lic_name, orig_score, result))
+
+        matched_license, orig_score, best_region = max(region_results, key = lambda x: x[2].score)
+
+        length = best_region.end_offset - best_region.start_offset + 1
+        found_region_lines = src.lines[best_region.start_line : best_region.end_line]
+        found_region = '\n'.join(found_region_lines) + '\n'
+
+        lcs_match = license_match.LicenseMatch(
+            file_name = input_fp,
+            file_path = input_fp,
+            license = matched_license,
+            start_byte = best_region.start_offset,
+            length = length)
         summary_obj = match_summary.MatchSummary(
             input_fp = input_fp,
             matched_license = matched_license,
-            score = score,
-            start_line_ind = start_line_ind,
-            end_line_ind = end_line_ind,
-            start_offset = start_offset,
-            end_offset = end_offset,
-            region_score = region_score,
+            score = orig_score,
+            start_line_ind = best_region.start_line,
+            end_line_ind = best_region.end_line,
+            start_offset = best_region.start_offset,
+            end_offset = best_region.end_offset,
+            region_score = best_region.score,
             found_region = found_region)
         return lcs_match, summary_obj
 
@@ -208,7 +236,6 @@ class LicenseIdentifier:
         else:  # pragma: no cover
             raise OSError('Neither file nor directory{}'.format(input_path))
 
-
     def apply_function_on_all_files(self, function_ptr, top_dir_name):
         list_of_result = []
         with closing(multiprocessing.Pool()) as pool:
@@ -234,20 +261,26 @@ class LicenseIdentifier:
         loc_finder = loc_id.Location_Finder(**loc_args)
         return loc_finder.main_process(lic, src)
 
-    def measure_similarity(self, src):
-        """
-        Return the similarity measure.
-        Assume that the license lookup is available.
-        """
+    def get_top_candidates(self, src):
         # First, compute n-grams for all lines in the source file
         src_ng = ng.n_grams()
         src_ng.parse_text_list_items(src.lines, universe_ng = _license_library.universe_n_grams)
 
+        # Measure n-gram similarity relative to all licenses in the library
         similarity_dict = OrderedDict()
         for license_name, lic in _license_library.licenses.items():
             similarity_score = lic.n_grams.measure_similarity(src_ng)
             similarity_dict[license_name] = similarity_score
-        return similarity_dict
+
+        # Filter out low-scoring licenses
+        best_score = max(similarity_dict.values())
+        current_threshold = max(self.threshold, best_score * self.keep_fraction_of_best)
+
+        top_candidates = OrderedDict()
+        for license_name, score in similarity_dict.items():
+            if score >= current_threshold:
+                top_candidates[license_name] = score
+        return top_candidates
 
     def get_str_from_file(self, file_path):
         fp = codecs.open(file_path, encoding='ascii', errors='surrogateescape')
@@ -290,6 +323,11 @@ def main(argv = []):
         help="Run as a single thread",
         action='store_true',
         default=False)
+    aparse.add_argument(
+        "--keep_fraction_of_best",
+        help="Look for the best-matching source region for any license with similarity score >= (this fraction) * (best score)",
+        default=DEFAULT_KEEP_FRACTION_OF_BEST,
+        type=float)
     aparse.add_argument("--log",
         help="Logging level (for example: DEBUG, INFO, WARNING)",
         default="INFO")
@@ -325,6 +363,7 @@ def main(argv = []):
                                 penalty_only_source=args.penalty_only_source,
                                 penalty_only_license=args.penalty_only_license,
                                 pickle_file_path=args.pickle_file_path,
+                                keep_fraction_of_best=args.keep_fraction_of_best,
                                 run_in_parellal=not args.single_thread)
     results = li_obj.analyze()
     li_obj.output(results)
