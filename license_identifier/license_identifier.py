@@ -29,6 +29,13 @@ DEFAULT_LICENSE_DIR = join(base_dir, 'data', 'license_dir')
 DEFAULT_PICKLED_LIBRARY_FILE = join(base_dir, 'data',
                                'license_n_gram_lib.pickle')
 
+# Use a global license library, as a workaround to improve multiprocessing
+# performance.
+# TODO: Find a better way to share the license library between workers
+#       (ideally avoiding global objects).
+# For ideas, see https://docs.python.org/2/library/multiprocessing.html#sharing-state-between-processes
+_license_library = None
+
 class LicenseIdentifier:
     def __init__(
             self,
@@ -81,16 +88,18 @@ class LicenseIdentifier:
         self.format_output(result_obj, self.output_format, output_path=self.output_path)
 
     def _init_pickled_library(self, pickle_file_path):
+        global _license_library
         with open(pickle_file_path, 'rb') as f:
-            self.license_library = pickle.load(f)
-        assert isinstance(self.license_library, prep.LicenseLibrary)
+            _license_library = pickle.load(f)
+        assert isinstance(_license_library, prep.LicenseLibrary)
 
     def _init_using_lic_dir(self, license_dir):
-        self.license_library = prep.LicenseLibrary.from_path(license_dir)
+        global _license_library
+        _license_library = prep.LicenseLibrary.from_path(license_dir)
 
     def _create_pickled_library(self, pickle_file):
         with open(pickle_file, 'wb') as f:
-            pickle.dump(self.license_library, f)
+            pickle.dump(_license_library, f)
 
     def format_output(self, result_obj, output_format, output_path):
         if output_format == 'csv':
@@ -122,7 +131,7 @@ class LicenseIdentifier:
         src = prep.Source.from_filename(input_fp)
         similarity_score_dict = self.measure_similarity(src)
         matched_license, score = max(similarity_score_dict.items(), key = lambda x: x[1])
-        lic = self.license_library.licenses[matched_license]
+        lic = _license_library.licenses[matched_license]
 
         if score >= threshold:
             [start_line_ind, end_line_ind, start_offset, end_offset, region_score] = \
@@ -233,10 +242,10 @@ class LicenseIdentifier:
         """
         # First, compute n-grams for all lines in the source file
         src_ng = ng.n_grams()
-        src_ng.parse_text_list_items(src.lines, universe_ng = self.license_library.universe_n_grams)
+        src_ng.parse_text_list_items(src.lines, universe_ng = _license_library.universe_n_grams)
 
         similarity_dict = OrderedDict()
-        for license_name, lic in self.license_library.licenses.items():
+        for license_name, lic in _license_library.licenses.items():
             similarity_score = lic.n_grams.measure_similarity(src_ng)
             similarity_dict[license_name] = similarity_score
         return similarity_dict
