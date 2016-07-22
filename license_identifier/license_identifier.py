@@ -91,6 +91,7 @@ class LicenseIdentifier:
         global _license_library
         with open(pickle_file_path, 'rb') as f:
             _license_library = pickle.load(f)
+        # Sanity check: make sure we're not opening an old pickle file
         assert isinstance(_license_library, prep.LicenseLibrary)
 
     def _init_using_lic_dir(self, license_dir):
