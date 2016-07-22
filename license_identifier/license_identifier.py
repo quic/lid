@@ -44,7 +44,7 @@ class LicenseIdentifier:
             output_format=None,
             output_path='',
             license_dir = None,
-            context_length = 0,
+            context_length = None,
             location_strategy=None,
             location_similarity=None,
             penalty_only_source=None,

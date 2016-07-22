@@ -127,6 +127,7 @@ def test_forward_args_to_loc_id():
     test_file_path = join(input_dir, 'test1.py')
     lid_obj = license_identifier.LicenseIdentifier(
         license_dir = license_dir,
+        context_length = 0,
         location_strategy = "exhaustive",
         location_similarity = "ngram",
         penalty_only_license = 3.0,
