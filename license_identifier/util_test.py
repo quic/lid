@@ -12,7 +12,7 @@ def test_read_lines_offsets():
         "seven"]
     assert offsets == [0, 5, 24, 29, 33, 38]
 
-def test_read_lines_offsets():
+def test_get_lines_and_line_offsets():
     lines, offsets = util.get_lines_and_line_offsets(["a b c\n", "d e\n", "f\n", "g h i j\n"])
     assert lines == ["a b c", "d e", "f", "g h i j"]
     assert offsets == [0, 6, 10, 12, 20]
