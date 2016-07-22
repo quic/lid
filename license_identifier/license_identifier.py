@@ -23,7 +23,7 @@ register_surrogateescape()
 
 base_dir = dirname(__file__)
 
-DEFAULT_THRESH_HOLD = 0.04
+DEFAULT_THRESHOLD = 0.04
 DEFAULT_PICKLED_LIBRARY_FILE = join(base_dir, 'data',
                                'license_n_gram_lib.pickle')
 
@@ -43,7 +43,7 @@ _logger.addHandler(logging.NullHandler())
 class LicenseIdentifier:
     def __init__(
             self,
-            threshold=DEFAULT_THRESH_HOLD,
+            threshold=DEFAULT_THRESHOLD,
             input_path=None,
             output_format=None,
             output_path='',
@@ -83,7 +83,7 @@ class LicenseIdentifier:
 
     def analyze(self):
         if self.input_path is not None:
-            return self.analyze_input_path(self.input_path, self.threshold)
+            return self.analyze_input_path(self.input_path)
         else:
             _logger.info("No input path; no analysis to perform")
             return None
@@ -131,19 +131,19 @@ class LicenseIdentifier:
         for result_obj in result_obj_list:
             print(result_obj[1].to_display_format())
 
-    def analyze_file(self, input_fp, threshold=DEFAULT_THRESH_HOLD):
+    def analyze_file(self, input_fp):
         src = prep.Source.from_filename(input_fp)
         similarity_score_dict = self.measure_similarity(src)
         matched_license, score = max(similarity_score_dict.items(), key = lambda x: x[1])
         lic = _license_library.licenses[matched_license]
 
-        if score >= threshold:
+        if score >= self.threshold:
             [start_line_ind, end_line_ind, start_offset, end_offset, region_score] = \
                 self.find_license_region(lic, src)
             found_region = src.lines[start_line_ind:end_line_ind]
             found_region = '\n'.join(found_region) + '\n'
             length = end_offset - start_offset + 1
-            if region_score < threshold:
+            if region_score < self.threshold:
                 matched_license = start_line_ind = start_offset = ''
                 end_line_ind = end_offset = region_score = found_region = length = ''
         else:
@@ -166,7 +166,7 @@ class LicenseIdentifier:
             found_region = found_region)
         return lcs_match, summary_obj
 
-    def postprocess_strip_off_comments(self, result_obj, threshold=DEFAULT_THRESH_HOLD):
+    def postprocess_strip_off_comments(self, result_obj):
         for res in result_obj:
             input_fp = res[1]["input_fp"]
             matched_license = res[1]["matched_license"]
@@ -174,7 +174,7 @@ class LicenseIdentifier:
             start_ind = res[1]["start_line_ind"]
             end_ind = res[1]["end_line_ind"]
             list_of_src_str = self.get_str_from_file(input_fp)
-            if matched_license and score >= threshold:
+            if matched_license and score >= self.threshold:
                 _, ext = splitext(input_fp)
                 lang = language.extension_to_lang_map.get(ext, None)
                 if lang:                    
@@ -188,33 +188,33 @@ class LicenseIdentifier:
             res[1]["stripped_region"] = stripped_region
         return result_obj
 
-    def analyze_file_lcs_match_output(self, input_fp, threshold=DEFAULT_THRESH_HOLD):
-        lcs_match, summary_obj = self.analyze_file(input_fp, threshold)
+    def analyze_file_lcs_match_output(self, input_fp):
+        lcs_match, summary_obj = self.analyze_file(input_fp)
         return lcs_match
 
-    def analyze_input_path(self, input_path, threshold=DEFAULT_THRESH_HOLD):
+    def analyze_input_path(self, input_path):
         if isdir(input_path):
-            return self.apply_function_on_all_files(analyze, input_path, threshold)
+            return self.apply_function_on_all_files(analyze, input_path)
         elif isfile(input_path):
-            return [self.analyze_file(input_path, threshold)]
+            return [self.analyze_file(input_path)]
         else:  # pragma: no cover
             raise OSError('Neither file nor directory{}'.format(input_path))
 
-    def analyze_input_path_lcs_match_output(self, input_path, threshold=DEFAULT_THRESH_HOLD):
+    def analyze_input_path_lcs_match_output(self, input_path):
         if isdir(input_path):
-            return self.apply_function_on_all_files(analyze_lcs_match, input_path, threshold)
+            return self.apply_function_on_all_files(analyze_lcs_match, input_path)
         elif isfile(input_path):
-            return [self.analyze_file_lcs_match_output(input_path, threshold)]
+            return [self.analyze_file_lcs_match_output(input_path)]
         else:  # pragma: no cover
             raise OSError('Neither file nor directory{}'.format(input_path))
 
 
-    def apply_function_on_all_files(self, function_ptr, top_dir_name, threshold):
+    def apply_function_on_all_files(self, function_ptr, top_dir_name):
         list_of_result = []
         with closing(multiprocessing.Pool()) as pool:
             apply_func = self.run_in_parellal and pool.apply_async or apply_sync
             for f in util.files_from_path(top_dir_name):
-                list_of_result.append(apply_func(function_ptr, [self, f, threshold]))
+                list_of_result.append(apply_func(function_ptr, [self, f]))
         output = []
         for entry in list_of_result:
             output += entry.get()
@@ -260,8 +260,8 @@ def main(argv = []):
         description="License text identification and license text region finder")
     aparse.add_argument(
         "-T", "--threshold",
-        default=DEFAULT_THRESH_HOLD,
-        help="threshold hold for similarity measure (ranging from 0 to 1)")
+        default=DEFAULT_THRESHOLD,
+        help="threshold for similarity measure (ranging from 0 to 1)")
     aparse.add_argument(
         "-L", "--license_folder",
         help="Specify directory path where the license text files are")
@@ -329,11 +329,11 @@ def main(argv = []):
     results = li_obj.analyze()
     li_obj.output(results)
 
-def analyze(lid_obj, input_path, threshold):
-    return lid_obj.analyze_input_path(input_path, threshold)
+def analyze(lid_obj, input_path):
+    return lid_obj.analyze_input_path(input_path)
 
-def analyze_lcs_match(lid_obj, input_path, threshold):
-    return lid_obj.analyze_input_path_lcs_match_output(input_path, threshold)
+def analyze_lcs_match(lid_obj, input_path):
+    return lid_obj.analyze_input_path_lcs_match_output(input_path)
 
 class SyncResult(object):
     """Mimic the interface of multiprocessing.pool.AsyncResult"""

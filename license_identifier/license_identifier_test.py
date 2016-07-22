@@ -34,7 +34,7 @@ BASE_DIR = join(curr_dir, "..")
 license_dir = join(BASE_DIR, 'data', 'test', 'license')
 input_dir = join(BASE_DIR, 'data', 'test', 'data')
 
-threshold='0.888'
+threshold=0.888
 output_path = 'test_path'
 
 lcs_id_obj = license_identifier.LicenseIdentifier(license_dir=license_dir,
@@ -48,8 +48,7 @@ lcs_id_obj_context = license_identifier.LicenseIdentifier(license_dir=license_di
                                           output_format='easy_read',
                                           context_length=1,
                                           run_in_parellal=False)
-result_obj = lcs_id_obj.analyze_input_path(input_path=input_dir,
-                                           threshold=threshold)
+result_obj = lcs_id_obj.analyze_input_path(input_path=input_dir)
 l_match_obj = l_match.LicenseMatch(file_name='f_name',
                                    file_path='some_path',
                                    license='test_license',
@@ -97,14 +96,13 @@ def test_init_pickle(mock_pickle_load, mock_pickle_dump):
     assert universe_ng.measure_similarity(universe_ng) == 1.0
 
 def test_write_csv_file():
-    # def format_output(self, result_obj, output_format, output_path):
     lid_obj = license_identifier.LicenseIdentifier(license_dir=license_dir,
                                           threshold=threshold,
                                           input_path=input_dir,
                                           output_format='csv',
                                           output_path=output_path)
 
-    result_obj = lid_obj.analyze_input_path(input_path=input_dir, threshold=threshold)
+    result_obj = lid_obj.analyze_input_path(input_path=input_dir)
 
     mock_open_name = '{}.open'.format(six.moves.builtins.__name__)
     with patch(mock_open_name, mock_open()) as mo:
@@ -143,7 +141,6 @@ def test_forward_args_to_loc_id():
             penalty_only_source = 4.0)
 
 def test_analyze_file_lcs_match_output():
-    # input_fp, threshold=DEFAULT_THRESH_HOLD
     test_file_path = join(input_dir, 'test1.py')
     lcs_match_obj = lcs_id_obj.analyze_file_lcs_match_output(test_file_path)
     assert lcs_match_obj.length == 20
