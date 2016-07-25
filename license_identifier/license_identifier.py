@@ -6,7 +6,6 @@ import sys
 import argparse
 import csv
 import codecs
-import pickle
 
 from . import license_match
 from . import match_summary
@@ -87,18 +86,14 @@ class LicenseIdentifier:
 
     def _init_pickled_library(self, pickle_file_path):
         global _license_library
-        with open(pickle_file_path, 'rb') as f:
-            _license_library = pickle.load(f)
-        # Sanity check: make sure we're not opening an old pickle file
-        assert isinstance(_license_library, prep.LicenseLibrary)
+        _license_library = prep.LicenseLibrary.deserialize(pickle_file_path)
 
     def _init_using_lic_dir(self, license_dir):
         global _license_library
         _license_library = prep.LicenseLibrary.from_path(license_dir)
 
     def _create_pickled_library(self, pickle_file):
-        with open(pickle_file, 'wb') as f:
-            pickle.dump(_license_library, f)
+        _license_library.serialize(pickle_file)
 
     def format_output(self, result_obj, output_format, output_path):
         if output_format == 'csv':

@@ -1,6 +1,7 @@
 import nltk
 import os.path
 import six
+import pickle
 from collections import namedtuple, OrderedDict
 
 from . import util
@@ -107,3 +108,15 @@ class LicenseLibrary(namedtuple("LicenseLibrary",
                 universe_n_grams.parse_text_list_items(prepped_license.lines)
 
         return LicenseLibrary(licenses = result, universe_n_grams = universe_n_grams)
+
+    @staticmethod
+    def deserialize(filename):
+        with open(filename, 'rb') as f:
+            result = pickle.load(f)
+        # Sanity check: make sure we're not opening an old pickle file
+        assert isinstance(result, LicenseLibrary)
+        return result
+
+    def serialize(self, filename):
+        with open(filename, 'wb') as f:
+            pickle.dump(self, f)
