@@ -6,6 +6,7 @@ import sys
 import argparse
 import csv
 import codecs
+import logging
 
 from . import license_match
 from . import match_summary
@@ -32,6 +33,12 @@ DEFAULT_PICKLED_LIBRARY_FILE = join(base_dir, 'data',
 #       (ideally avoiding global objects).
 # For ideas, see https://docs.python.org/2/library/multiprocessing.html#sharing-state-between-processes
 _license_library = None
+
+# Set up a logger for this module
+_logger_name = "main" if __name__ == "__main__" else __name__
+_logger = logging.getLogger(name = _logger_name)
+# Add a NullHandler so that client apps aren't forced to see all log messages
+_logger.addHandler(logging.NullHandler())
 
 class LicenseIdentifier:
     def __init__(
@@ -78,7 +85,7 @@ class LicenseIdentifier:
         if self.input_path is not None:
             return self.analyze_input_path(self.input_path, self.threshold)
         else:
-            print "No input path; no analysis to perform"
+            _logger.info("No input path; no analysis to perform")
             return None
 
     def output(self, result_obj):
@@ -86,13 +93,16 @@ class LicenseIdentifier:
 
     def _init_pickled_library(self, pickle_file_path):
         global _license_library
+        _logger.info("Loading license library from {}".format(pickle_file_path))
         _license_library = prep.LicenseLibrary.deserialize(pickle_file_path)
 
     def _init_using_lic_dir(self, license_dir):
         global _license_library
+        _logger.info("Loading license library from {}".format(license_dir))
         _license_library = prep.LicenseLibrary.from_path(license_dir)
 
     def _create_pickled_library(self, pickle_file):
+        _logger.info("Saving license library to {}".format(pickle_file))
         _license_library.serialize(pickle_file)
 
     def format_output(self, result_obj, output_format, output_path):
@@ -246,7 +256,6 @@ class LicenseIdentifier:
         return list_of_str
 
 def main(argv = []):
-    # threshold, license folder, input file, input folder, output format
     aparse = argparse.ArgumentParser(
         description="License text identification and license text region finder")
     aparse.add_argument(
@@ -281,6 +290,9 @@ def main(argv = []):
         help="Run as a single thread",
         action='store_true',
         default=False)
+    aparse.add_argument("--log",
+        help="Logging level (for example: DEBUG, INFO, WARNING)",
+        default="INFO")
     aparse.add_argument("--location_strategy",
         help=argparse.SUPPRESS)
     aparse.add_argument("--location_similarity",
@@ -292,10 +304,17 @@ def main(argv = []):
         help=argparse.SUPPRESS,
         type=float)
     args = aparse.parse_args(argv)
+
     if args.input_path is not None and args.output_format is None:
         # Use easy_read as the default output format, but only
         # if a source-code analysis will be run
         args.output_format = 'easy_read'
+
+    numeric_logging_level = getattr(logging, args.log.upper(), None)
+    if not isinstance(numeric_logging_level, int):  # pragma: no cover
+        raise ValueError("Invalid log level: {}".format(args.log))
+    logging.basicConfig(level = numeric_logging_level)
+
     li_obj = LicenseIdentifier(license_dir=args.license_folder,
                                 threshold=float(args.threshold),
                                 input_path=args.input_path,
