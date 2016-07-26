@@ -12,7 +12,7 @@ test-deps: test-requirements.txt
 	pip install -r $<
 
 test: deps test-deps
-	cd license_identifier && python -B -m pytest --cov-config=.coveragerc --cov=. --cov-report=term-missing *_test.py
+	cd license_identifier && python -B -m pytest --cov-config=.coveragerc --cov=. --cov-report=term-missing *_test.py && python -m coverage xml -o ../coverage.xml
 
 install: deps license_identifier/licenses.py
 	python setup.py install

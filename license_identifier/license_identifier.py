@@ -1,6 +1,6 @@
 from os import listdir, walk, getcwd, linesep
 from os.path import isfile, join, isdir, dirname, exists
-from collections import Counter, defaultdict
+from collections import defaultdict, OrderedDict
 from contextlib import closing
 import multiprocessing
 import sys
@@ -14,6 +14,7 @@ from . import match_summary
 from . import n_grams as ng
 from . import location_identifier as loc_id
 from . import util
+from . import prep
 from comment_parser import language
 import comment_parser
 
@@ -28,8 +29,12 @@ DEFAULT_LICENSE_DIR = join(base_dir, 'data', 'license_dir')
 DEFAULT_PICKLED_LIBRARY_FILE = join(base_dir, 'data',
                                'license_n_gram_lib.pickle')
 
-license_n_grams = defaultdict()
-_universe_n_grams = None
+# Use a global license library, as a workaround to improve multiprocessing
+# performance.
+# TODO: Find a better way to share the license library between workers
+#       (ideally avoiding global objects).
+# For ideas, see https://docs.python.org/2/library/multiprocessing.html#sharing-state-between-processes
+_license_library = None
 
 class LicenseIdentifier:
     def __init__(
@@ -39,8 +44,9 @@ class LicenseIdentifier:
             output_format=None,
             output_path='',
             license_dir = None,
-            context_length = 0,
+            context_length = None,
             location_strategy=None,
+            location_similarity=None,
             penalty_only_source=None,
             penalty_only_license=None,
             pickle_file_path=None,
@@ -52,6 +58,7 @@ class LicenseIdentifier:
         self.output_format = output_format
         self.run_in_parellal = run_in_parellal
         self.location_strategy = location_strategy
+        self.location_similarity = location_similarity
         self.penalty_only_source = penalty_only_source
         self.penalty_only_license = penalty_only_license
 
@@ -66,11 +73,9 @@ class LicenseIdentifier:
                 pickle_file_path = DEFAULT_PICKLED_LIBRARY_FILE
             self._init_pickled_library(pickle_file_path)
         else:
-            custom_license_dir = join(license_dir, 'custom')
-            self._init_using_lic_dir(license_dir, custom_license_dir)
+            self._init_using_lic_dir(license_dir)
             if pickle_file_path is not None:
                 self._create_pickled_library(pickle_file_path)
-
 
     def analyze(self):
         if self.input_path is not None:
@@ -83,54 +88,19 @@ class LicenseIdentifier:
         self.format_output(result_obj, self.output_format, output_path=self.output_path)
 
     def _init_pickled_library(self, pickle_file_path):
-        global license_n_grams, _universe_n_grams
-        if exists(pickle_file_path):
-            with open(pickle_file_path, 'rb') as f:
-                self.license_file_name_list, license_n_grams, _universe_n_grams =\
-                pickle.load(f)
-        return
+        global _license_library
+        with open(pickle_file_path, 'rb') as f:
+            _license_library = pickle.load(f)
+        # Sanity check: make sure we're not opening an old pickle file
+        assert isinstance(_license_library, prep.LicenseLibrary)
 
-    def _init_using_lic_dir(self, license_dir, custom_license_dir):
-        # holds n gram models for each license type
-        #  used for matching input vs. each license
-        global license_n_grams, _universe_n_grams
-        license_n_grams = defaultdict()
-        self.license_file_name_list = []
-        # holds n-gram models for all license types
-        #  used for parsing input file words (only consider known words)
-        _universe_n_grams = ng.n_grams()
-        _universe_n_grams = self._build_n_gram_univ_license(license_dir,\
-                                                                 custom_license_dir,\
-                                                                 _universe_n_grams)
+    def _init_using_lic_dir(self, license_dir):
+        global _license_library
+        _license_library = prep.LicenseLibrary.from_path(license_dir)
 
     def _create_pickled_library(self, pickle_file):
         with open(pickle_file, 'wb') as f:
-            pickle.dump([self.license_file_name_list, license_n_grams, _universe_n_grams], f)
-        return
-
-    def _init_library(self, pickle_load_path):
-        if pickle_load_path is None:
-            # holds n gram models for each license type
-            #  used for matching input vs. each license
-            self.license_n_grams = defaultdict()
-            self.license_file_name_list = []
-            # holds n-gram models for all license types
-            #  used for parsing input file words (only consider known words)
-            self._universe_n_grams = ng.n_grams()
-            self._universe_n_grams = self._build_n_gram_univ_license(self.license_dir,\
-                                                                     self.custom_license_dir,\
-                                                                     self._universe_n_grams)
-        elif exists(pickle_load_path):
-            with open(pickle_load_path, 'rb') as f:
-                 self.license_file_name_list, self.license_n_grams, self._universe_n_grams =\
-                pickle.load(f)
-        return
-
-    def _build_n_gram_univ_license(self, license_dir, custom_license_dir, universal_n_grams):
-        universal_n_grams = self._add_to_n_gram_univ_license(license_dir, universal_n_grams)
-        if exists(custom_license_dir):
-            universal_n_grams = self._add_to_n_gram_univ_license(custom_license_dir, universal_n_grams)
-        return universal_n_grams
+            pickle.dump(_license_library, f)
 
     def format_output(self, result_obj, output_format, output_path):
         if output_format == 'csv':
@@ -154,50 +124,21 @@ class LicenseIdentifier:
             writer.writerow(row)
         f.close()
 
-    def _get_license_file_names(self, directory):
-        file_fp_list = [ f for f in join(listdir(directory)) \
-                           if isfile(join(directory,f)) and \
-                           '.txt' in f ]
-        return file_fp_list
-
-    def _get_license_name(self, file_name):
-        return file_name.split('.txt')[0]
-
-    def _add_to_n_gram_univ_license(self, license_dir, universal_n_grams):
-        '''
-        parses the license text files and build n_gram models
-        for each license type
-          and
-        for all license corpus combined
-        '''
-        license_file_name_list = self._get_license_file_names(license_dir)
-        for license_file_name in license_file_name_list:
-            list_of_license_str = self.get_str_from_file(join(license_dir, license_file_name))
-            license_name = self._get_license_name(license_file_name)
-            universal_n_grams.parse_text_list_items(list_of_license_str)
-            new_license_ng = ng.n_grams(list_of_license_str)
-            license_n_grams[license_name] = (new_license_ng, license_dir)
-        self.license_file_name_list.extend(license_file_name_list)
-        return universal_n_grams
-
     def display_easy_read(self, result_obj_list):
         for result_obj in result_obj_list:
             print(result_obj[1].to_display_format())
 
     def analyze_file(self, input_fp, threshold=DEFAULT_THRESH_HOLD):
-        input_dir = dirname(input_fp)
-        list_of_src_str = self.get_str_from_file(input_fp)
-        my_file_ng = ng.n_grams()
-        my_file_ng.parse_text_list_items(list_of_src_str,
-                                         universe_ng=_universe_n_grams)
-        similarity_score_dict = self.measure_similarity(my_file_ng)
-        [matched_license, score] = self.find_best_match(similarity_score_dict)
+        src = prep.Source.from_filename(input_fp)
+        similarity_score_dict = self.measure_similarity(src)
+        matched_license, score = max(similarity_score_dict.items(), key = lambda x: x[1])
+        lic = _license_library.licenses[matched_license]
 
         if score >= threshold:
             [start_line_ind, end_line_ind, start_offset, end_offset, region_score] = \
-                self.find_license_region(matched_license, input_fp)
-            found_region = list_of_src_str[start_line_ind:end_line_ind]
-            found_region = ''.join(found_region)
+                self.find_license_region(lic, src)
+            found_region = src.lines[start_line_ind:end_line_ind]
+            found_region = '\n'.join(found_region) + '\n'
             length = end_offset - start_offset + 1
             if region_score < threshold:
                 matched_license = start_line_ind = start_offset = ''
@@ -281,38 +222,34 @@ class LicenseIdentifier:
             output += entry.get()
         return output
 
-    def find_license_region(self, license_name, input_fp):
-        n_gram, license_dir = license_n_grams[license_name]
-        license_fp = join(base_dir, "../", license_dir, license_name + '.txt')
-
+    def find_license_region(self, lic, src):
         # Pass along only the location args that were explicitly specified
         loc_args_raw = dict(
             context_lines = self.context_length,
             strategy = self.location_strategy,
+            similarity = self.location_similarity,
             penalty_only_source = self.penalty_only_source,
             penalty_only_license = self.penalty_only_license,
         )
         loc_args = { k: v for k, v in loc_args_raw.items() if v is not None }
 
         loc_finder = loc_id.Location_Finder(**loc_args)
-        return loc_finder.main_process(license_fp, input_fp)
+        return loc_finder.main_process(lic, src)
 
-    def measure_similarity(self, input_ng):
+    def measure_similarity(self, src):
         """
         Return the similarity measure.
         Assume that the license lookup is available.
         """
-        similarity_dict = Counter()
-        for license_name in license_n_grams:
-            license_ng, license_dir = license_n_grams[license_name]
-            similarity_score = license_ng.measure_similarity(input_ng)
+        # First, compute n-grams for all lines in the source file
+        src_ng = ng.n_grams()
+        src_ng.parse_text_list_items(src.lines, universe_ng = _license_library.universe_n_grams)
+
+        similarity_dict = OrderedDict()
+        for license_name, lic in _license_library.licenses.items():
+            similarity_score = lic.n_grams.measure_similarity(src_ng)
             similarity_dict[license_name] = similarity_score
         return similarity_dict
-
-    def find_best_match(self, scores):
-        license_found = max(scores, key=scores.get)
-        max_val = scores[max(scores, key=scores.get)]
-        return license_found, max_val
 
     def get_str_from_file(self, file_path):
         fp = codecs.open(file_path, encoding='ascii', errors='surrogateescape')
@@ -358,6 +295,8 @@ def main(argv = []):
         action='store_true',
         default=False)
     aparse.add_argument("--location_strategy",
+        help=argparse.SUPPRESS)
+    aparse.add_argument("--location_similarity",
         help=argparse.SUPPRESS)
     aparse.add_argument("--penalty_only_source",
         help=argparse.SUPPRESS,

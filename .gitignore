@@ -39,3 +39,4 @@ data/scanner_evaluation_files-1.0.0
 /test.pickle
 /ENV
 .coverage
+coverage.xml

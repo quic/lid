@@ -3,6 +3,7 @@ from . import license_identifier
 from . import license_match as l_match
 from . import match_summary
 from . import location_identifier
+from . import prep
 from collections import Counter
 from os import getcwd
 from os.path import join, dirname, exists, abspath
@@ -65,8 +66,8 @@ field_names = ['input file name',
                    "Found license text"]
 
 def test_init():
-    assert 'test_license.txt' in lcs_id_obj.license_file_name_list
-    assert license_identifier._universe_n_grams.measure_similarity(n_gram_obj) > 0.5
+    assert 'test_license' in license_identifier._license_library.licenses.keys()
+    assert license_identifier._license_library.universe_n_grams.measure_similarity(n_gram_obj) > 0.5
 
 @patch('pickle.dump')
 @patch('pickle.load')
@@ -92,9 +93,8 @@ def test_init_pickle(mock_pickle_load, mock_pickle_dump):
     assert abspath(mock_pickle_load.call_args[0][0].name) \
         == abspath(test_pickle_file)
 
-    sim_score = license_identifier._universe_n_grams.measure_similarity(license_identifier._universe_n_grams)
-
-    assert sim_score == 1.0
+    universe_ng = license_identifier._license_library.universe_n_grams
+    assert universe_ng.measure_similarity(universe_ng) == 1.0
 
 def test_write_csv_file():
     # def format_output(self, result_obj, output_format, output_path):
@@ -127,7 +127,9 @@ def test_forward_args_to_loc_id():
     test_file_path = join(input_dir, 'test1.py')
     lid_obj = license_identifier.LicenseIdentifier(
         license_dir = license_dir,
+        context_length = 0,
         location_strategy = "exhaustive",
+        location_similarity = "ngram",
         penalty_only_license = 3.0,
         penalty_only_source = 4.0)
     with patch.object(location_identifier, 'Location_Finder') as m:
@@ -136,6 +138,7 @@ def test_forward_args_to_loc_id():
         m.assert_called_with(
             context_lines = 0,
             strategy = "exhaustive",
+            similarity = "ngram",
             penalty_only_license = 3.0,
             penalty_only_source = 4.0)
 
@@ -150,36 +153,40 @@ def test_analyze_file_lcs_match_output():
     assert lcs_match_obj[0].length == 20
 
     lcs_match_obj = lcs_id_obj.analyze_input_path_lcs_match_output(input_dir)
-    assert len(lcs_match_obj) == 3
-    assert lcs_match_obj[0].length == 20
-    assert lcs_match_obj[1].length == ''
+    assert len(lcs_match_obj) == 4
+    assert lcs_match_obj[0].length == 19
+    assert lcs_match_obj[1].length == 20
     assert lcs_match_obj[2].length == ''
+    assert lcs_match_obj[3].length == ''
 
     test_file_path2 = join(input_dir, 'subdir', 'subdir2', 'test3.py')
     lcs_match_obj2 = lcs_id_obj.analyze_file_lcs_match_output(test_file_path2)
     assert lcs_match_obj2.license == ''
 
-def test_get_license_name():
-    assert lcs_id_obj._get_license_name('myname.txt') == 'myname'
-
 def test_analyze_file():
     fp = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
-    lcs_match, summary_list = lcs_id_obj.analyze_file(input_fp=fp)
-    assert summary_list[2] == 1.0
+    lcs_match, summary_obj = lcs_id_obj.analyze_file(input_fp=fp)
+    assert summary_obj.matched_license == 'test_license'
+    assert summary_obj.score == 1.0
+    assert summary_obj.found_region == "one two three four\n"
 
 def test_analyze_input_path():
     fp = join(BASE_DIR, 'data', 'test', 'data')
     list_of_result_obj = lcs_id_obj.analyze_input_path(input_path=fp)
-    assert list_of_result_obj[0][1][1] == 'test_license'
+    assert len(list_of_result_obj) == 4
+    assert list_of_result_obj[0][1].matched_license == 'custom_license'
+    assert list_of_result_obj[1][1].matched_license == 'test_license'
+    assert list_of_result_obj[2][1].matched_license == ''
+    assert list_of_result_obj[3][1].matched_license == ''
 
 def test_find_license_region():
-    fp = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
-    license_name = 'test_license'
-    test1_loc_result = lcs_id_obj.find_license_region(license_name, fp)
+    lic = license_identifier._license_library.licenses['test_license']
+    src_fp = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
+    src = prep.Source.from_filename(src_fp)
+    test1_loc_result = lcs_id_obj.find_license_region(lic, src)
     assert test1_loc_result == (1, 2, 5, 24, 1.0)
-    test1_loc_result = lcs_id_obj_context.find_license_region(license_name, fp)
+    test1_loc_result = lcs_id_obj_context.find_license_region(lic, src)
     assert test1_loc_result == (0, 3, 0, 29, 1.0)
-
 
 def test_get_str_from_file():
     fp = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
@@ -211,7 +218,9 @@ def test_main_process_pickle(mock_pickle_dump):
 
 @patch('pickle.load')
 def test_default_pickle_path(mock_pickle):
-    mock_pickle.return_value = ([], n_gram_obj, n_gram_obj)
+    mock_pickle.return_value = prep.LicenseLibrary(
+        licenses = dict(),
+        universe_n_grams = n_gram_obj)
     lic_obj = license_identifier.LicenseIdentifier()
     result = lic_obj.analyze()
     lic_obj.output(result)
