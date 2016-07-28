@@ -1,5 +1,5 @@
 from os import listdir, walk, getcwd, linesep
-from os.path import isfile, join, isdir, dirname, exists
+from os.path import isfile, join, isdir, dirname, exists, splitext
 from collections import defaultdict, OrderedDict
 from contextlib import closing
 import multiprocessing
@@ -165,9 +165,11 @@ class LicenseIdentifier:
 
     def postprocess_strip_off_comments(self, result_obj, threshold=DEFAULT_THRESH_HOLD):
         for res in result_obj:
-            input_fp = res[1][0]
-            matched_license = res[1][1]
-            score = res[1][2]
+            input_fp = res[1]["input_fp"]
+            matched_license = res[1]["matched_license"]
+            score = res[1]["score"]
+            start_ind = res[1]["start_line_ind"]
+            end_ind = res[1]["end_line_ind"]
             list_of_src_str = self.get_str_from_file(input_fp)
             if matched_license and score >= threshold:
                 _, ext = splitext(input_fp)
@@ -177,15 +179,10 @@ class LicenseIdentifier:
                         list(comment_parser.parse_file(lang, list_of_src_str))
                 else:
                     stripped_file_lines = list_of_src_str
-                [start_ind, end_ind, start_offset, end_offset, region_score] = \
-                        self.find_license_region(matched_license, input_fp)
-                stripped_region = stripped_file_lines[start_ind:end_ind]
-                stripped_region = ''.join(stripped_region)
-                if region_score < threshold:
-                    stripped_region  = ''
+                stripped_region = ''.join(stripped_file_lines[start_ind:end_ind])
             else:
                 stripped_region = '' 
-            res[1].append(stripped_region)
+            res[1]["stripped_region"] = stripped_region
         return result_obj
 
     def analyze_file_lcs_match_output(self, input_fp, threshold=DEFAULT_THRESH_HOLD):

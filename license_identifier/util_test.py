@@ -24,11 +24,12 @@ def test_files_from_path():
     # Process a directory
     input_dir = os.path.join(os.getcwd(), '../data/test/data')
     result = util.files_from_path(input_dir)
-    assert len(result) == 4
+    assert len(result) == 5
     assert result[0].endswith("test/data/test0.py")
     assert result[1].endswith("test/data/test1.py")
     assert result[2].endswith("test/data/subdir/test2.py")
     assert result[3].endswith("test/data/subdir/subdir2/test3.py")
+    assert result[4].endswith("test/data/subdir/subdir2/test4.bogus")
 
     # Process a single file
     input_file = os.path.join(os.getcwd(), '../data/test/data/test1.py')
