@@ -58,8 +58,8 @@ class License(namedtuple("License",
          "token_positions_by_line",
          "n_grams"])):
 
-    @staticmethod
-    def from_filename(filename):
+    @classmethod
+    def from_filename(cls, filename):
         name, ext = os.path.splitext(os.path.basename(filename))
         lines, offsets_by_line = util.read_lines_offsets(filename)
         tokens_by_line, token_positions_by_line = _tokens_and_positions_by_line(lines)
@@ -67,7 +67,7 @@ class License(namedtuple("License",
         for token_list in tokens_by_line:
             tokens.extend(token_list)
         n_grams = ng.n_grams(lines)
-        return License(
+        return cls(
             name = name,
             filename = filename,
             lines = lines,
@@ -76,15 +76,15 @@ class License(namedtuple("License",
             token_positions_by_line = token_positions_by_line,
             n_grams = n_grams)
 
-    @staticmethod
-    def from_lines(lines, name = "<from_lines>"):
+    @classmethod
+    def from_lines(cls, lines, name = "<from_lines>"):
         lines, offsets_by_line = util.get_lines_and_line_offsets(lines)
         tokens_by_line, token_positions_by_line = _tokens_and_positions_by_line(lines)
         tokens = []
         for token_list in tokens_by_line:
             tokens.extend(token_list)
         n_grams = ng.n_grams(lines)
-        return License(
+        return cls(
             name = name,
             filename = None,
             lines = lines,
@@ -105,13 +105,13 @@ class Source(namedtuple("Source",
          "token_positions_by_line",
          "tokens_by_line"])):
 
-    @staticmethod
-    def from_filename(filename):
+    @classmethod
+    def from_filename(cls, filename):
         lines, offsets_by_line = util.read_lines_offsets(filename)
         tokens_by_line, token_positions_by_line = \
             _tokens_and_positions_by_line(lines)
 
-        return Source(
+        return cls(
             filename = filename,
             lines = lines,
             original_line_offset = 0,
@@ -119,13 +119,13 @@ class Source(namedtuple("Source",
             token_positions_by_line = token_positions_by_line,
             tokens_by_line = tokens_by_line)
 
-    @staticmethod
-    def from_lines(lines):
+    @classmethod
+    def from_lines(cls, lines):
         lines, offsets_by_line = util.get_lines_and_line_offsets(lines)
         tokens_by_line, token_positions_by_line = \
             _tokens_and_positions_by_line(lines)
 
-        return Source(
+        return cls(
             filename = None,
             lines = lines,
             original_line_offset = 0,
@@ -145,12 +145,18 @@ class Source(namedtuple("Source",
     def get_ignored_strings(self):
         return _get_ignored_strings(self.lines, self.token_positions_by_line)
 
+    def relative_line_index(self, ind):
+        return ind - self.original_line_offset
+
+    def get_lines_original_indexing(self, start_ind, end_ind):
+        return self.lines[self.relative_line_index(start_ind) : self.relative_line_index(end_ind)]
+
 
 class LicenseLibrary(namedtuple("LicenseLibrary",
         ["licenses",
          "universe_n_grams"])):
-    @staticmethod
-    def from_path(path):
+    @classmethod
+    def from_path(cls, path):
         assert isinstance(path, six.string_types)
         filenames = util.files_from_path(path)
         result = OrderedDict([])
@@ -161,14 +167,23 @@ class LicenseLibrary(namedtuple("LicenseLibrary",
                 result[prepped_license.name] = prepped_license
                 universe_n_grams.parse_text_list_items(prepped_license.lines)
 
-        return LicenseLibrary(licenses = result, universe_n_grams = universe_n_grams)
+        return cls(licenses = result, universe_n_grams = universe_n_grams)
 
-    @staticmethod
-    def deserialize(filename):
+    @classmethod
+    def from_licenses(cls, licenses):
+        license_dict = OrderedDict([])
+        universe_n_grams = ng.n_grams()
+        for lic in licenses:
+            license_dict[lic.name] = lic
+            universe_n_grams.parse_text_list_items(lic.lines)
+        return cls(licenses = license_dict, universe_n_grams = universe_n_grams)
+
+    @classmethod
+    def deserialize(cls, filename):
         with open(filename, 'rb') as f:
             result = pickle.load(f)
         # Sanity check: make sure we're not opening an old pickle file
-        assert isinstance(result, LicenseLibrary)
+        assert isinstance(result, cls)
         return result
 
     def serialize(self, filename):

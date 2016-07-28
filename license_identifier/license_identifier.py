@@ -58,6 +58,7 @@ class LicenseIdentifier:
             penalty_only_license=None,
             punct_weight=None,
             keep_fraction_of_best=DEFAULT_KEEP_FRACTION_OF_BEST,
+            return_multiple=False,
             pickle_file_path=None,
             run_in_parellal=True,
             original_matched_text_flag=False):
@@ -72,6 +73,7 @@ class LicenseIdentifier:
         self.penalty_only_source = penalty_only_source
         self.penalty_only_license = penalty_only_license
         self.punct_weight = punct_weight
+        self.return_multiple = return_multiple
         self.keep_fraction_of_best = self._check_keep_fraction_of_best(keep_fraction_of_best)
         self.original_matched_text_flag = original_matched_text_flag
 
@@ -135,17 +137,17 @@ class LicenseIdentifier:
         _logger.info("Saving license library to {}".format(pickle_file))
         self._get_license_library().serialize(pickle_file)
 
-    def format_output(self, result_obj, output_format, output_path):
+    def format_output(self, result_dict, output_format, output_path):
         if output_format == 'csv':
-            self.write_csv_file(result_obj, output_path)
+            self.write_csv_file(result_dict, output_path)
         elif output_format == 'easy_read':
-            self.display_easy_read(result_obj)
+            self.display_easy_read(result_dict)
         elif output_format is None:
             pass
         else:  # pragma: no cover
             raise Exception("Unrecognized output format: {}".format(output_format))
 
-    def write_csv_file(self, result_obj_list, output_path):
+    def write_csv_file(self, result_dict, output_path):
         if sys.version_info >= (3,0,0):  # pragma: no cover
             f = open(output_path, 'w', newline='')
         else:  # pragma: no cover
@@ -155,44 +157,35 @@ class LicenseIdentifier:
         if not self.original_matched_text_flag:
             field_names.remove("Matched license text without context")
         writer.writerow(field_names)
-        for result_obj in result_obj_list:
-            row = result_obj[1].to_csv_row()
-            writer.writerow(row)
+        for filename, results in result_dict.items():
+            for r in results:
+                row = r[1].to_csv_row()
+                writer.writerow(row)
         f.close()
 
-    def display_easy_read(self, result_obj_list):
-        for result_obj in result_obj_list:
-            print(result_obj[1].to_display_format())
+    def display_easy_read(self, result_dict):
+        for filename, results in result_dict.items():
+            print("=== Found {} results for '{}':".format(len(results), filename))
+            for r in results:
+                print(r[1].to_display_format())
 
     def analyze_file(self, input_fp):
+        '''
+        Find licenses within a source file (or within a subset of a file).
+        '''
         if isinstance(input_fp, six.string_types):
             src = prep.Source.from_filename(input_fp)
         else:
             src = input_fp
             input_fp = src.filename
 
+        if (len(src.lines) == 0):
+            return []
+
         # Consider only the top matching licenses
         top_candidates = self.get_top_candidates(src)
-
         if len(top_candidates) == 0:
-            lcs_match = license_match.LicenseMatch(
-                file_name = input_fp,
-                file_path = input_fp,
-                license = '',
-                start_byte = '',
-                length = '')
-            summary_obj = match_summary.MatchSummary(
-                input_fp = input_fp,
-                matched_license = '',
-                score = '',
-                start_line_ind = '',
-                end_line_ind = '',
-                start_offset = '',
-                end_offset = '',
-                region_score = '',
-                original_region = '',
-                found_region = '')
-            return lcs_match, summary_obj
+            return []
 
         # Search for best matching region for each of the top candidates
         region_results = []
@@ -204,19 +197,19 @@ class LicenseIdentifier:
         matched_license, orig_score, best_region = max(region_results, key = lambda x: x[2].score)
 
         length = best_region.end_offset - best_region.start_offset + 1
-        found_region_lines = src.lines[best_region.start_line : best_region.end_line]
+        found_region_lines = src.get_lines_original_indexing(best_region.start_line, best_region.end_line)
         found_region = '\r\n'.join(found_region_lines) + '\r\n'
-        original_region_lines = src.lines[best_region.start_line_orig : best_region.end_line_orig]
+        original_region_lines = src.get_lines_original_indexing(best_region.start_line_orig, best_region.end_line_orig)
         original_region = '\r\n'.join(original_region_lines) + '\r\n'
 
         lcs_match = license_match.LicenseMatch(
-            file_name = input_fp,
-            file_path = input_fp,
+            file_name = src.filename,
+            file_path = src.filename,
             license = matched_license,
             start_byte = best_region.start_offset,
             length = length)
         summary_obj = match_summary.MatchSummary(
-            input_fp = input_fp,
+            input_fp = src.filename,
             matched_license = matched_license,
             score = orig_score,
             start_line_ind = best_region.start_line,
@@ -230,60 +223,64 @@ class LicenseIdentifier:
         if not self.original_matched_text_flag:
             summary_obj.pop("original_region")
 
-        return lcs_match, summary_obj
+        results = [(lcs_match, summary_obj)]
 
-    def postprocess_strip_off_comments(self, result_obj):
-        for res in result_obj:
-            input_fp = res[1]["input_fp"]
-            matched_license = res[1]["matched_license"]
-            score = res[1]["score"]
-            start_ind = res[1]["start_line_ind"]
-            end_ind = res[1]["end_line_ind"]
-            src = prep.Source.from_filename(input_fp)
-            src_lines_crlf = [line + '\r\n' for line in src.lines]
-            if matched_license and score >= self.threshold:
-                _, ext = splitext(input_fp)
-                lang = language.extension_to_lang_map.get(ext, None)
-                if lang:                    
-                    stripped_file_lines = \
-                        list(comment_parser.parse_file(lang, src_lines_crlf))
+        if self.return_multiple:
+            src_above = src.subset(0, src.relative_line_index(best_region.start_line))
+            src_below = src.subset(src.relative_line_index(best_region.end_line), len(src.lines))
+
+            results_above = self.analyze_file(src_above)
+            results_below = self.analyze_file(src_below)
+
+            results.extend(results_above)
+            results.extend(results_below)
+            results.sort(key = lambda x: -x[1]["region_score"])
+
+        return results
+
+    def postprocess_strip_off_comments(self, result_dict):
+        for filename, results in result_dict.items():
+            for res in results:
+                input_fp = res[1]["input_fp"]
+                matched_license = res[1]["matched_license"]
+                score = res[1]["score"]
+                start_ind = res[1]["start_line_ind"]
+                end_ind = res[1]["end_line_ind"]
+                src = prep.Source.from_filename(input_fp)
+                src_lines_crlf = [line + '\r\n' for line in src.lines]
+                if matched_license and score >= self.threshold:
+                    _, ext = splitext(input_fp)
+                    lang = language.extension_to_lang_map.get(ext, None)
+                    if lang:                    
+                        stripped_file_lines = \
+                            list(comment_parser.parse_file(lang, src_lines_crlf))
+                    else:
+                        stripped_file_lines = src_lines_crlf
+                    stripped_region = ''.join(stripped_file_lines[start_ind:end_ind])
                 else:
-                    stripped_file_lines = src_lines_crlf
-                stripped_region = ''.join(stripped_file_lines[start_ind:end_ind])
-            else:
-                stripped_region = '' 
-            res[1]["stripped_region"] = stripped_region
-        return result_obj
+                    stripped_region = ''
+                res[1]["stripped_region"] = stripped_region
+        return result_dict
 
     def analyze_file_lcs_match_output(self, input_fp):
-        lcs_match, summary_obj = self.analyze_file(input_fp)
-        return lcs_match
+        results = self.analyze_file(input_fp)
+        return map(lambda x: x[0], results)
 
     def analyze_input_path(self, input_path):
-        if isdir(input_path):
-            return self.apply_function_on_all_files(analyze, input_path)
-        elif isfile(input_path):
-            return [self.analyze_file(input_path)]
-        else:  # pragma: no cover
-            raise OSError('Neither file nor directory{}'.format(input_path))
+        return self.apply_function_on_all_files(_analyze_file, input_path)
 
     def analyze_input_path_lcs_match_output(self, input_path):
-        if isdir(input_path):
-            return self.apply_function_on_all_files(analyze_lcs_match, input_path)
-        elif isfile(input_path):
-            return [self.analyze_file_lcs_match_output(input_path)]
-        else:  # pragma: no cover
-            raise OSError('Neither file nor directory{}'.format(input_path))
+        return self.apply_function_on_all_files(_analyze_file_lcs_match_output, input_path)
 
     def apply_function_on_all_files(self, function_ptr, top_dir_name):
-        list_of_result = []
+        dict_of_result = OrderedDict()
         with closing(multiprocessing.Pool()) as pool:
             apply_func = self.run_in_parellal and pool.apply_async or apply_sync
             for f in util.files_from_path(top_dir_name):
-                list_of_result.append(apply_func(function_ptr, [self, f]))
-        output = []
-        for entry in list_of_result:
-            output += entry.get()
+                dict_of_result[f] = apply_func(function_ptr, [self, f])
+        output = OrderedDict()
+        for filename, result in dict_of_result.items():
+            output[filename] = result.get()
         return output
 
     def find_license_region(self, lic, src):
@@ -383,6 +380,9 @@ def main(argv = []):
         help="Show matched license text without context",
         action='store_true',
         default=False)
+    aparse.add_argument("--return_multiple",
+        help="Allow returning more than one license per match",
+        action="store_true")
     args = aparse.parse_args(argv)
 
     if args.input_path is not None and args.output_format is None:
@@ -406,6 +406,7 @@ def main(argv = []):
                                penalty_only_license=args.penalty_only_license,
                                punct_weight=args.punct_weight,
                                pickle_file_path=args.pickle_file_path,
+                               return_multiple=args.return_multiple,
                                keep_fraction_of_best=args.keep_fraction_of_best,
                                run_in_parellal=not args.single_thread,
                                original_matched_text_flag=args.matched_text_without_context)
@@ -413,11 +414,12 @@ def main(argv = []):
     results = li_obj.analyze()
     li_obj.output(results)
 
-def analyze(lid_obj, input_path):
-    return lid_obj.analyze_input_path(input_path)
 
-def analyze_lcs_match(lid_obj, input_path):
-    return lid_obj.analyze_input_path_lcs_match_output(input_path)
+def _analyze_file(lid_obj, input_path):
+    return lid_obj.analyze_file(input_path)
+
+def _analyze_file_lcs_match_output(lid_obj, input_path):
+    return lid_obj.analyze_file_lcs_match_output(input_path)
 
 class SyncResult(object):
     """Mimic the interface of multiprocessing.pool.AsyncResult"""

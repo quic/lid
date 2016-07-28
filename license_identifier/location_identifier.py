@@ -136,6 +136,12 @@ class Location_Finder(object):
             self.determine_offsets(start_line, end_line,
             src.lines, src.offsets_by_line)
 
+        # Adjust line indices if we're dealing with a subset of the source
+        start_line_orig += src.original_line_offset
+        end_line_orig += src.original_line_offset
+        start_line += src.original_line_offset
+        end_line += src.original_line_offset
+
         return lr.LocationResult(
             start_line = start_line,
             end_line = end_line,
