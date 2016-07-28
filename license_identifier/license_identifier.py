@@ -118,7 +118,7 @@ class LicenseIdentifier:
         else:  # pragma: no cover
             f = open(output_path, 'wb')
         writer = csv.writer(f)
-        writer.writerow(match_summary.MatchSummary.field_names())
+        writer.writerow(match_summary.MatchSummary.field_names().values())
         for result_obj in result_obj_list:
             row = result_obj[1].to_csv_row()
             writer.writerow(row)
