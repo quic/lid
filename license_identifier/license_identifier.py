@@ -1,6 +1,5 @@
-from os import listdir, walk, getcwd, linesep
-from os.path import isfile, join, isdir, dirname, exists, splitext
-from collections import defaultdict, OrderedDict
+from os.path import isfile, join, isdir, dirname, splitext
+from collections import OrderedDict
 from contextlib import closing
 import multiprocessing
 import sys
@@ -210,10 +209,8 @@ class LicenseIdentifier:
         list_of_result = []
         with closing(multiprocessing.Pool()) as pool:
             apply_func = self.run_in_parellal and pool.apply_async or apply_sync
-            for root, dirs, files in walk(top_dir_name):
-                for file in files:
-                    if isfile(join(root, file)):
-                        list_of_result.append(apply_func(function_ptr, [self, join(root, file), threshold]))
+            for f in util.files_from_path(top_dir_name):
+                list_of_result.append(apply_func(function_ptr, [self, f, threshold]))
         output = []
         for entry in list_of_result:
             output += entry.get()
