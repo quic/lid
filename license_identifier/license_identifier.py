@@ -24,7 +24,6 @@ register_surrogateescape()
 base_dir = dirname(__file__)
 
 DEFAULT_THRESH_HOLD = 0.04
-DEFAULT_LICENSE_DIR = join(base_dir, 'data', 'license_dir')
 DEFAULT_PICKLED_LIBRARY_FILE = join(base_dir, 'data',
                                'license_n_gram_lib.pickle')
 
@@ -261,8 +260,7 @@ def main(argv = []):
         help="threshold hold for similarity measure (ranging from 0 to 1)")
     aparse.add_argument(
         "-L", "--license_folder",
-        help="Specify directory path where the license text files are",
-        default=DEFAULT_LICENSE_DIR)
+        help="Specify directory path where the license text files are")
     aparse.add_argument(
         "-C", "--context",
         help="Specify an amount of context to add to the license text output",
