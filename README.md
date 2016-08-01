@@ -21,8 +21,17 @@ make deps
 make test-deps
 ```
 
-To run tests:
+To update the licenses from the web:
+```
+make update-licenses  # OPTIONAL
+```
 
+To generate the default license library as a pickle file:
+```
+make pickle
+```
+
+To run tests:
 ```
 make test
 ```
@@ -69,10 +78,7 @@ python -m license_identifier.license_identifier -L /path/to/license_directory -P
 
 If you want to add more licenses, please create a text file with the license text.
 Then, save it into the `./data/license_dir/custom` folder.
-Then, build the n-gram license library using the following command.
-```
-python -m license_identifier.license_identifier -L license_identifier/data/license_dir -P license_identifier/data/license_n_gram_lib.pickle
-```
+Then, build the n-gram license library using `make pickle`.
 
 Note for the developers who want to integrate this module into their code:
 The program reads all the license files when it begins - it takes a few seconds.  For efficiency gain,
