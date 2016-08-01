@@ -46,10 +46,28 @@ def files_from_path(path):
     if os.path.isfile(path):
         return [path]
     elif os.path.isdir(path):
-        result = []
-        for root, dirs, files in os.walk(path):
-            for f in files:
-                result.append(os.path.join(root, f))
-        return result
+        return _files_from_dir(path)
     else:  # pragma: no cover
         raise Exception("Not a file or a directory: {}".format(path))
+
+def _files_from_dir(path):
+    """
+    Recursive helper function for extracting a list of files within
+    a directory, in a platform-independent order.
+    """
+    assert os.path.isdir(path), "Not a directory: {}".format(path)
+    result = []
+    # Explicitly sort contents to get a platform-independent order
+    contents = sorted(os.listdir(path))
+    # First, add files in the given directory
+    for f in contents:
+        filepath = os.path.join(path, f)
+        if os.path.isfile(filepath):
+            result.append(filepath)
+    # Next, add subdirectories recursively
+    for f in contents:
+        subdir = os.path.join(path, f)
+        if os.path.isdir(subdir):
+            subresult = _files_from_dir(subdir)
+            result.extend(subresult)
+    return result
