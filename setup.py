@@ -27,13 +27,13 @@ setup(
     url='https://www.python.org/sigs/distutils-sig/',
     packages=['license_identifier'],
     install_requires=[
-        'future>=0.15.2',
-        'isodate>=0.5.4',
-        'pyparsing>=2.1.1',
-        'rdflib>=4.2.1',
-        'six>=1.10.0',
-        'nltk>=3.2.1',
-        'comment_parser==0.2.5',
+        "comment-parser==0.2.5",
+        # Note: Using a pinned version of comment_parser for disambiguation
+        #       (this package name clashes with an existing PyPI package)
+        "future",
+        "nltk",
+        "rdflib",
+        "six",
     ],
     package_data={
         'license_identifier': [

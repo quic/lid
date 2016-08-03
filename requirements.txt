@@ -1,5 +1,5 @@
-# Specify a concrete source for comment-parser
 git+https://github.qualcomm.com/qosp/comment-parser.git@0.2.5
-
-# Use requirements from setup.py
-.
+future==0.15.2
+nltk==3.2.1
+rdflib==4.2.1
+six==1.10.0
