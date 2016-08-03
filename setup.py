@@ -27,16 +27,13 @@ setup(
     url='https://www.python.org/sigs/distutils-sig/',
     packages=['license_identifier'],
     install_requires=[
-        'future',
-        'isodate',
-        'pyparsing',
-        'rdflib',
-        'six',
-        'nltk',
+        'future>=0.15.2',
+        'isodate>=0.5.4',
+        'pyparsing>=2.1.1',
+        'rdflib>=4.2.1',
+        'six>=1.10.0',
+        'nltk>=3.2.1',
         'comment_parser==0.2.5',
-    ],
-    dependency_links=[
-        'git+https://github.qualcomm.com/qosp/comment-parser.git@0.2.5#egg=comment_parser-0.2.5',
     ],
     package_data={
         'license_identifier': [
