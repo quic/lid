@@ -96,24 +96,17 @@ optional arguments:
 ```
 
 There are four main modes:
-
-1. Use the default pickled license library file (recommended)
 ```
+# 1. Use the default pickled license library file (recommended)
 python -m license_identifier.license_identifier -I /path/to/source/code
-```
 
-2. Use a particular pickled license library file
-```
+# 2. Use a particular pickled license library file
 python -m license_identifier.license_identifier -P /path/to/pickled_licenses -I /path/to/source_code
-```
 
-3. Use a license directory without building a pickled file
-```
+# 3. Use a license directory without building a pickled file
 python -m license_identifier.license_identifier -L /path/to/license_directory -I /path/to/source_code
-```
 
-4. Build a pickled file from the specified license directory
-```
+# 4. Build a pickled file from the specified license directory
 python -m license_identifier.license_identifier -L /path/to/license_directory -P /path/to/output_pickled_licenses
 ```
 
