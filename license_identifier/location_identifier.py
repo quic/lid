@@ -207,7 +207,7 @@ class Location_Finder(object):
         best_score = score_to_beat
 
         while True:
-            if overshoot_remaining <= 0: break
+            if overshoot_remaining < 0: break
 
             start_line, end_line = update(start_line, end_line)
             if start_line < 0: break
@@ -218,17 +218,21 @@ class Location_Finder(object):
 
             current_result = (start_line, end_line, score)
             results.append(current_result)
-            if self.verbosity >= 1:  # pragma: no cover
-                print("Considering expansion (top = {}): {}-{}: score = {}" \
-                    .format(top, *current_result))
 
             if score >= best_score:
                 best_start_line = start_line
                 best_end_line = end_line
                 best_score = score
                 overshoot_remaining = self.overshoot  # reset overshoot
+                new_best = True
             else:
                 overshoot_remaining -= 1
+                new_best = False
+
+            if self.verbosity >= 1:  # pragma: no cover
+                suffix = " *" if new_best else ""
+                print("Considering expansion (top = {}): {}-{}: score = {}{}" \
+                    .format(top, start_line, end_line, score, suffix))
 
         return best_start_line, best_end_line, best_score
 
