@@ -255,11 +255,11 @@ def test_top_level_main(mock_stdout):
     assert mock_stdout.getvalue() == expected_output
 
 
-@patch("pickle.load")
+@patch.object(prep.LicenseLibrary, "deserialize")
 @patch("sys.stdout", new_callable=StringIO)
-def test_top_level_main_pickled_license_library(mock_stdout, mock_pickle_load):
+def test_top_level_main_pickled_license_library(mock_stdout, mock_deserialize):
     pickle_file = join(BASE_DIR, "test.pickle")
-    mock_pickle_load.return_value = prep.LicenseLibrary(
+    mock_deserialize.return_value = prep.LicenseLibrary(
         licenses = dict(), universe_n_grams = None)
 
     lcs_file = join(get_license_dir(), 'test_license.txt')
@@ -269,7 +269,8 @@ def test_top_level_main_pickled_license_library(mock_stdout, mock_pickle_load):
 
     expected_output = "LocationResult(start_line=1, end_line=2, start_offset=5, end_offset=24, score=1.0)\n"
     assert mock_stdout.getvalue() == expected_output
-    assert abspath(mock_pickle_load.call_args[0][0].name) == abspath(pickle_file)
+    assert mock_deserialize.call_count == 1
+    assert abspath(mock_deserialize.call_args[0][0]) == abspath(pickle_file)
 
 
 def mklic(lines):
