@@ -1,7 +1,5 @@
 git+https://github.qualcomm.com/qosp/comment-parser.git@0.2.5
 future==0.15.2
-isodate==0.5.4
-pyparsing==2.1.1
+nltk==3.2.1
 rdflib==4.2.1
 six==1.10.0
-nltk==3.2.1

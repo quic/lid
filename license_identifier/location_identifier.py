@@ -3,7 +3,6 @@ import nltk
 import difflib
 import argparse
 import sys
-import pickle
 
 from . import location_result as lr
 from . import n_grams as ng
@@ -38,8 +37,8 @@ def main(argv = []):
     args = parser.parse_args(argv)
 
     if args.pickled_license_library is not None:
-        with open(args.pickled_license_library) as f:
-            license_library = pickle.load(f)
+        license_library = prep.LicenseLibrary.deserialize(
+            args.pickled_license_library)
         universe_n_grams = license_library.universe_n_grams
     else:
         universe_n_grams = None

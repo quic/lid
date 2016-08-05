@@ -36,6 +36,7 @@ tags
 !data/license_dir/custom
 data/licenses-1.18
 data/scanner_evaluation_files-1.0.0
+license_n_gram_lib.pickle
 /test.pickle
 /ENV
 .coverage

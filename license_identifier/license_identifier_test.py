@@ -226,14 +226,14 @@ def test_main_process_pickle(mock_pickle_dump):
     dump_args = mock_pickle_dump.call_args[0]
     assert abspath(dump_args[1].name) == abspath(test_pickle_file)
 
-@patch('pickle.load')
-def test_default_pickle_path(mock_pickle):
-    mock_pickle.return_value = prep.LicenseLibrary(
+@patch.object(prep.LicenseLibrary, 'deserialize')
+def test_default_pickle_path(mock_deserialize):
+    mock_deserialize.return_value = prep.LicenseLibrary(
         licenses = dict(),
         universe_n_grams = n_gram_obj)
     lic_obj = license_identifier.LicenseIdentifier()
     result = lic_obj.analyze()
     lic_obj.output(result)
-    assert mock_pickle.call_count == 1
-    assert abspath(mock_pickle.call_args[0][0].name) \
+    assert mock_deserialize.call_count == 1
+    assert abspath(mock_deserialize.call_args[0][0]) \
         == abspath(license_identifier.DEFAULT_PICKLED_LIBRARY_FILE)
