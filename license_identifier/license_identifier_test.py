@@ -169,7 +169,7 @@ def test_analyze_file():
     lcs_match, summary_obj = lcs_id_obj.analyze_file(input_fp=fp)
     assert summary_obj["matched_license"] == 'test_license'
     assert summary_obj["score"] == 1.0
-    assert summary_obj["found_region"] == "one two three four\n"
+    assert summary_obj["found_region"] == "one two three four\n"            
 
 def test_analyze_input_path():
     fp = join(BASE_DIR, 'data', 'test', 'data')
@@ -191,12 +191,17 @@ def test_find_license_region():
     assert test1_loc_result == (0, 3, 0, 29, 1.0)
 
 def test_postprocess_comments():
-    fp = join(BASE_DIR, 'data', 'test', 'data')
-    list_of_result_obj = lcs_id_obj.analyze_input_path(input_path=fp)
-    result = lcs_id_obj.postprocess_strip_off_comments(list_of_result_obj)
-    assert result[0][1]["matched_license"] == 'custom_license'
-    assert len(result[0][1]["found_region"]) > 0
-    assert len(result[0][1]["stripped_region"]) > 0
+    fp = join(BASE_DIR, 'data', 'test', 'data', 'subdir', 'subdir2', 'test4.bogus')
+    result_obj = lcs_id_obj.analyze_input_path(input_path=fp)
+    start_ind = result_obj[0][1]["start_line_ind"]
+    end_ind = result_obj[0][1]["end_line_ind"]
+    list_of_src_str = lcs_id_obj.get_str_from_file(fp)
+    postprocess_obj = lcs_id_obj.postprocess_strip_off_comments(result_obj)
+    assert postprocess_obj[0][1]["stripped_region"] == ''.join(list_of_src_str[start_ind:end_ind])
+    result_obj[0][1]["score"] = 0
+    postprocess_obj = lcs_id_obj.postprocess_strip_off_comments(result_obj)
+    assert postprocess_obj[0][1]["stripped_region"] == ''
+
 
 def test_get_str_from_file():
     fp = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
