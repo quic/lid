@@ -2,6 +2,7 @@ from . import n_grams as ng
 from . import license_identifier
 from . import license_match as l_match
 from . import match_summary
+from . import location_result as lr
 from . import location_identifier
 from . import prep
 from collections import Counter
@@ -34,7 +35,7 @@ BASE_DIR = join(curr_dir, "..")
 license_dir = join(BASE_DIR, 'data', 'test', 'license')
 input_dir = join(BASE_DIR, 'data', 'test', 'data')
 
-threshold='0.888'
+threshold=0.888
 output_path = 'test_path'
 
 lcs_id_obj = license_identifier.LicenseIdentifier(license_dir=license_dir,
@@ -48,8 +49,7 @@ lcs_id_obj_context = license_identifier.LicenseIdentifier(license_dir=license_di
                                           output_format='easy_read',
                                           context_length=1,
                                           run_in_parellal=False)
-result_obj = lcs_id_obj.analyze_input_path(input_path=input_dir,
-                                           threshold=threshold)
+result_obj = lcs_id_obj.analyze_input_path(input_path=input_dir)
 l_match_obj = l_match.LicenseMatch(file_name='f_name',
                                    file_path='some_path',
                                    license='test_license',
@@ -97,14 +97,13 @@ def test_init_pickle(mock_pickle_load, mock_pickle_dump):
     assert universe_ng.measure_similarity(universe_ng) == 1.0
 
 def test_write_csv_file():
-    # def format_output(self, result_obj, output_format, output_path):
     lid_obj = license_identifier.LicenseIdentifier(license_dir=license_dir,
                                           threshold=threshold,
                                           input_path=input_dir,
                                           output_format='csv',
                                           output_path=output_path)
 
-    result_obj = lid_obj.analyze_input_path(input_path=input_dir, threshold=threshold)
+    result_obj = lid_obj.analyze_input_path(input_path=input_dir)
 
     mock_open_name = '{}.open'.format(six.moves.builtins.__name__)
     with patch(mock_open_name, mock_open()) as mo:
@@ -133,7 +132,7 @@ def test_forward_args_to_loc_id():
         penalty_only_license = 3.0,
         penalty_only_source = 4.0)
     with patch.object(location_identifier, 'Location_Finder') as m:
-        m.return_value.main_process.return_value = (0, 0, 0, 0, 0)
+        m.return_value.main_process.return_value = lr.LocationResult(0, 0, 0, 0, 0)
         lcs_match_obj = lid_obj.analyze_file(test_file_path)
         m.assert_called_with(
             context_lines = 0,
@@ -143,7 +142,6 @@ def test_forward_args_to_loc_id():
             penalty_only_source = 4.0)
 
 def test_analyze_file_lcs_match_output():
-    # input_fp, threshold=DEFAULT_THRESH_HOLD
     test_file_path = join(input_dir, 'test1.py')
     lcs_match_obj = lcs_id_obj.analyze_file_lcs_match_output(test_file_path)
     assert lcs_match_obj.length == 20
@@ -237,3 +235,26 @@ def test_default_pickle_path(mock_deserialize):
     assert mock_deserialize.call_count == 1
     assert abspath(mock_deserialize.call_args[0][0]) \
         == abspath(license_identifier.DEFAULT_PICKLED_LIBRARY_FILE)
+
+def test_analyze_file_near_ties():
+    # Note: as long as license_identifier uses a global _license_library
+    # as a multiprocessing workaround, this test should come after any other
+    # uses of lcs_id_obj.
+    fp = join(BASE_DIR, 'data', 'test', 'near_tie', 'data', 'source')
+    near_tie_license_dir = join(BASE_DIR, 'data', 'test', 'near_tie', 'license')
+
+    lid_obj = license_identifier.LicenseIdentifier(
+        license_dir = near_tie_license_dir,
+        threshold = 0.1,
+        input_path = fp,
+        location_similarity = "edit_weighted",
+        keep_fraction_of_best = 0.5,
+        run_in_parellal = False)
+
+    src = prep.Source.from_filename(fp)
+    top_candidates = lid_obj.get_top_candidates(src)
+    lcs_match, summary_obj = lid_obj.analyze_file(input_fp=fp)
+
+    assert set(top_candidates.keys()) == set(['license1', 'license2'])
+    assert top_candidates['license1'] > top_candidates['license2']
+    assert lcs_match.license == 'license2'
