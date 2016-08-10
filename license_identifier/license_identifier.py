@@ -2,6 +2,7 @@ from os.path import isfile, join, isdir, dirname, splitext
 from collections import OrderedDict
 from contextlib import closing
 import multiprocessing
+import six
 import sys
 import argparse
 import csv
@@ -164,8 +165,13 @@ class LicenseIdentifier:
             print(result_obj[1].to_display_format())
 
     def analyze_file(self, input_fp):
+        if isinstance(input_fp, six.string_types):
+            src = prep.Source.from_filename(input_fp)
+        else:
+            src = input_fp
+            input_fp = src.filename
+
         # Consider only the top matching licenses
-        src = prep.Source.from_filename(input_fp)
         top_candidates = self.get_top_candidates(src)
 
         if len(top_candidates) == 0:
