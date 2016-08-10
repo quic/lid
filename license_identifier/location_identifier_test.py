@@ -59,6 +59,15 @@ def test_main_process_exhaustive():
     loc_result = loc_id_obj.main_process(lic, src)
     assert loc_result==(0, 3, 0, 29, 1.0, 1, 2)
 
+def test_main_process_full_text_only():
+    lcs_file = join(get_license_dir(), 'test_license.txt')
+    input_file = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
+    loc_id_obj = loc_id.Location_Finder(strategy = "full_text_only", similarity = "edit_weighted")
+    lic = prep.License.from_filename(lcs_file)
+    src = prep.Source.from_filename(input_file)
+    loc_result = loc_id_obj.main_process(lic, src)
+    assert loc_result==(0, 5, 0, 38, 0.5, 0, 5)
+
 def test_one_line_then_expand():
     loc_id_obj = loc_id.Location_Finder(
         similarity = "edit_weighted",

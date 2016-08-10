@@ -101,6 +101,7 @@ class Location_Finder(object):
         allowed_strategies = [
             "exhaustive",
             "one_line_then_expand",
+            "full_text_only",
         ]
         assert strategy in allowed_strategies, \
             "Unrecognized strategy: {}".format(strategy)
@@ -123,6 +124,10 @@ class Location_Finder(object):
         elif self.strategy == "one_line_then_expand":
             start_line, end_line, best_score = \
                 self.one_line_then_expand(lic, src)
+        elif self.strategy == "full_text_only":
+            start_line = 0
+            end_line = len(src.lines)
+            best_score = self.similarity_obj.score(lic, src)
         else:  # pragma: no cover
             raise Exception("Unrecognized strategy: {}".format(self.strategy))
 
