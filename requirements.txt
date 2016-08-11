@@ -1,4 +1,5 @@
 git+https://github.qualcomm.com/qosp/comment-parser.git@0.2.5
+chardet==2.3.0
 future==0.15.2
 nltk==3.2.1
 rdflib==4.2.1

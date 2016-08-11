@@ -1,6 +1,15 @@
 from . import util
 import os
 
+def test_detect_file_encoding():
+    input_fp = os.path.join(os.getcwd(), '../data/test/encodings/test-utf-8')
+    encoding = util.detect_file_encoding(input_fp)
+    assert encoding == "utf-8"
+
+    input_fp = os.path.join(os.getcwd(), '../data/test/encodings/test-windows-1252')
+    encoding = util.detect_file_encoding(input_fp)
+    assert encoding == "windows-1252"
+
 def test_read_lines_offsets():
     input_fp = os.path.join(os.getcwd(), '../data/test/data/test1.py')
     lines, offsets = util.read_lines_offsets(input_fp)
@@ -11,6 +20,17 @@ def test_read_lines_offsets():
         "six",
         "seven"]
     assert offsets == [0, 5, 24, 29, 33, 38]
+
+def test_read_lines_offsets_non_ascii():
+    input_fp = os.path.join(os.getcwd(), '../data/test/encodings/test-utf-8')
+    lines, offsets = util.read_lines_offsets(input_fp)
+    assert lines == [u"\u3053\u3093\u306b\u3061\u306f"]
+    assert offsets == [0, 6]
+
+    input_fp = os.path.join(os.getcwd(), '../data/test/encodings/test-windows-1252')
+    lines, offsets = util.read_lines_offsets(input_fp)
+    assert lines == [u"Non-ascii: \u00a3100"]
+    assert offsets == [0, 16]
 
 def test_get_lines_and_line_offsets():
     lines, offsets = util.get_lines_and_line_offsets(["a b c\n", "d e\n", "f\n", "g h i j\n"])
