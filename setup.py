@@ -20,7 +20,7 @@ class CustomInstall(install):
 
 setup(
     name='license_identifier',
-    version='0.31',
+    version='0.4.0',
     description='Scans a file or folder for predefined licenses',
     author='Peter Shin',
     author_email='phshin@qti.qualcomm.com',
