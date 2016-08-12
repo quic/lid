@@ -1,9 +1,7 @@
 from collections import Counter, defaultdict
-import string
 import six
 
-def is_punctuation(input_value):
-    return all(c in string.punctuation for c in input_value)
+from . import util
 
 class n_grams(object):
     def __init__(self, text=None):
@@ -28,7 +26,7 @@ class n_grams(object):
         for line in list_text_line:
             words = line.split()
             for word in words:
-                if is_punctuation(word):
+                if util.is_punctuation(word):
                     continue
                 prev2_word = prev_word
                 prev_word = curr_word

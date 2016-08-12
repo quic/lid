@@ -17,14 +17,6 @@ bigram_counter = Counter([('two', 'one'),
 trigram_counter = Counter([('three', 'two', 'one'),
                           ('four', 'three', 'two')])
 
-def test_is_punctuation():
-    assert ng.is_punctuation("#")
-    assert ng.is_punctuation("//")
-    assert ng.is_punctuation("/*")
-    assert ng.is_punctuation("*")
-    assert ng.is_punctuation("1.0") == False
-    assert ng.is_punctuation("abc123") == False
-
 def test_init_list_input():
     n_grams_obj = ng.n_grams(text_list)
     assert n_grams_obj.unigram_count == unigram_counter

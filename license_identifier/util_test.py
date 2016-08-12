@@ -20,6 +20,14 @@ def test_get_lines_and_line_offsets():
 def test_get_user_date_time_str():
     assert len(util.get_user_date_time_str()) > 15
 
+def test_is_punctuation():
+    assert util.is_punctuation("#")
+    assert util.is_punctuation("//")
+    assert util.is_punctuation("/*")
+    assert util.is_punctuation("*")
+    assert util.is_punctuation("1.0") == False
+    assert util.is_punctuation("abc123") == False
+
 def test_files_from_path():
     # Process a directory
     input_dir = os.path.join(os.getcwd(), '../data/test/data')
