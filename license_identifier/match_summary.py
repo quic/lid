@@ -10,7 +10,7 @@ def truncate_column(column):
     else:
         return column
 
-class MatchSummary(OrderedDict):
+class MatchSummary(dict):
     @staticmethod
     def field_names():
         return OrderedDict([
