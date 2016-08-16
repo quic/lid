@@ -23,13 +23,8 @@ class MatchSummary(dict):
             ("end_offset", "End byte offset"),
             ("region_score", "Score using only the license text portion"),
             ("found_region", "Found license text"),
+            ("original_region", "Matched license text without context")
         ])
-
-    def to_csv_row(self):
-        csv_row = [truncate_column(self[key]) for key in MatchSummary.field_names().keys()]
-        csv_row[0] = csv_row[0].encode('utf8', 'surrogateescape')
-        csv_row[8] = csv_row[8].encode('utf8', 'surrogateescape')
-        return csv_row
 
     def to_display_format(self):
         output_str = "Summary of the analysis" + linesep + linesep\
@@ -45,4 +40,21 @@ class MatchSummary(dict):
             + "-----BEGIN-----" + linesep\
             + self["found_region"] \
             + "-----END-----" + linesep + linesep
+        if self.has_key("original_region"):
+            output_str = output_str[:-1] \
+                         + "The following text is found to be original matched license text \
+                         without context " + linesep\
+                         + "-----BEGIN-----" + linesep\
+                         + self["original_region"] \
+                         + "-----END-----" + linesep + linesep
         return output_str
+
+    def to_csv_row(self):
+        csv_row = []
+        for key in self.field_names().keys():
+            if self.has_key(key):
+                if key in ("input_fp", "found_region", "original_region"):
+                    csv_row.append(truncate_column(self[key]).encode('utf8', 'surrogateescape'))
+                else:
+                    csv_row.append(truncate_column(self[key]))
+        return csv_row

@@ -49,14 +49,15 @@ class LicenseIdentifier:
             output_format=None,
             output_path='',
             license_dir = None,
-            context_length = None,
+            context_length = 0,
             location_strategy=None,
             location_similarity=None,
             penalty_only_source=None,
             penalty_only_license=None,
             keep_fraction_of_best=DEFAULT_KEEP_FRACTION_OF_BEST,
             pickle_file_path=None,
-            run_in_parellal=True):
+            run_in_parellal=True,
+            original_matched_text_flag=False):
 
         self.threshold = threshold
         self.context_length = context_length
@@ -68,6 +69,7 @@ class LicenseIdentifier:
         self.penalty_only_source = penalty_only_source
         self.penalty_only_license = penalty_only_license
         self.keep_fraction_of_best = self._check_keep_fraction_of_best(keep_fraction_of_best)
+        self.original_matched_text_flag = original_matched_text_flag
 
         if output_path:
             self.output_path = output_path + '_' + util.get_user_date_time_str() + '.csv'
@@ -129,7 +131,10 @@ class LicenseIdentifier:
         else:  # pragma: no cover
             f = open(output_path, 'wb')
         writer = csv.writer(f)
-        writer.writerow(match_summary.MatchSummary.field_names().values())
+        field_names = match_summary.MatchSummary.field_names().values()
+        if not self.original_matched_text_flag:
+            field_names.remove("Matched license text without context")
+        writer.writerow(field_names)
         for result_obj in result_obj_list:
             row = result_obj[1].to_csv_row()
             writer.writerow(row)
@@ -160,6 +165,7 @@ class LicenseIdentifier:
                 start_offset = '',
                 end_offset = '',
                 region_score = '',
+                original_region = '',
                 found_region = '')
             return lcs_match, summary_obj
 
@@ -174,6 +180,10 @@ class LicenseIdentifier:
 
         length = best_region.end_offset - best_region.start_offset + 1
         found_region_lines = src.lines[best_region.start_line : best_region.end_line]
+
+        original_region_lines = found_region_lines[self.context_length : len(found_region_lines)- self.context_length]
+
+        original_region = '\n'.join(original_region_lines) + '\n'
         found_region = '\n'.join(found_region_lines) + '\n'
 
         lcs_match = license_match.LicenseMatch(
@@ -191,7 +201,12 @@ class LicenseIdentifier:
             start_offset = best_region.start_offset,
             end_offset = best_region.end_offset,
             region_score = best_region.score,
-            found_region = found_region)
+            found_region = found_region,
+            original_region = original_region)
+
+        if not self.original_matched_text_flag:
+            summary_obj.pop("original_region")
+
         return lcs_match, summary_obj
 
     def postprocess_strip_off_comments(self, result_obj):
@@ -341,6 +356,10 @@ def main(argv = []):
     aparse.add_argument("--penalty_only_license",
         help=argparse.SUPPRESS,
         type=float)
+    aparse.add_argument("--matched_text_without_context",
+        help="Show matched license text without context",
+        action='store_true',
+        default=False)
     args = aparse.parse_args(argv)
 
     if args.input_path is not None and args.output_format is None:
@@ -354,17 +373,19 @@ def main(argv = []):
     logging.basicConfig(level = numeric_logging_level)
 
     li_obj = LicenseIdentifier(license_dir=args.license_folder,
-                                threshold=float(args.threshold),
-                                input_path=args.input_path,
-                                output_format=args.output_format,
-                                output_path=args.output_file_path,
-                                context_length=args.context,
-                                location_strategy=args.location_strategy,
-                                penalty_only_source=args.penalty_only_source,
-                                penalty_only_license=args.penalty_only_license,
-                                pickle_file_path=args.pickle_file_path,
-                                keep_fraction_of_best=args.keep_fraction_of_best,
-                                run_in_parellal=not args.single_thread)
+                               threshold=float(args.threshold),
+                               input_path=args.input_path,
+                               output_format=args.output_format,
+                               output_path=args.output_file_path,
+                               context_length=args.context,
+                               location_strategy=args.location_strategy,
+                               penalty_only_source=args.penalty_only_source,
+                               penalty_only_license=args.penalty_only_license,
+                               pickle_file_path=args.pickle_file_path,
+                               keep_fraction_of_best=args.keep_fraction_of_best,
+                               run_in_parellal=not args.single_thread,
+                               original_matched_text_flag=args.matched_text_without_context)
+
     results = li_obj.analyze()
     li_obj.output(results)
 
