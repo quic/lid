@@ -7,6 +7,8 @@ from collections import namedtuple, OrderedDict
 from . import util
 from . import n_grams as ng
 
+DEFAULT_PICKLE_PROTOCOL_VERSION = 2
+
 _nltk_tokenizer = nltk.tokenize.WordPunctTokenizer()
 
 def _tokenize(text):
@@ -119,4 +121,4 @@ class LicenseLibrary(namedtuple("LicenseLibrary",
 
     def serialize(self, filename):
         with open(filename, 'wb') as f:
-            pickle.dump(self, f)
+            pickle.dump(self, f, protocol = DEFAULT_PICKLE_PROTOCOL_VERSION)
