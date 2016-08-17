@@ -13,6 +13,7 @@ from mock import patch, Mock
 import csv
 import random
 import string
+import re
 import six
 
 import pytest
@@ -151,12 +152,13 @@ def test_analyze_file_lcs_match_output():
     assert lcs_match_obj[0].length == 20
 
     lcs_match_obj = lcs_id_obj.analyze_input_path_lcs_match_output(input_dir)
-    assert len(lcs_match_obj) == 5
+    assert len(lcs_match_obj) == 6
     assert lcs_match_obj[0].length == 19
     assert lcs_match_obj[1].length == 20
     assert lcs_match_obj[2].length == ''
     assert lcs_match_obj[3].length == ''
     assert lcs_match_obj[4].length == 20
+    assert lcs_match_obj[5].length == ''
 
     test_file_path2 = join(input_dir, 'subdir', 'subdir2', 'test3.py')
     lcs_match_obj2 = lcs_id_obj.analyze_file_lcs_match_output(test_file_path2)
@@ -172,12 +174,13 @@ def test_analyze_file():
 def test_analyze_input_path():
     fp = join(BASE_DIR, 'data', 'test', 'data')
     list_of_result_obj = lcs_id_obj.analyze_input_path(input_path=fp)
-    assert len(list_of_result_obj) == 5
+    assert len(list_of_result_obj) == 6
     assert list_of_result_obj[0][1]["matched_license"] == 'custom_license'
     assert list_of_result_obj[1][1]["matched_license"] == 'test_license'
     assert list_of_result_obj[2][1]["matched_license"] == ''
     assert list_of_result_obj[3][1]["matched_license"] == ''
     assert list_of_result_obj[4][1]["matched_license"] == 'test_license'
+    assert list_of_result_obj[5][1]["matched_license"] == ''
 
 def test_find_license_region():
     lic = license_identifier._license_library.licenses['test_license']
@@ -200,6 +203,19 @@ def test_postprocess_comments():
     postprocess_obj = lcs_id_obj.postprocess_strip_off_comments(result_obj)
     assert postprocess_obj[0][1]["stripped_region"] == ''
 
+    lcs_id_low_threshold = license_identifier.LicenseIdentifier(
+        license_dir = license_dir,
+        threshold = 0.001)
+    fp = join(BASE_DIR, 'data', 'test', 'data', 'subdir', 'subdir2', 'test5.py')
+    result_obj = lcs_id_low_threshold.analyze_input_path(input_path=fp)
+    postprocess_obj = lcs_id_low_threshold.postprocess_strip_off_comments(result_obj)
+    stripped_region_lines = postprocess_obj[0][1]["stripped_region"].splitlines()
+    assert len(stripped_region_lines) == 5
+    assert stripped_region_lines[0] == '# one'
+    assert re.match(r'\w*', stripped_region_lines[1])
+    assert stripped_region_lines[2] == '# two three'
+    assert re.match(r'\w*', stripped_region_lines[3])
+    assert stripped_region_lines[4] == '# four'
 
 def test_get_str_from_file():
     fp = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
