@@ -1,0 +1,12 @@
+.cache
+.coverage
+.git
+.tox
+*.pyc
+*.pickle
+*~
+ENV
+coverage.xml
+license_identifier/.coverage
+license_identifier/.coverage.*
+
