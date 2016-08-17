@@ -13,7 +13,6 @@ from mock import patch, Mock
 import csv
 import random
 import string
-import re
 import six
 
 import pytest
@@ -210,12 +209,8 @@ def test_postprocess_comments():
     result_obj = lcs_id_low_threshold.analyze_input_path(input_path=fp)
     postprocess_obj = lcs_id_low_threshold.postprocess_strip_off_comments(result_obj)
     stripped_region_lines = postprocess_obj[0][1]["stripped_region"].splitlines()
-    assert len(stripped_region_lines) == 5
-    assert stripped_region_lines[0] == '# one'
-    assert re.match(r'\w*', stripped_region_lines[1])
-    assert stripped_region_lines[2] == '# two three'
-    assert re.match(r'\w*', stripped_region_lines[3])
-    assert stripped_region_lines[4] == '# four'
+    expected_lines = ['# one', '', '# two three', '', '# four']
+    assert [line.strip() for line in stripped_region_lines] == expected_lines
 
 def test_get_str_from_file():
     fp = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
