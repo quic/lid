@@ -1,18 +1,11 @@
 FROM ubuntu:14.04
 
-MAINTAINER Shaoyan Zhang
+MAINTAINER Peter Shin
 
-RUN apt-get update 
-
-RUN apt-get install -y python python-pip 
-
-RUN apt-get install -y git
+RUN apt-get update && apt-get install -y python python-pip git
 
 RUN pip install -U setuptools 
 
 COPY . /src
 
-RUN cd /src &&  make test
-
-
-
+CMD make -C /src test
