@@ -54,6 +54,7 @@ class LicenseIdentifier:
             location_similarity=None,
             penalty_only_source=None,
             penalty_only_license=None,
+            punct_weight=None,
             keep_fraction_of_best=DEFAULT_KEEP_FRACTION_OF_BEST,
             pickle_file_path=None,
             run_in_parellal=True,
@@ -68,6 +69,7 @@ class LicenseIdentifier:
         self.location_similarity = location_similarity
         self.penalty_only_source = penalty_only_source
         self.penalty_only_license = penalty_only_license
+        self.punct_weight = punct_weight
         self.keep_fraction_of_best = self._check_keep_fraction_of_best(keep_fraction_of_best)
         self.original_matched_text_flag = original_matched_text_flag
 
@@ -270,6 +272,7 @@ class LicenseIdentifier:
             similarity = self.location_similarity,
             penalty_only_source = self.penalty_only_source,
             penalty_only_license = self.penalty_only_license,
+            punct_weight = self.punct_weight,
         )
         loc_args = { k: v for k, v in loc_args_raw.items() if v is not None }
 
@@ -356,6 +359,9 @@ def main(argv = []):
     aparse.add_argument("--penalty_only_license",
         help=argparse.SUPPRESS,
         type=float)
+    aparse.add_argument("--punct_weight",
+        help=argparse.SUPPRESS,
+        type=float)
     aparse.add_argument("--matched_text_without_context",
         help="Show matched license text without context",
         action='store_true',
@@ -381,6 +387,7 @@ def main(argv = []):
                                location_strategy=args.location_strategy,
                                penalty_only_source=args.penalty_only_source,
                                penalty_only_license=args.penalty_only_license,
+                               punct_weight=args.punct_weight,
                                pickle_file_path=args.pickle_file_path,
                                keep_fraction_of_best=args.keep_fraction_of_best,
                                run_in_parellal=not args.single_thread,

@@ -17,18 +17,23 @@ def test_ngram_similarity():
 def test_edit_weighted_similarity():
     scorer = scores.EditWeightedSimilarity(
         penalty_only_source = 2.0,
-        penalty_only_license = 3.0)
+        penalty_only_license = 3.0,
+        punct_weight = 0.5)
 
     assert scorer.penalty_only_source == 2.0
     assert scorer.penalty_only_license == 3.0
 
+    assert scorer.score(mklic([""]), mksrc([""])) == 0.0
     assert scorer.score(mklic(["a"]), mksrc(["a"])) == 1.0
+    assert scorer.score(mklic(["."]), mksrc(["."])) == 1.0
     assert scorer.score(mklic(["a"]), mksrc([""])) == 0.0
     assert scorer.score(mklic([""]), mksrc(["a"])) == 0.0
     assert scorer.score(mklic(["a"]), mksrc(["a b"])) == 1/3.
     assert scorer.score(mklic(["a c"]), mksrc(["a b"])) == 1/6.
+    assert scorer.score(mklic([". c"]), mksrc([". b"])) == 1/11.
+    assert scorer.score(mklic(["a ."]), mksrc(["a b"])) == 2/9.
+    assert scorer.score(mklic(["a c"]), mksrc(["a ."])) == 1/5.
     assert scorer.score(mklic(["a c"]), mksrc(["a"])) == 1/4.
-
 
 def mklic(lines):
     return prep.License.from_lines(lines)

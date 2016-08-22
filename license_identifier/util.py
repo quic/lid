@@ -2,6 +2,7 @@ import codecs
 import getpass
 import datetime
 import os, os.path
+import string
 
 
 def read_lines_offsets(file_name):
@@ -25,6 +26,10 @@ def get_lines_and_line_offsets(lines):
         line_offsets.append(line_offsets[-1] + len(line))
         lines_stripped.append(line.rstrip('\n'))
     return lines_stripped, line_offsets
+
+
+def is_punctuation(input_value):
+    return all(c in string.punctuation for c in input_value)
 
 
 def get_user_date_time_str():

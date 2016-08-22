@@ -18,6 +18,7 @@ DEFAULT_OVERSHOOT = 5
 DEFAULT_STRATEGY = "one_line_then_expand"
 DEFAULT_SIMILARITY = "edit_weighted"
 DEFAULT_VERBOSITY = 0
+DEFAULT_PUNCT_WEIGHT = 0.01
 
 
 def main(argv = []):
@@ -34,6 +35,8 @@ def main(argv = []):
         default=DEFAULT_PENALTY_ONLY_SOURCE)
     parser.add_argument("--penalty_only_license", type=float,
         default=DEFAULT_PENALTY_ONLY_LICENSE)
+    parser.add_argument("--punct_weight", type=float,
+        default=DEFAULT_PUNCT_WEIGHT)
     args = parser.parse_args(argv)
 
     if args.pickled_license_library is not None:
@@ -47,6 +50,7 @@ def main(argv = []):
         context_lines = args.context_lines,
         penalty_only_source = args.penalty_only_source,
         penalty_only_license = args.penalty_only_license,
+        punct_weight = args.punct_weight,
         universe_n_grams = universe_n_grams,
         overshoot = args.overshoot,
         similarity = args.similarity,
@@ -65,6 +69,7 @@ class Location_Finder(object):
             context_lines = DEFAULT_CONTEXT,
             penalty_only_source = DEFAULT_PENALTY_ONLY_SOURCE,
             penalty_only_license = DEFAULT_PENALTY_ONLY_LICENSE,
+            punct_weight = DEFAULT_PUNCT_WEIGHT,
             universe_n_grams = None,
             overshoot = DEFAULT_OVERSHOOT,
             strategy = DEFAULT_STRATEGY,
@@ -73,6 +78,7 @@ class Location_Finder(object):
         self.context_lines = context_lines
         self.penalty_only_source = penalty_only_source
         self.penalty_only_license = penalty_only_license
+        self.punct_weight = punct_weight
         self.universe_n_grams = universe_n_grams
         self.overshoot = overshoot
         self.strategy = Location_Finder._check_strategy(strategy)
@@ -105,7 +111,8 @@ class Location_Finder(object):
         if self.similarity == "edit_weighted":
             self.similarity_obj = scores.EditWeightedSimilarity(
                 penalty_only_source = self.penalty_only_source,
-                penalty_only_license = self.penalty_only_license)
+                penalty_only_license = self.penalty_only_license,
+                punct_weight = self.punct_weight)
         elif self.similarity == "ngram":
             self.similarity_obj = scores.NgramSimilarity(
                 universe_n_grams = self.universe_n_grams)
