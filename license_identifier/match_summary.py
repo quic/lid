@@ -28,14 +28,14 @@ class MatchSummary(dict):
 
     def to_display_format(self):
         output_str = "Summary of the analysis" + linesep + linesep\
-            + "Name of the input file: {}".format(self["input_fp"]) + linesep\
-            + "Matched license type is {}".format(self["matched_license"]) + linesep\
-            + "Score for the match is {:.3}".format(self["score"]) + linesep\
-            + "License text beings at line {}.".format(self["start_line_ind"]) + linesep\
-            + "License text ends at line {}.".format(self["end_line_ind"]) + linesep\
-            + "Start byte offset for the license text is {}.".format(self["start_offset"]) + linesep\
-            + "End byte offset for the license text is {}.".format(self["end_offset"]) +linesep\
-            + "The found license text has the score of {:.3}".format(self["region_score"]) + linesep\
+            + u"Name of the input file: {}".format(self["input_fp"]) + linesep\
+            + u"Matched license type is {}".format(self["matched_license"]) + linesep\
+            + u"Score for the match is {:.3}".format(self["score"]) + linesep\
+            + u"License text beings at line {}.".format(self["start_line_ind"]) + linesep\
+            + u"License text ends at line {}.".format(self["end_line_ind"]) + linesep\
+            + u"Start byte offset for the license text is {}.".format(self["start_offset"]) + linesep\
+            + u"End byte offset for the license text is {}.".format(self["end_offset"]) +linesep\
+            + u"The found license text has the score of {:.3}".format(self["region_score"]) + linesep\
             + "The following text is found to be license text " + linesep\
             + "-----BEGIN-----" + linesep\
             + self["found_region"] \

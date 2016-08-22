@@ -3,10 +3,22 @@ import getpass
 import datetime
 import os, os.path
 import string
+import chardet
+
+
+def detect_file_encoding(file_name):
+    # Detect encoding by reading entire file in binary mode.
+    # Note: if the files are too large, we may want to consider using
+    #       chardet.universaldetector to process it in smaller pieces.
+    with open(file_name, 'rb') as f:
+        contents = f.read()
+        encoding = chardet.detect(contents)["encoding"]
+    return encoding
 
 
 def read_lines_offsets(file_name):
-    fp = codecs.open(file_name, 'r', encoding='ISO-8859-1')
+    encoding = detect_file_encoding(file_name)
+    fp = codecs.open(file_name, 'r', encoding=encoding)
     lines =[]
     line_offsets=[0]
     while True:
