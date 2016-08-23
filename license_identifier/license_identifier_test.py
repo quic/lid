@@ -117,6 +117,24 @@ def test_write_csv_file():
             handle = m()
             handle.writerow.assert_any_call(field_names)
 
+            m.reset_mock()
+            result_obj_dict = license_identifier.match_summary.MatchSummary(
+                input_fp='data/test/data/test1.py',
+                matched_license='test_license',
+                score='1.0',
+                start_line_ind='0',
+                end_line_ind='5',
+                start_offset='0',
+                end_offset='40',
+                region_score='1.0',
+                found_region='+zero\none two three four\n')
+            result_obj = [[[],result_obj_dict]]
+            expected_res_string = ['data/test/data/test1.py','test_license','1.0','0','5',\
+                                   '0','40','1.0'," +zero\none two three four\n"]
+            lid_obj.write_csv_file(result_obj, output_path)
+            handle = m()
+            handle.writerow.assert_any_call(expected_res_string)
+
 @patch('sys.stdout', new_callable=StringIO)
 def test_build_summary_list_str(mock_stdout):
     display_str = lcs_id_obj.display_easy_read(result_obj)

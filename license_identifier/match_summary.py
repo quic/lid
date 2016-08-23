@@ -54,7 +54,10 @@ class MatchSummary(dict):
         for key in self.field_names().keys():
             if self.has_key(key):
                 if key in ("input_fp", "found_region", "original_region"):
-                    csv_row.append(truncate_column(self[key]).encode('utf8', 'surrogateescape'))
+                    value = self[key].encode('utf8', 'surrogateescape')
+                    if value.startswith(('+','-','@','=')):
+                        value = ' ' + value
+                    csv_row.append(truncate_column(value))
                 else:
                     csv_row.append(truncate_column(self[key]))
         return csv_row
