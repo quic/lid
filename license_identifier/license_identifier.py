@@ -182,11 +182,9 @@ class LicenseIdentifier:
 
         length = best_region.end_offset - best_region.start_offset + 1
         found_region_lines = src.lines[best_region.start_line : best_region.end_line]
-
-        original_region_lines = found_region_lines[self.context_length : len(found_region_lines)- self.context_length]
-
-        original_region = '\n'.join(original_region_lines) + '\n'
         found_region = '\n'.join(found_region_lines) + '\n'
+        original_region_lines = src.lines[best_region.start_line_orig : best_region.end_line_orig]
+        original_region = '\n'.join(original_region_lines) + '\n'
 
         lcs_match = license_match.LicenseMatch(
             file_name = input_fp,

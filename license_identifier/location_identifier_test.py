@@ -27,11 +27,11 @@ def test_main_process_default():
     lic = prep.License.from_filename(lcs_file)
     src = prep.Source.from_filename(input_file)
     loc_result = loc_id_obj.main_process(lic, src)
-    assert loc_result==(1, 2, 5, 24, 1.0)
+    assert loc_result==(1, 2, 5, 24, 1.0, 1, 2)
 
     loc_id_obj = loc_id.Location_Finder(context_lines = 1)
     loc_result = loc_id_obj.main_process(lic, src)
-    assert loc_result==(0, 3, 0, 29, 1.0)
+    assert loc_result==(0, 3, 0, 29, 1.0, 1, 2)
 
 def test_main_process_ngram():
     lcs_file = join(get_license_dir(), 'test_license.txt')
@@ -40,11 +40,11 @@ def test_main_process_ngram():
     lic = prep.License.from_filename(lcs_file)
     src = prep.Source.from_filename(input_file)
     loc_result = loc_id_obj.main_process(lic, src)
-    assert loc_result==(1, 2, 5, 24, 1.0)
+    assert loc_result==(1, 2, 5, 24, 1.0, 1, 2)
 
     loc_id_obj = loc_id.Location_Finder(context_lines = 1)
     loc_result = loc_id_obj.main_process(lic, src)
-    assert loc_result==(0, 3, 0, 29, 1.0)
+    assert loc_result==(0, 3, 0, 29, 1.0, 1, 2)
 
 def test_main_process_exhaustive():
     lcs_file = join(get_license_dir(), 'test_license.txt')
@@ -53,11 +53,11 @@ def test_main_process_exhaustive():
     lic = prep.License.from_filename(lcs_file)
     src = prep.Source.from_filename(input_file)
     loc_result = loc_id_obj.main_process(lic, src)
-    assert loc_result==(1, 2, 5, 24, 1.0)
+    assert loc_result==(1, 2, 5, 24, 1.0, 1, 2)
 
     loc_id_obj = loc_id.Location_Finder(context_lines = 1)
     loc_result = loc_id_obj.main_process(lic, src)
-    assert loc_result==(0, 3, 0, 29, 1.0)
+    assert loc_result==(0, 3, 0, 29, 1.0, 1, 2)
 
 def test_find_best_window_expansion():
     lcs_file = join(get_license_dir(), 'test_license.txt')
@@ -295,7 +295,7 @@ def test_top_level_main(mock_stdout):
     lcs_file = join(get_license_dir(), 'test_license.txt')
     input_file = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
     loc_id.main([lcs_file, input_file])
-    expected_output = "LocationResult(start_line=1, end_line=2, start_offset=5, end_offset=24, score=1.0)\n"
+    expected_output = "LocationResult(start_line=1, end_line=2, start_offset=5, end_offset=24, score=1.0, start_line_orig=1, end_line_orig=2)\n"
     assert mock_stdout.getvalue() == expected_output
 
 
@@ -311,7 +311,7 @@ def test_top_level_main_pickled_license_library(mock_stdout, mock_deserialize):
 
     loc_id.main([lcs_file, input_file, "-P", pickle_file])
 
-    expected_output = "LocationResult(start_line=1, end_line=2, start_offset=5, end_offset=24, score=1.0)\n"
+    expected_output = "LocationResult(start_line=1, end_line=2, start_offset=5, end_offset=24, score=1.0, start_line_orig=1, end_line_orig=2)\n"
     assert mock_stdout.getvalue() == expected_output
     assert mock_deserialize.call_count == 1
     assert abspath(mock_deserialize.call_args[0][0]) == abspath(pickle_file)
