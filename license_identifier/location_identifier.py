@@ -130,6 +130,7 @@ class Location_Finder(object):
         else:  # pragma: no cover
             raise Exception("Unrecognized strategy: {}".format(self.strategy))
 
+        start_line_orig, end_line_orig = start_line, end_line
         start_line, end_line, start_offset, end_offset = \
             self.determine_offsets(start_line, end_line,
             src.lines, src.offsets_by_line)
@@ -139,7 +140,9 @@ class Location_Finder(object):
             end_line = end_line,
             start_offset = start_offset,
             end_offset = end_offset,
-            score = best_score)
+            score = best_score,
+            start_line_orig = start_line_orig,
+            end_line_orig = end_line_orig)
 
     def best_region_exhaustive(self, lic, src):
         results = []

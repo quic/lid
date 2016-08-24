@@ -5,4 +5,6 @@ LocationResult = namedtuple("LocationResult",
      "end_line",
      "start_offset",
      "end_offset",
-     "score"])
+     "score",
+     "start_line_orig",
+     "end_line_orig"])

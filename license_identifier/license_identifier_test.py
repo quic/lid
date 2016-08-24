@@ -49,6 +49,20 @@ lcs_id_obj_context = license_identifier.LicenseIdentifier(license_dir=license_di
                                           output_format='easy_read',
                                           context_length=1,
                                           run_in_parellal=False)
+lcs_id_obj_origmatched = license_identifier.LicenseIdentifier(license_dir=license_dir,
+                                          threshold=threshold,
+                                          input_path=input_dir,
+                                          output_format='easy_read',
+                                          run_in_parellal=False,
+                                          original_matched_text_flag=True)
+lcs_id_obj_context_origmatched = license_identifier.LicenseIdentifier(license_dir=license_dir,
+                                          threshold=threshold,
+                                          input_path=input_dir,
+                                          output_format='easy_read',
+                                          context_length=5,
+                                          run_in_parellal=False,
+                                          original_matched_text_flag=True)
+
 result_obj = lcs_id_obj.analyze_input_path(input_path=input_dir)
 l_match_obj = l_match.LicenseMatch(file_name='f_name',
                                    file_path='some_path',
@@ -150,7 +164,7 @@ def test_forward_args_to_loc_id():
         penalty_only_license = 3.0,
         penalty_only_source = 4.0)
     with patch.object(location_identifier, 'Location_Finder') as m:
-        m.return_value.main_process.return_value = lr.LocationResult(0, 0, 0, 0, 0)
+        m.return_value.main_process.return_value = lr.LocationResult(0, 0, 0, 0, 0, 0, 0)
         lcs_match_obj = lid_obj.analyze_file(test_file_path)
         m.assert_called_with(
             context_lines = 0,
@@ -186,7 +200,17 @@ def test_analyze_file():
     lcs_match, summary_obj = lcs_id_obj.analyze_file(input_fp=fp)
     assert summary_obj["matched_license"] == 'test_license'
     assert summary_obj["score"] == 1.0
-    assert summary_obj["found_region"] == "one two three four\n"            
+    assert summary_obj["found_region"] == "one two three four\n"
+
+    lcs_match, summary_obj = lcs_id_obj_origmatched.analyze_file(input_fp=fp)
+    assert summary_obj["original_region"] == "one two three four\n"
+
+    lcs_match, summary_obj = lcs_id_obj_context.analyze_file(input_fp=fp)
+    assert summary_obj["found_region"] == "zero\none two three four\nfive\n"
+
+    lcs_match, summary_obj = lcs_id_obj_context_origmatched.analyze_file(input_fp=fp)
+    assert summary_obj["found_region"] == "zero\none two three four\nfive\nsix\nseven\n"
+    assert summary_obj["original_region"] == "one two three four\n"
 
 def test_analyze_input_path():
     fp = join(BASE_DIR, 'data', 'test', 'data')
@@ -204,9 +228,9 @@ def test_find_license_region():
     src_fp = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
     src = prep.Source.from_filename(src_fp)
     test1_loc_result = lcs_id_obj.find_license_region(lic, src)
-    assert test1_loc_result == (1, 2, 5, 24, 1.0)
+    assert test1_loc_result == (1, 2, 5, 24, 1.0, 1, 2)
     test1_loc_result = lcs_id_obj_context.find_license_region(lic, src)
-    assert test1_loc_result == (0, 3, 0, 29, 1.0)
+    assert test1_loc_result == (0, 3, 0, 29, 1.0, 1, 2)
 
 def test_postprocess_comments():
     fp = join(BASE_DIR, 'data', 'test', 'data', 'subdir', 'subdir2', 'test4.bogus')
