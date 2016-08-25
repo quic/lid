@@ -101,7 +101,7 @@ class Location_Finder(object):
         allowed_strategies = [
             "exhaustive",
             "one_line_then_expand",
-            "window_then_expand",
+            "full_text_only",
         ]
         assert strategy in allowed_strategies, \
             "Unrecognized strategy: {}".format(strategy)
@@ -124,9 +124,10 @@ class Location_Finder(object):
         elif self.strategy == "one_line_then_expand":
             start_line, end_line, best_score = \
                 self.one_line_then_expand(lic, src)
-        elif self.strategy == "window_then_expand":
-            start_line, end_line, best_score = \
-                self.window_then_expand(lic, src)
+        elif self.strategy == "full_text_only":
+            start_line = 0
+            end_line = len(src.lines)
+            best_score = self.similarity_obj.score(lic, src)
         else:  # pragma: no cover
             raise Exception("Unrecognized strategy: {}".format(self.strategy))
 
@@ -245,51 +246,6 @@ class Location_Finder(object):
 
         return best_start_line, best_end_line, best_score
 
-    def window_then_expand(self, lic, src):
-        # split up the window and loop over the windows
-        # for small source file case
-        # TODO: check if they match & score
-        [similarity_scores, window_start_index] = \
-            self.split_and_measure_similarities(lic, src)
-
-        # Find the window with maximum scores.
-        [max_score, max_index] = self.find_max_score_ind(similarity_scores)
-
-        # Expand and find the region with maximum score
-        return self.find_best_window_expansion(
-            max_index = max_index,
-            lic = lic,
-            src = src,
-            window_start_index = window_start_index)
-
-    def find_best_window_expansion(
-            self, max_index, lic, src, window_start_index):
-        # for maximum scores that share the same value
-        final_score = []
-        start_index = []
-        end_index =[]
-
-        # find the region that has the best score (if a tie, pick the first)
-        for max_ind in max_index:
-            # 5. Expand until the line addition does not add any gain in similarity measure
-            [s_ind, e_ind, final_s] = self.expand_window(
-                lic = lic,
-                src = src,
-                start_ind = window_start_index[max_ind])
-            start_index.append(s_ind)
-            end_index.append(e_ind)
-            final_score.append(final_s)
-        max_score = max(final_score)
-        max_index = [i for i, j in enumerate(final_score) if j == max_score]
-        first_max_ind = max_index[0]
-
-        start_line = start_index[first_max_ind]
-        end_line = end_index[first_max_ind]
-
-        return start_line, \
-               end_line, \
-               final_score[first_max_ind]
-
     def determine_offsets(self, start_line, end_line, src_lines, src_offsets):
         if self.context_lines:
             end_line = end_line + self.context_lines
@@ -305,89 +261,6 @@ class Location_Finder(object):
             end_offset = src_offsets[end_line]
 
         return start_line, end_line, src_offsets[start_line], end_offset
-
-    def find_max_score_ind(self, similarity_scores):
-        max_score = max(similarity_scores)
-        max_index = [i for i, j in enumerate(similarity_scores) if j == max_score]
-        return max_score, max_index
-
-    def split_and_measure_similarities(self, lic, src):
-        '''split up the window and loop over the windows
-        for small source file case
-        TODO: check if they match & score
-        '''
-        window_size = len(lic.lines)
-        window_start_ind = 0
-        window_end_ind = window_size
-
-        similarity_scores = []
-        window_start_index = []
-
-        index_increment = int(math.floor(window_size / 2))
-
-        if index_increment == 0:
-            index_increment = 1
-        while (window_start_ind < len(src.lines)):
-            # create the sliding window
-            # find the similarity measure for each window
-            src_subset = src.subset(window_start_ind, window_end_ind)
-            similarity_score = self.similarity_obj.score(lic, src_subset)
-
-            # keep track of the scores
-            similarity_scores.append(similarity_score)
-
-            # bookkeeping of the indices
-            window_start_index.append(window_start_ind)
-
-            # increment the indices for the next window
-            window_start_ind += index_increment
-            window_end_ind += index_increment
-        return similarity_scores, window_start_index
-
-    def expand_window(self, lic, src, start_ind):
-        # find the baseline score
-        window_size = len(lic.lines)
-        end_ind = start_ind + window_size
-        src_subset = src.subset(start_ind, end_ind)
-        score_to_keep = self.similarity_obj.score(lic, src_subset)
-        # TODO: possibly use regular expression to find the start and end
-        for increment in [3, 2, 1]:
-            start_ind, end_ind, score_to_keep = self.expand_generic(
-                lic, src, start_ind, end_ind,
-                score_to_keep, start_increment = increment, end_increment = 0)
-        for increment in [5, 4, 3, 2, 1]:
-            start_ind, end_ind, score_to_keep = self.expand_generic(
-                lic, src, start_ind, end_ind,
-                score_to_keep, start_increment = 0, end_increment = increment)
-        return start_ind, end_ind, score_to_keep
-
-    def expand_generic(self, lic, src, start_ind, end_ind,
-            score_to_keep, start_increment, end_increment):
-        assert start_increment >= 0 and end_increment >= 0, \
-            "Cannot use negative increments"
-        assert start_increment != 0 or end_increment != 0, \
-            "Start and end increments are both zero"
-        while True:
-            start_ind -= start_increment
-            end_ind += end_increment
-
-            if start_ind >= 0 and end_ind <= len(src.lines):
-                src_subset = src.subset(start_ind, end_ind)
-                score = self.similarity_obj.score(lic, src_subset)
-                if (score <= score_to_keep):
-                    start_ind += start_increment
-                    end_ind -= end_increment
-                    break
-                # score improved
-                else:
-                    # keep the score and the index
-                    score_to_keep = score
-                    # pass to the next loop
-            else:
-                start_ind += start_increment
-                end_ind -= end_increment
-                break
-        return start_ind, end_ind, score_to_keep
 
 
 if __name__ == "__main__":  # pragma: no cover
