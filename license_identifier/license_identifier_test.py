@@ -80,8 +80,8 @@ field_names = ['input file name',
                    "Found license text"]
 
 def test_init():
-    assert 'test_license' in license_identifier._license_library.licenses.keys()
-    assert license_identifier._license_library.universe_n_grams.measure_similarity(n_gram_obj) > 0.5
+    assert 'test_license' in lcs_id_obj._get_license_library().licenses.keys()
+    assert lcs_id_obj._get_license_library().universe_n_grams.measure_similarity(n_gram_obj) > 0.5
 
 @patch('pickle.dump')
 @patch('pickle.load')
@@ -107,7 +107,7 @@ def test_init_pickle(mock_pickle_load, mock_pickle_dump):
     assert abspath(mock_pickle_load.call_args[0][0].name) \
         == abspath(test_pickle_file)
 
-    universe_ng = license_identifier._license_library.universe_n_grams
+    universe_ng = lcs_id_pickle_obj._get_license_library().universe_n_grams
     assert universe_ng.measure_similarity(universe_ng) == 1.0
 
 def test_write_csv_file():
@@ -148,6 +148,20 @@ def test_write_csv_file():
             lid_obj.write_csv_file(result_obj, output_path)
             handle = m()
             handle.writerow.assert_any_call(expected_res_string)
+
+def test_init_using_license_library_object():
+    # Make sure that two instances of LID can have license libraries
+    # that don't interfere with each other
+    path1 = join(BASE_DIR, 'data', 'test', 'near_tie', 'license')
+    lid1 = license_identifier.LicenseIdentifier(
+        license_library = prep.LicenseLibrary.from_path(path1))
+
+    path2 = join(BASE_DIR, 'data', 'test', 'license')
+    lid2 = license_identifier.LicenseIdentifier(
+        license_library = prep.LicenseLibrary.from_path(path2))
+
+    assert lid1._get_license_library().licenses.keys() == ['license1', 'license2']
+    assert lid2._get_license_library().licenses.keys() == ['test_license', 'custom_license']
 
 @patch('sys.stdout', new_callable=StringIO)
 def test_build_summary_list_str(mock_stdout):
@@ -224,7 +238,7 @@ def test_analyze_input_path():
     assert list_of_result_obj[5][1]["matched_license"] == ''
 
 def test_find_license_region():
-    lic = license_identifier._license_library.licenses['test_license']
+    lic = lcs_id_obj._get_license_library().licenses['test_license']
     src_fp = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
     src = prep.Source.from_filename(src_fp)
     test1_loc_result = lcs_id_obj.find_license_region(lic, src)
@@ -295,9 +309,6 @@ def test_default_pickle_path(mock_deserialize):
         == abspath(license_identifier.DEFAULT_PICKLED_LIBRARY_FILE)
 
 def test_analyze_file_near_ties():
-    # Note: as long as license_identifier uses a global _license_library
-    # as a multiprocessing workaround, this test should come after any other
-    # uses of lcs_id_obj.
     fp = join(BASE_DIR, 'data', 'test', 'near_tie', 'data', 'source')
     near_tie_license_dir = join(BASE_DIR, 'data', 'test', 'near_tie', 'license')
 

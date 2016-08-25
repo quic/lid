@@ -28,12 +28,12 @@ DEFAULT_PICKLED_LIBRARY_FILE = join(base_dir, 'data',
                                'license_n_gram_lib.pickle')
 DEFAULT_KEEP_FRACTION_OF_BEST = 0.9
 
-# Use a global license library, as a workaround to improve multiprocessing
-# performance.
+# Use a global "registry" of license libraries, as a workaround to improve
+# multiprocessing performance.
 # TODO: Find a better way to share the license library between workers
 #       (ideally avoiding global objects).
 # For ideas, see https://docs.python.org/2/library/multiprocessing.html#sharing-state-between-processes
-_license_library = None
+_license_library_registry = dict()
 
 # Set up a logger for this module
 _logger_name = "main" if __name__ == "__main__" else __name__
@@ -48,6 +48,7 @@ class LicenseIdentifier:
             input_path=None,
             output_format=None,
             output_path='',
+            license_library = None,
             license_dir = None,
             context_length = 0,
             location_strategy=None,
@@ -78,8 +79,10 @@ class LicenseIdentifier:
         else:
             self.output_path = None
 
-        # Use pickled library
-        if license_dir is None:
+        if license_library is not None:
+            self._init_using_library_object(license_library)
+        elif license_dir is None:
+            # Use pickled library
             if pickle_file_path is None:
                 pickle_file_path = DEFAULT_PICKLED_LIBRARY_FILE
             self._init_pickled_library(pickle_file_path)
@@ -103,19 +106,33 @@ class LicenseIdentifier:
     def output(self, result_obj):
         self.format_output(result_obj, self.output_format, output_path=self.output_path)
 
+    def _set_license_library(self, license_library):
+        global _license_library_registry
+        ref = id(license_library)
+        self.license_library_ref = ref
+        if ref not in _license_library_registry:
+            _license_library_registry[ref] = license_library
+
+    def _get_license_library(self):
+        return _license_library_registry[self.license_library_ref]
+
+    def _init_using_library_object(self, license_library):
+        _logger.info("Using given license library")
+        self._set_license_library(license_library)
+
     def _init_pickled_library(self, pickle_file_path):
-        global _license_library
         _logger.info("Loading license library from {}".format(pickle_file_path))
-        _license_library = prep.LicenseLibrary.deserialize(pickle_file_path)
+        license_library = prep.LicenseLibrary.deserialize(pickle_file_path)
+        self._set_license_library(license_library)
 
     def _init_using_lic_dir(self, license_dir):
-        global _license_library
         _logger.info("Loading license library from {}".format(license_dir))
-        _license_library = prep.LicenseLibrary.from_path(license_dir)
+        license_library = prep.LicenseLibrary.from_path(license_dir)
+        self._set_license_library(license_library)
 
     def _create_pickled_library(self, pickle_file):
         _logger.info("Saving license library to {}".format(pickle_file))
-        _license_library.serialize(pickle_file)
+        self._get_license_library().serialize(pickle_file)
 
     def format_output(self, result_obj, output_format, output_path):
         if output_format == 'csv':
@@ -174,7 +191,7 @@ class LicenseIdentifier:
         # Search for best matching region for each of the top candidates
         region_results = []
         for lic_name, orig_score in top_candidates.items():
-            lic = _license_library.licenses[lic_name]
+            lic = self._get_license_library().licenses[lic_name]
             result = self.find_license_region(lic, src)
             region_results.append((lic_name, orig_score, result))
 
@@ -280,11 +297,11 @@ class LicenseIdentifier:
     def get_top_candidates(self, src):
         # First, compute n-grams for all lines in the source file
         src_ng = ng.n_grams()
-        src_ng.parse_text_list_items(src.lines, universe_ng = _license_library.universe_n_grams)
+        src_ng.parse_text_list_items(src.lines, universe_ng = self._get_license_library().universe_n_grams)
 
         # Measure n-gram similarity relative to all licenses in the library
         similarity_dict = OrderedDict()
-        for license_name, lic in _license_library.licenses.items():
+        for license_name, lic in self._get_license_library().licenses.items():
             similarity_score = lic.n_grams.measure_similarity(src_ng)
             similarity_dict[license_name] = similarity_score
 
