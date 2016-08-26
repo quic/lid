@@ -214,17 +214,17 @@ def test_analyze_file():
     lcs_match, summary_obj = lcs_id_obj.analyze_file(input_fp=fp)
     assert summary_obj["matched_license"] == 'test_license'
     assert summary_obj["score"] == 1.0
-    assert summary_obj["found_region"] == "one two three four\n"
+    assert summary_obj["found_region"] == "one two three four\r\n"
 
     lcs_match, summary_obj = lcs_id_obj_origmatched.analyze_file(input_fp=fp)
-    assert summary_obj["original_region"] == "one two three four\n"
+    assert summary_obj["original_region"] == "one two three four\r\n"
 
     lcs_match, summary_obj = lcs_id_obj_context.analyze_file(input_fp=fp)
-    assert summary_obj["found_region"] == "zero\none two three four\nfive\n"
+    assert summary_obj["found_region"] == "zero\r\none two three four\r\nfive\r\n"
 
     lcs_match, summary_obj = lcs_id_obj_context_origmatched.analyze_file(input_fp=fp)
-    assert summary_obj["found_region"] == "zero\none two three four\nfive\nsix\nseven\n"
-    assert summary_obj["original_region"] == "one two three four\n"
+    assert summary_obj["found_region"] == "zero\r\none two three four\r\nfive\r\nsix\r\nseven\r\n"
+    assert summary_obj["original_region"] == "one two three four\r\n"
 
 def test_analyze_input_path():
     fp = join(BASE_DIR, 'data', 'test', 'data')
@@ -251,9 +251,8 @@ def test_postprocess_comments():
     result_obj = lcs_id_obj.analyze_input_path(input_path=fp)
     start_ind = result_obj[0][1]["start_line_ind"]
     end_ind = result_obj[0][1]["end_line_ind"]
-    list_of_src_str = lcs_id_obj.get_str_from_file(fp)
     postprocess_obj = lcs_id_obj.postprocess_strip_off_comments(result_obj)
-    assert postprocess_obj[0][1]["stripped_region"] == ''.join(list_of_src_str[start_ind:end_ind])
+    assert postprocess_obj[0][1]["stripped_region"] == 'one two three four\r\n'
     result_obj[0][1]["score"] = 0
     postprocess_obj = lcs_id_obj.postprocess_strip_off_comments(result_obj)
     assert postprocess_obj[0][1]["stripped_region"] == ''
@@ -267,14 +266,6 @@ def test_postprocess_comments():
     stripped_region_lines = postprocess_obj[0][1]["stripped_region"].splitlines()
     expected_lines = ['# one', '', '# two three', '', '# four']
     assert [line.strip() for line in stripped_region_lines] == expected_lines
-
-def test_get_str_from_file():
-    fp = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
-    list_of_str = lcs_id_obj.get_str_from_file(fp)
-    assert list_of_str == ['zero\n', 'one two three four\n', 'five\n', 'six\n', 'seven']
-    fp = "what"
-    with pytest.raises(IOError):
-        lcs_id_obj.get_str_from_file(fp)
 
 def test_truncate_column():
     data = ''.join(random.choice(string.lowercase) for x in range(40000))
