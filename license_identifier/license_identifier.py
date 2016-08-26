@@ -199,9 +199,9 @@ class LicenseIdentifier:
 
         length = best_region.end_offset - best_region.start_offset + 1
         found_region_lines = src.lines[best_region.start_line : best_region.end_line]
-        found_region = '\n'.join(found_region_lines) + '\n'
+        found_region = '\r\n'.join(found_region_lines) + '\r\n'
         original_region_lines = src.lines[best_region.start_line_orig : best_region.end_line_orig]
-        original_region = '\n'.join(original_region_lines) + '\n'
+        original_region = '\r\n'.join(original_region_lines) + '\r\n'
 
         lcs_match = license_match.LicenseMatch(
             file_name = input_fp,
@@ -233,15 +233,16 @@ class LicenseIdentifier:
             score = res[1]["score"]
             start_ind = res[1]["start_line_ind"]
             end_ind = res[1]["end_line_ind"]
-            list_of_src_str = self.get_str_from_file(input_fp)
+            src = prep.Source.from_filename(input_fp)
+            src_lines_crlf = [line + '\r\n' for line in src.lines]
             if matched_license and score >= self.threshold:
                 _, ext = splitext(input_fp)
                 lang = language.extension_to_lang_map.get(ext, None)
                 if lang:                    
                     stripped_file_lines = \
-                        list(comment_parser.parse_file(lang, list_of_src_str))
+                        list(comment_parser.parse_file(lang, src_lines_crlf))
                 else:
-                    stripped_file_lines = list_of_src_str
+                    stripped_file_lines = src_lines_crlf
                 stripped_region = ''.join(stripped_file_lines[start_ind:end_ind])
             else:
                 stripped_region = '' 
@@ -315,11 +316,6 @@ class LicenseIdentifier:
                 top_candidates[license_name] = score
         return top_candidates
 
-    def get_str_from_file(self, file_path):
-        fp = codecs.open(file_path, encoding='ascii', errors='surrogateescape')
-        list_of_str = fp.readlines()
-        fp.close()
-        return list_of_str
 
 def main(argv = []):
     aparse = argparse.ArgumentParser(
