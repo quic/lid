@@ -177,8 +177,7 @@ def test_forward_args_to_loc_id():
         location_similarity = "ngram",
         penalty_only_license = 3.0,
         penalty_only_source = 4.0)
-    with patch.object(location_identifier, 'Location_Finder') as m:
-        m.return_value.main_process.return_value = lr.LocationResult(0, 0, 0, 0, 0, 0, 0)
+    with patch.object(location_identifier, 'Location_Finder', wraps = location_identifier.Location_Finder) as m:
         lcs_match_obj = lid_obj.analyze_file(test_file_path)
         m.assert_called_with(
             context_lines = 0,
@@ -358,7 +357,6 @@ def test_analyze_file_multiple_licenses():
         license_library = lib,
         threshold = 0.001,
         location_similarity = "edit_weighted",
-        return_multiple = True,
         run_in_parellal = False)
 
     src = prep.Source.from_lines(

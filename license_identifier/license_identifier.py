@@ -58,7 +58,6 @@ class LicenseIdentifier:
             penalty_only_license=None,
             punct_weight=None,
             keep_fraction_of_best=DEFAULT_KEEP_FRACTION_OF_BEST,
-            return_multiple=False,
             pickle_file_path=None,
             run_in_parellal=True,
             original_matched_text_flag=False):
@@ -73,7 +72,6 @@ class LicenseIdentifier:
         self.penalty_only_source = penalty_only_source
         self.penalty_only_license = penalty_only_license
         self.punct_weight = punct_weight
-        self.return_multiple = return_multiple
         self.keep_fraction_of_best = self._check_keep_fraction_of_best(keep_fraction_of_best)
         self.original_matched_text_flag = original_matched_text_flag
 
@@ -225,16 +223,15 @@ class LicenseIdentifier:
 
         results = [(lcs_match, summary_obj)]
 
-        if self.return_multiple:
-            src_above = src.subset(0, src.relative_line_index(best_region.start_line))
-            src_below = src.subset(src.relative_line_index(best_region.end_line), len(src.lines))
+        src_above = src.subset(0, src.relative_line_index(best_region.start_line))
+        src_below = src.subset(src.relative_line_index(best_region.end_line), len(src.lines))
 
-            results_above = self.analyze_file(src_above)
-            results_below = self.analyze_file(src_below)
+        results_above = self.analyze_file(src_above)
+        results_below = self.analyze_file(src_below)
 
-            results.extend(results_above)
-            results.extend(results_below)
-            results.sort(key = lambda x: -x[1]["region_score"])
+        results.extend(results_above)
+        results.extend(results_below)
+        results.sort(key = lambda x: -x[1]["region_score"])
 
         return results
 
@@ -380,9 +377,6 @@ def main(argv = []):
         help="Show matched license text without context",
         action='store_true',
         default=False)
-    aparse.add_argument("--return_multiple",
-        help="Allow returning more than one license per match",
-        action="store_true")
     args = aparse.parse_args(argv)
 
     if args.input_path is not None and args.output_format is None:
@@ -406,7 +400,6 @@ def main(argv = []):
                                penalty_only_license=args.penalty_only_license,
                                punct_weight=args.punct_weight,
                                pickle_file_path=args.pickle_file_path,
-                               return_multiple=args.return_multiple,
                                keep_fraction_of_best=args.keep_fraction_of_best,
                                run_in_parellal=not args.single_thread,
                                original_matched_text_flag=args.matched_text_without_context)
