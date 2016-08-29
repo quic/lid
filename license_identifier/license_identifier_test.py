@@ -226,6 +226,13 @@ def test_analyze_file():
     assert summary_obj["found_region"] == "zero\r\none two three four\r\nfive\r\nsix\r\nseven\r\n"
     assert summary_obj["original_region"] == "one two three four\r\n"
 
+def test_analyze_file_source():
+    src = prep.Source.from_lines(["a", "one two three four", "b"])
+    lcs_match, summary_obj = lcs_id_obj.analyze_file(input_fp=src)
+    assert summary_obj["matched_license"] == 'test_license'
+    assert summary_obj["score"] == 1.0
+    assert summary_obj["found_region"] == "one two three four\r\n"
+
 def test_analyze_input_path():
     fp = join(BASE_DIR, 'data', 'test', 'data')
     list_of_result_obj = lcs_id_obj.analyze_input_path(input_path=fp)
