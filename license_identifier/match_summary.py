@@ -36,17 +36,17 @@ class MatchSummary(dict):
             + u"Start byte offset for the license text is {}.".format(self["start_offset"]) + linesep\
             + u"End byte offset for the license text is {}.".format(self["end_offset"]) +linesep\
             + u"The found license text has the score of {:.3}".format(self["region_score"]) + linesep\
-            + "The following text is found to be license text " + linesep\
+            + "The following text is found to be license text" + linesep\
             + "-----BEGIN-----" + linesep\
             + self["found_region"] \
             + "-----END-----" + linesep + linesep
         if self.has_key("original_region"):
             output_str = output_str[:-1] \
-                         + "The following text is found to be original matched license text \
-                         without context " + linesep\
-                         + "-----BEGIN-----" + linesep\
-                         + self["original_region"] \
-                         + "-----END-----" + linesep + linesep
+                + "The following text is found to be " \
+                + "original matched license text without context" + linesep \
+                + "-----BEGIN-----" + linesep \
+                + self["original_region"] \
+                + "-----END-----" + linesep + linesep
         return output_str
 
     def to_csv_row(self):

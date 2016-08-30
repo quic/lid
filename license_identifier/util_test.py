@@ -37,6 +37,10 @@ def test_get_lines_and_line_offsets():
     assert lines == ["a b c", "d e", "f", "g h i j"]
     assert offsets == [0, 6, 10, 12, 20]
 
+    lines, offsets = util.get_lines_and_line_offsets(["a b c\r\n", "d e\r\n", "f\r\n", "g h i j\r\n"])
+    assert lines == ["a b c", "d e", "f", "g h i j"]
+    assert offsets == [0, 7, 12, 15, 24]
+
 def test_get_user_date_time_str():
     assert len(util.get_user_date_time_str()) > 15
 

@@ -18,16 +18,8 @@ def detect_file_encoding(file_name):
 
 def read_lines_offsets(file_name):
     encoding = detect_file_encoding(file_name)
-    fp = codecs.open(file_name, 'r', encoding=encoding)
-    lines =[]
-    line_offsets=[0]
-    while True:
-        line = fp.readline()
-        if not line:
-            break
-        line_offsets.append(line_offsets[-1] + len(line))
-        line = line.rstrip('\n')
-        lines.append(line)
+    with codecs.open(file_name, 'r', encoding=encoding) as fp:
+        lines, line_offsets = get_lines_and_line_offsets(iter(fp))
     return lines, line_offsets
 
 
@@ -36,7 +28,7 @@ def get_lines_and_line_offsets(lines):
     line_offsets = [0]
     for line in lines:
         line_offsets.append(line_offsets[-1] + len(line))
-        lines_stripped.append(line.rstrip('\n'))
+        lines_stripped.append(line.rstrip('\r\n'))
     return lines_stripped, line_offsets
 
 
