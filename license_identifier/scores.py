@@ -47,6 +47,15 @@ class EditWeightedSimilarity(Similarity, namedtuple("EditWeightedSimilarity",
     
         diff_chunks = []
 
+        ignored_strings_src = src.get_ignored_strings()
+        ignored_strings_lic = lic.get_ignored_strings()
+
+        result = dict()
+
+        if extras:
+            result["init_ignored_src"] = ignored_strings_src.next()
+            result["init_ignored_lic"] = ignored_strings_lic.next()
+
         total_counts = Counter()
         for op, ts1, te1, ts2, te2 in matcher.get_opcodes():
             num_tokens_src = te1 - ts1
@@ -70,12 +79,12 @@ class EditWeightedSimilarity(Similarity, namedtuple("EditWeightedSimilarity",
 
             if extras:
                 ignored_src = []
-                for token_index in range(ts1, te1 + 1):
-                    ignored_src.append(src._get_ignored_text_before_token(token_index))
+                for token_index in range(ts1, te1):
+                    ignored_src.append(ignored_strings_src.next())
 
                 ignored_lic = []
-                for token_index in range(ts2, te2 + 1):
-                    ignored_lic.append(lic._get_ignored_text_before_token(token_index))
+                for token_index in range(ts2, te2):
+                    ignored_lic.append(ignored_strings_lic.next())
 
                 diff_chunks.append({
                     "op": op,
@@ -98,9 +107,7 @@ class EditWeightedSimilarity(Similarity, namedtuple("EditWeightedSimilarity",
         else:
             similarity = unchanged / denom
 
-        result = {
-            "score": similarity,
-        }
+        result["score"] = similarity
 
         if extras:
             result["penalty_only_source"] = self.penalty_only_source

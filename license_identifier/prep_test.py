@@ -24,12 +24,8 @@ def test_prep_license():
     lic = prep.License.from_filename(path)
     assert len(lic.lines) == 1
 
-    lic = prep.License.from_lines(["  ab  cd  ", "", "   ef   "])
-    assert len(lic.lines) == 3
-    assert lic._locate_token(1) == (0, 6, 8)
-
     lic = prep.License.from_lines(["  ab c,d.  ", "\t", "   ef   "])
-    assert lic._get_ignored_text_before_token(5) == "  \n\t\n   "
+    assert list(lic.get_ignored_strings()) == ["  ", " ", "", "", "", "  \n\t\n   ", "   \n"]
 
 def test_prep_source():
     path = os.path.join(BASE_DIR, "data", "test", "data", "test1.py")
@@ -48,40 +44,24 @@ def test_prep_source():
     assert src_subset_3.lines == ["seven"]
     assert src_subset_3.original_line_offset == 4
 
-def test_source_locate_token():
+def test_source_tokens_by_line():
     src = prep.Source.from_lines(["  ab  cd  ", "", "   ef   "])
     assert src.tokens_by_line == [["ab", "cd"], [], ["ef"]]
     assert src.token_positions_by_line == [[(2,4), (6,8)], [], [(3,5)]]
-    assert src._locate_token(0) == (0, 2, 4)
-    assert src._locate_token(1) == (0, 6, 8)
-    assert src._locate_token(2) == (2, 3, 5)
 
-    with pytest.raises(ValueError):
-        src._locate_token(-1)
-    with pytest.raises(ValueError):
-        src._locate_token(3)
-
-def test_source_get_ignored_text_before_token():
-    src = prep.Source.from_lines(["  ab c,d.  ", "\t", "   ef   "])
-    assert src.tokens_by_line == [["ab", "c", ",", "d", "."], [], ["ef"]]
-    assert src._get_ignored_text_before_token(0) == "  "
-    assert src._get_ignored_text_before_token(1) == " "
-    assert src._get_ignored_text_before_token(2) == ""
-    assert src._get_ignored_text_before_token(3) == ""
-    assert src._get_ignored_text_before_token(4) == ""
-    assert src._get_ignored_text_before_token(5) == "  \n\t\n   "
-    assert src._get_ignored_text_before_token(6) == "   \n"
-
-    with pytest.raises(ValueError):
-        src._get_ignored_text_before_token(-1)
-    with pytest.raises(ValueError):
-        src._get_ignored_text_before_token(7)
-
+def test_source_get_ignored_strings():
     src = prep.Source.from_lines([])
-    assert src._get_ignored_text_before_token(0) == "\n"
+    assert src.tokens_by_line == []
+    assert list(src.get_ignored_strings()) == [""]
 
     src = prep.Source.from_lines(["   ", "  ", " "])
-    assert src._get_ignored_text_before_token(0) == "   \n  \n \n"
+    assert src.tokens_by_line == [[], [], []]
+    assert list(src.get_ignored_strings()) == ["   \n  \n \n"]
+
+    src = prep.Source.from_lines(["  ab c,d.  ", "\t", "   ef   "])
+    assert src.tokens_by_line == [["ab", "c", ",", "d", "."], [], ["ef"]]
+    expected = ["  ", " ", "", "", "", "  \n\t\n   ", "   \n"]
+    assert list(src.get_ignored_strings()) == expected
 
 def test_license_library():
     license_dir = os.path.join(BASE_DIR, "data", "test", "license")
