@@ -57,8 +57,8 @@ def main(argv = []):
         strategy = args.strategy,
         verbosity = args.verbosity)
 
-    lic = prep.License.from_filename(args.license_file)
-    src = prep.Source.from_filename(args.input_src_file)
+    lic = prep.License.from_filepath(args.license_file)
+    src = prep.Source.from_filepath(args.input_src_file)
 
     print(loc_obj.main_process(lic, src))
 
@@ -135,6 +135,12 @@ class Location_Finder(object):
         start_line, end_line, start_offset, end_offset = \
             self.determine_offsets(start_line, end_line,
             src.lines, src.offsets_by_line)
+
+        # Adjust line indices if we're dealing with a subset of the source
+        start_line_orig += src.original_line_offset
+        end_line_orig += src.original_line_offset
+        start_line += src.original_line_offset
+        end_line += src.original_line_offset
 
         return lr.LocationResult(
             start_line = start_line,

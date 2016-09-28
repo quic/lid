@@ -21,7 +21,7 @@ def test_tokens_and_positions_by_line():
 
 def test_prep_license():
     path = os.path.join(BASE_DIR, "data", "test", "license", "test_license.txt")
-    lic = prep.License.from_filename(path)
+    lic = prep.License.from_filepath(path)
     assert len(lic.lines) == 1
 
     lic = prep.License.from_lines(["  ab c,d.  ", "\t", "   ef   "])
@@ -29,7 +29,7 @@ def test_prep_license():
 
 def test_prep_source():
     path = os.path.join(BASE_DIR, "data", "test", "data", "test1.py")
-    src = prep.Source.from_filename(path)
+    src = prep.Source.from_filepath(path)
     assert src.lines == ["zero", "one two three four", "five", "six", "seven"]
 
     src_subset_1 = src.subset(0, 2)
@@ -63,7 +63,32 @@ def test_source_get_ignored_strings():
     expected = ["  ", " ", "", "", "", "  \n\t\n   ", "   \n"]
     assert list(src.get_ignored_strings()) == expected
 
+def test_source_original_indexing():
+    src1 = prep.Source.from_lines([str(i) for i in range(100)])
+    assert len(src1.lines) == 100
+
+    src2 = src1.subset(40, 60)
+    assert len(src2.lines) == 20
+
+    assert src1.get_lines_original_indexing(42, 45) == ["42", "43", "44"]
+    assert src2.get_lines_original_indexing(42, 45) == ["42", "43", "44"]
+
+    assert src1.relative_line_index(42) == 42
+    assert src2.relative_line_index(42) == 2
+
 def test_license_library():
     license_dir = os.path.join(BASE_DIR, "data", "test", "license")
     license_library = prep.LicenseLibrary.from_path(license_dir)
     assert set(["test_license", "custom_license"]) == set(license_library.licenses.keys())
+
+def test_license_library_from_list():
+    licenses = [
+        prep.License.from_lines(["a"], name = "L1"),
+        prep.License.from_lines(["b"], name = "L2"),
+        prep.License.from_lines(["c"], name = "L3"),
+    ]
+    license_library = prep.LicenseLibrary.from_licenses(licenses)
+    assert license_library.licenses.keys() == ["L1", "L2", "L3"]
+    assert license_library.licenses["L1"].lines == ["a"]
+    assert license_library.licenses["L2"].lines == ["b"]
+    assert license_library.licenses["L3"].lines == ["c"]
