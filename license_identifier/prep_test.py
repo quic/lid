@@ -21,7 +21,7 @@ def test_tokens_and_positions_by_line():
 
 def test_prep_license():
     path = os.path.join(BASE_DIR, "data", "test", "license", "test_license.txt")
-    lic = prep.License.from_filename(path)
+    lic = prep.License.from_filepath(path)
     assert len(lic.lines) == 1
 
     lic = prep.License.from_lines(["  ab c,d.  ", "\t", "   ef   "])
@@ -29,7 +29,7 @@ def test_prep_license():
 
 def test_prep_source():
     path = os.path.join(BASE_DIR, "data", "test", "data", "test1.py")
-    src = prep.Source.from_filename(path)
+    src = prep.Source.from_filepath(path)
     assert src.lines == ["zero", "one two three four", "five", "six", "seven"]
 
     src_subset_1 = src.subset(0, 2)

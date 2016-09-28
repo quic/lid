@@ -24,8 +24,8 @@ def test_main_process_default():
     loc_id_obj = loc_id.Location_Finder()
     assert loc_id_obj.strategy == "one_line_then_expand"
     assert loc_id_obj.similarity == "edit_weighted"
-    lic = prep.License.from_filename(lcs_file)
-    src = prep.Source.from_filename(input_file)
+    lic = prep.License.from_filepath(lcs_file)
+    src = prep.Source.from_filepath(input_file)
     loc_result = loc_id_obj.main_process(lic, src)
     assert loc_result==(1, 2, 5, 24, 1.0, 1, 2)
 
@@ -37,8 +37,8 @@ def test_main_process_ngram():
     lcs_file = join(get_license_dir(), 'test_license.txt')
     input_file = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
     loc_id_obj = loc_id.Location_Finder(similarity = "ngram")
-    lic = prep.License.from_filename(lcs_file)
-    src = prep.Source.from_filename(input_file)
+    lic = prep.License.from_filepath(lcs_file)
+    src = prep.Source.from_filepath(input_file)
     loc_result = loc_id_obj.main_process(lic, src)
     assert loc_result==(1, 2, 5, 24, 1.0, 1, 2)
 
@@ -50,8 +50,8 @@ def test_main_process_exhaustive():
     lcs_file = join(get_license_dir(), 'test_license.txt')
     input_file = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
     loc_id_obj = loc_id.Location_Finder(strategy = "exhaustive", similarity = "edit_weighted")
-    lic = prep.License.from_filename(lcs_file)
-    src = prep.Source.from_filename(input_file)
+    lic = prep.License.from_filepath(lcs_file)
+    src = prep.Source.from_filepath(input_file)
     loc_result = loc_id_obj.main_process(lic, src)
     assert loc_result==(1, 2, 5, 24, 1.0, 1, 2)
 
@@ -63,8 +63,8 @@ def test_main_process_full_text_only():
     lcs_file = join(get_license_dir(), 'test_license.txt')
     input_file = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
     loc_id_obj = loc_id.Location_Finder(strategy = "full_text_only", similarity = "edit_weighted")
-    lic = prep.License.from_filename(lcs_file)
-    src = prep.Source.from_filename(input_file)
+    lic = prep.License.from_filepath(lcs_file)
+    src = prep.Source.from_filepath(input_file)
     loc_result = loc_id_obj.main_process(lic, src)
     assert loc_result==(0, 5, 0, 38, 0.5, 0, 5)
 

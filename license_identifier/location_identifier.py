@@ -57,8 +57,8 @@ def main(argv = []):
         strategy = args.strategy,
         verbosity = args.verbosity)
 
-    lic = prep.License.from_filename(args.license_file)
-    src = prep.Source.from_filename(args.input_src_file)
+    lic = prep.License.from_filepath(args.license_file)
+    src = prep.Source.from_filepath(args.input_src_file)
 
     print(loc_obj.main_process(lic, src))
 
