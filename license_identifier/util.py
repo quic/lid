@@ -18,7 +18,7 @@ def detect_file_encoding(file_name):
 
 def read_lines_offsets(file_name):
     encoding = detect_file_encoding(file_name)
-    with codecs.open(file_name, 'r', encoding=encoding) as fp:
+    with codecs.open(file_name, 'r', encoding=encoding, errors='replace') as fp:
         lines, line_offsets = get_lines_and_line_offsets(iter(fp))
     return lines, line_offsets
 
