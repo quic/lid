@@ -1,9 +1,11 @@
-from collections import Counter, defaultdict
 import six
+from collections import Counter
 
 from . import util
 
+
 class n_grams(object):
+
     def __init__(self, text=None):
         self.unigram_count = Counter()
         self.bigram_count = Counter()
@@ -19,9 +21,9 @@ class n_grams(object):
         return 'n_grams'
 
     def parse_text_list_items(self, list_text_line, universe_ng=None):
-        prev2_word =""
-        prev_word = ""
-        curr_word = ""
+        prev2_word = ''
+        prev_word = ''
+        curr_word = ''
 
         for line in list_text_line:
             words = line.split()
@@ -31,21 +33,21 @@ class n_grams(object):
                 prev2_word = prev_word
                 prev_word = curr_word
                 curr_word = word
-                if universe_ng == None:
+                if universe_ng is None:
                     self.insert_ngrams(curr_word, prev_word, prev2_word)
                 else:
-                    self.insert_ng_within_universe( \
-                        curr_word, prev_word, prev2_word, universe_ng)
+                    self.insert_ng_within_universe(curr_word, prev_word,
+                                                   prev2_word, universe_ng)
 
     def parse_text_str(self, text_str, universe_ng=None):
         self.parse_text_list_items(text_str.split(), universe_ng)
 
     def insert_ngrams(self, first, second, third):
-        if len(first) >0:
+        if len(first) > 0:
             self.unigram_count[first] += 1
-        if len(second)>0:
-            self.bigram_count [first, second]  += 1
-        if len(third)>0:
+        if len(second) > 0:
+            self.bigram_count[first, second] += 1
+        if len(third) > 0:
             self.trigram_count[first, second, third] += 1
 
     def insert_ng_within_universe(self, first, second, third, universe_ng):
@@ -71,18 +73,21 @@ class n_grams(object):
         bi_union = other_n_grams.bigram_count | self.bigram_count
         tri_union = other_n_grams.trigram_count | self.trigram_count
 
-        if (sum(uni_union.values()) > 0):
-            uni_score = (1.0*sum(uni_intersect.values())) / sum(uni_union.values())
+        if sum(uni_union.values()) > 0:
+            uni_score = \
+                float(sum(uni_intersect.values())) / sum(uni_union.values())
         else:
             uni_score = 0.0
 
-        if (sum(bi_union.values()) > 0):
-            bi_score = (1.0* sum(bi_intersect.values())) / sum(bi_union.values())
+        if sum(bi_union.values()) > 0:
+            bi_score = \
+                float(sum(bi_intersect.values())) / sum(bi_union.values())
         else:
             bi_score = 0.0
-        if (sum(tri_union.values()) > 0):
-            tri_score = (1.0*sum(tri_intersect.values())) / sum(tri_union.values())
+        if sum(tri_union.values()) > 0:
+            tri_score = \
+                float(sum(tri_intersect.values())) / sum(tri_union.values())
         else:
             tri_score = 0.0
 
-        return (uni_score + bi_score*6.0 + tri_score*8.0 )/15.0
+        return (uni_score + (bi_score * 6.0) + (tri_score * 8.0)) / 15.0

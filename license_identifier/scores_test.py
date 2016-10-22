@@ -1,24 +1,25 @@
-from . import scores
-from . import prep
 from . import n_grams as ng
+from . import prep
+from . import scores
 
 
 def test_ngram_similarity():
     universe_ng = ng.n_grams("a b c d")
-    scorer = scores.NgramSimilarity(
-        universe_n_grams = universe_ng)
+    scorer = scores.NgramSimilarity(universe_n_grams=universe_ng)
 
     assert scorer.score(mklic(["a b c d"]), mksrc(["a b c d"])) == 1.0
-    assert scorer.score(mklic(["a b c d"]), mksrc(["a b c"])) == (3/4. + 2/3. * 6.0 + 1/2. * 8.0) / 15.0
+    assert scorer.score(mklic(["a b c d"]), mksrc(["a b c"])) == \
+        (3/4. + 2/3. * 6.0 + 1/2. * 8.0) / 15.0
     assert scorer.score(mklic(["a b c d"]), mksrc(["a"])) == 1/60.
     assert scorer.score(mklic(["a b c d"]), mksrc(["a x y"])) == 1/60.
-    assert scorer.score(mklic(["a b c d"]), mksrc(["a b c x y"])) == (3/4. + 2/3. * 6.0 + 1/2. * 8.0) / 15.0
+    assert scorer.score(mklic(["a b c d"]), mksrc(["a b c x y"])) == \
+        (3/4. + 2/3. * 6.0 + 1/2. * 8.0) / 15.0
+
 
 def test_edit_weighted_similarity():
-    scorer = scores.EditWeightedSimilarity(
-        penalty_only_source = 2.0,
-        penalty_only_license = 3.0,
-        punct_weight = 0.5)
+    scorer = scores.EditWeightedSimilarity(penalty_only_source=2.0,
+                                           penalty_only_license=3.0,
+                                           punct_weight=0.5)
 
     assert scorer.penalty_only_source == 2.0
     assert scorer.penalty_only_license == 3.0
@@ -35,20 +36,22 @@ def test_edit_weighted_similarity():
     assert scorer.score(mklic(["a c"]), mksrc(["a ."])) == 1/5.
     assert scorer.score(mklic(["a c"]), mksrc(["a"])) == 1/4.
 
-    result = scorer.score_and_rationale(mklic(["a c"]), mksrc(["a"]), extras = False)
+    result = scorer.score_and_rationale(mklic(["a c"]), mksrc(["a"]),
+                                        extras=False)
     assert "score" in result.keys()
     assert "diff_chunks" not in result.keys()
 
+
 def test_edit_weighted_similarity_rationale():
     scorer = scores.EditWeightedSimilarity(
-        penalty_only_source = 2.0,
-        penalty_only_license = 3.0,
-        punct_weight = 0.5)
+        penalty_only_source=2.0,
+        penalty_only_license=3.0,
+        punct_weight=0.5)
 
     result = scorer.score_and_rationale(
-        lic = mklic(["a x\t", "b c d e f g"]),
-        src = mksrc([" a  ", "b c m", "n g x x"]),
-        extras = True)
+        lic=mklic(["a x\t", "b c d e f g"]),
+        src=mksrc([" a  ", "b c m", "n g x x"]),
+        extras=True)
     assert set(["score", "diff_chunks"]).issubset(set(result.keys()))
 
     assert result["init_ignored_src"] == " "
@@ -93,8 +96,10 @@ def test_edit_weighted_similarity_rationale():
     assert chunks[5]["ignored_src"] == [" ", "\n"]
     assert chunks[5]["ignored_lic"] == []
 
+
 def mklic(lines):
     return prep.License.from_lines(lines)
+
 
 def mksrc(lines):
     return prep.Source.from_lines(lines)
