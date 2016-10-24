@@ -82,9 +82,9 @@ field_names = ['input file name',
 
 
 def test_init():
-    assert 'test_license' in lcs_id_obj._license_library.licenses.keys()
+    assert 'test_license' in lcs_id_obj.license_library.licenses.keys()
     assert lcs_id_obj.\
-        _license_library.universe_n_grams.measure_similarity(n_gram_obj) > 0.5
+        license_library.universe_n_grams.measure_similarity(n_gram_obj) > 0.5
 
 
 @patch('pickle.dump')
@@ -110,7 +110,7 @@ def test_init_pickle(mock_pickle_load, mock_pickle_dump):
     assert abspath(mock_pickle_load.call_args[0][0].name) == \
         abspath(test_pickle_file)
 
-    universe_ng = lcs_id_pickle_obj._get_license_library().universe_n_grams
+    universe_ng = lcs_id_pickle_obj.license_library.universe_n_grams
     assert universe_ng.measure_similarity(universe_ng) == 1.0
 
 
@@ -166,9 +166,9 @@ def test_init_using_license_library_object():
     lid2 = license_identifier.LicenseIdentifier(
         license_library=prep.LicenseLibrary.from_path(path2))
 
-    assert lid1._license_library.licenses.keys() == ['license1', 'license2']
-    assert lid2._license_library.licenses.keys() == ['test_license',
-                                                     'custom_license']
+    assert lid1.license_library.licenses.keys() == ['license1', 'license2']
+    assert lid2.license_library.licenses.keys() == ['test_license',
+                                                    'custom_license']
 
 
 @patch('sys.stdout', new_callable=StringIO)
@@ -305,7 +305,7 @@ def test_analyze_input_path():
 
 
 def test_find_license_region():
-    lic = lcs_id_obj._get_license_library().licenses['test_license']
+    lic = lcs_id_obj.license_library.licenses['test_license']
     src_fp = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
     src = prep.Source.from_filepath(src_fp)
     test1_loc_result = lcs_id_obj.find_license_region(lic, src)

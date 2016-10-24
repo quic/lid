@@ -106,9 +106,6 @@ class LicenseIdentifier:
         if ref not in _license_library_registry:
             _license_library_registry[ref] = license_library
 
-    def _get_license_library(self):
-        return _license_library_registry[self.license_library_ref]
-
     def _init_using_library_object(self, license_library):
         _logger.info("Using given license library")
         self._set_license_library(license_library)
@@ -126,7 +123,15 @@ class LicenseIdentifier:
 
     def _create_pickled_library(self, pickle_file):
         _logger.info("Saving license library to {}".format(pickle_file))
-        self._get_license_library().serialize(pickle_file)
+        self.license_library.serialize(pickle_file)
+
+    def _get_license_library(self):
+        """Deprecated - remove once Andrew's app no longer depends on it."""
+        return self.license_library
+
+    @property
+    def license_library(self):
+        return _license_library_registry[self.license_library_ref]
 
     def analyze(self):
         if self.input_path is not None:
@@ -181,8 +186,8 @@ class LicenseIdentifier:
 
         # Search for best matching region for each of the top candidates
         region_results = []
-            lic = self._get_license_library().licenses[lic_name]
         for license_name, original_score in top_candidates.iteritems():
+            license = self.license_library.licenses[license_name]
             result = self.find_license_region(license, source)
             region_results.append((license_name, original_score, result))
 
@@ -268,11 +273,11 @@ class LicenseIdentifier:
         src_ng = n_grams.NGrams()
         src_ng.parse_text_list_items(
             source.lines,
-            universe_ng=self._license_library.universe_n_grams)
+            universe_ng=self.license_library.universe_n_grams)
 
         # Measure n-gram similarity relative to all licenses in the library
         similarities = OrderedDict()
-        for license_name, lic in self._get_license_library().licenses.iteritems():
+        for license_name, lic in self.license_library.licenses.iteritems():
             similarity_score = lic.n_grams.measure_similarity(src_ng)
             similarities[license_name] = similarity_score
 
