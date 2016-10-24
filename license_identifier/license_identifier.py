@@ -239,35 +239,6 @@ class LicenseIdentifier:
 
         return results
 
-    def postprocess_strip_off_code(self, result_dict):
-        for filename, results in result_dict.items():
-            for res in results:
-                summary = res[1]
-                input_fp = summary["input_fp"]
-                matched_license = summary["matched_license"]
-                score = summary["score"]
-                start_ind = summary["start_line_ind"]
-                end_ind = summary["end_line_ind"]
-                src = prep.Source.from_filepath(input_fp)
-                src_lines_crlf = [line + '\r\n' for line in src.lines]
-                if matched_license and score >= self.threshold:
-                    _, ext = splitext(input_fp)
-                    lang = language.extension_to_lang_map.get(ext, None)
-                    if lang:
-                        stripped_file_lines = list(
-                            comment_parser.parse_file(lang, src_lines_crlf))
-                    else:
-                        stripped_file_lines = src_lines_crlf
-
-                    stripped_region = ''.join(
-                        stripped_file_lines[start_ind:end_ind])
-                else:
-                    stripped_region = ''
-
-                summary["stripped_region"] = stripped_region
-
-        return result_dict
-
     def get_top_candidates(self, source):
         # First, compute n-grams for all lines in the source file
         src_ng = n_grams.NGrams()
@@ -320,6 +291,55 @@ class LicenseIdentifier:
             start_byte=best_region.start_offset,
             length=best_region.end_offset - best_region.start_offset + 1
         )
+
+    def postprocess_strip_off_code(self, results):
+        return PostProcessor(self.threshold).strip_off_code(results)
+
+
+class PostProcessor(object):
+
+    def __init__(self, threshold):
+        self._threshold = threshold
+
+    def strip_off_code(self, results):
+        for filename, file_results in results.iteritems():
+            for __, summary in file_results:
+                summary['stripped_region'] = self._strip_region(summary)
+
+        return results
+
+    def _strip_region(self, summary):
+        if summary['matched_license'] and summary['score'] >= self._threshold:
+            stripped_file_lines = self._strip_file_lines(summary)
+            start, end = summary['start_line_ind'], summary['end_line_ind']
+
+            stripped_region = ''.join(stripped_file_lines[start:end])
+        else:
+            stripped_region = ''
+
+        return stripped_region
+
+    def _strip_file_lines(self, summary):
+        lang = self._get_language(summary['input_fp'])
+        src_lines_crlf = self._src_lines_crlf(summary['input_fp'])
+
+        if lang:
+            stripped_file_lines = list(
+                comment_parser.parse_file(lang, src_lines_crlf))
+        else:
+            stripped_file_lines = src_lines_crlf
+
+        return stripped_file_lines
+
+    def _get_language(self, input_filepath):
+        __, ext = splitext(input_filepath)
+
+        return comment_parser.language.extension_to_lang_map.get(ext, None)
+
+    def _src_lines_crlf(self, input_filepath):
+        src = prep.Source.from_filepath(input_filepath)
+
+        return [line + '\r\n' for line in src.lines]
 
 
 def main(argv):
