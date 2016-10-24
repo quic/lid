@@ -39,7 +39,7 @@ pip install git+https://github.qualcomm.com/qosp/license_identifier.git
 
 At this point, you can test the installation by running, for example:
 ```
-python -m license_identifier.license_identifier -I path/to/source/files
+license-identifier -I path/to/source/files
 ```
 
 Note for the developers who want to integrate this module into their code:
@@ -84,7 +84,7 @@ Usage
 ===
 
 ```
-usage: python -m license_identifier.license_identifier -I '/your/input/file/dir_or_file' -F 'easy_read'
+usage: license-identifier -I '/your/input/file/dir_or_file' -F 'easy_read'
 
 optional arguments:
 -T, --threshold     Set the threshold for similarity measure (ranging from 0 to 1, default value is 0.04)
@@ -98,16 +98,16 @@ optional arguments:
 There are four main modes:
 ```
 # 1. Use the default pickled license library file (recommended)
-python -m license_identifier.license_identifier -I /path/to/source/code
+license-identifier -I /path/to/source/code
 
 # 2. Use a particular pickled license library file
-python -m license_identifier.license_identifier -P /path/to/pickled_licenses -I /path/to/source_code
+license-identifier -P /path/to/pickled_licenses -I /path/to/source_code
 
 # 3. Use a license directory without building a pickled file
-python -m license_identifier.license_identifier -L /path/to/license_directory -I /path/to/source_code
+license-identifier -L /path/to/license_directory -I /path/to/source_code
 
 # 4. Build a pickled file from the specified license directory
-python -m license_identifier.license_identifier -L /path/to/license_directory -P /path/to/output_pickled_licenses
+license-identifier -L /path/to/license_directory -P /path/to/output_pickled_licenses
 ```
 
 ## Adding Licenses

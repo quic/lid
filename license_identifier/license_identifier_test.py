@@ -8,6 +8,7 @@ import six
 from StringIO import StringIO
 from mock import Mock, mock_open, patch
 
+from . import cli
 from . import license_identifier
 from . import license_match as l_match
 from . import location_identifier
@@ -124,13 +125,12 @@ def test_write_csv_file():
     mock_open_name = '{}.open'.format(six.moves.builtins.__name__)
     with patch(mock_open_name, mock_open()):
         with patch('csv.writer', Mock(spec=csv.writer)) as m:
-            license_identifier._output_results(result_dict, 'csv', output_path,
-                                               False)
+            cli._output_results(result_dict, 'csv', output_path, False)
             handle = m()
             handle.writerow.assert_any_call(field_names)
 
             m.reset_mock()
-            license_identifier._write_csv_file(result_dict, output_path, False)
+            cli._write_csv_file(result_dict, output_path, False)
             handle = m()
             handle.writerow.assert_any_call(field_names)
 
@@ -150,7 +150,7 @@ def test_write_csv_file():
             expected_res_string = ['data/test/data/test1.py', 'test_license',
                                    '1.0', '0', '5', '0', '40', '1.0',
                                    " +zero\none two three four\n"]
-            license_identifier._write_csv_file(result_dict, output_path, False)
+            cli._write_csv_file(result_dict, output_path, False)
             handle = m()
             handle.writerow.assert_any_call(expected_res_string)
 
@@ -173,7 +173,7 @@ def test_init_using_license_library_object():
 
 @patch('sys.stdout', new_callable=StringIO)
 def test_build_summary_list_str(mock_stdout):
-    license_identifier._display_easy_read(result_dict)
+    cli._display_easy_read(result_dict)
     assert mock_stdout.getvalue().find('Summary of the analysis') >= 0
 
 
@@ -345,11 +345,6 @@ def test_truncate_column():
     assert len(match_summary.truncate_column(data)) == \
         match_summary.COLUMN_LIMIT
     assert match_summary.truncate_column(3.0) == 3.0
-
-
-def test_main():
-    arg_string = "-I {} -L {}".format(input_dir, license_dir)
-    license_identifier.main(arg_string.split())
 
 
 @patch('pickle.dump')

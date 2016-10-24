@@ -35,6 +35,11 @@ setup(
     author_email='phshin@qti.qualcomm.com',
     url='https://www.python.org/sigs/distutils-sig/',
     packages=['license_identifier'],
+    entry_points={
+        'console_scripts': [
+            'license-identifier = license_identifier.cli:main',
+        ],
+    },
     install_requires=[
         "comment-parser==0.2.5",
         # Note: Using a pinned version of comment_parser for disambiguation
