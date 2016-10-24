@@ -39,14 +39,12 @@ lcs_id_obj = license_identifier.LicenseIdentifier(
     license_dir=license_dir,
     threshold=threshold,
     input_path=input_dir,
-    output_format='easy_read',
     run_in_parallel=False
 )
 lcs_id_obj_context = license_identifier.LicenseIdentifier(
     license_dir=license_dir,
     threshold=threshold,
     input_path=input_dir,
-    output_format='easy_read',
     context_length=1,
     run_in_parallel=False
 )
@@ -54,7 +52,6 @@ lcs_id_obj_origmatched = license_identifier.LicenseIdentifier(
     license_dir=license_dir,
     threshold=threshold,
     input_path=input_dir,
-    output_format='easy_read',
     run_in_parallel=False,
     original_matched_text_flag=True
 )
@@ -62,7 +59,6 @@ lcs_id_obj_context_origmatched = license_identifier.LicenseIdentifier(
     license_dir=license_dir,
     threshold=threshold,
     input_path=input_dir,
-    output_format='easy_read',
     context_length=5,
     run_in_parallel=False,
     original_matched_text_flag=True
@@ -108,8 +104,7 @@ def test_init_pickle(mock_pickle_load, mock_pickle_dump):
     lcs_id_pickle_obj = license_identifier.LicenseIdentifier(
         threshold=threshold,
         input_path=input_dir,
-        pickle_file_path=test_pickle_file,
-        output_format='easy_read')
+        pickle_file_path=test_pickle_file)
 
     assert mock_pickle_load.call_count == 1
     assert abspath(mock_pickle_load.call_args[0][0].name) == \
@@ -122,21 +117,20 @@ def test_init_pickle(mock_pickle_load, mock_pickle_dump):
 def test_write_csv_file():
     lid = license_identifier.LicenseIdentifier(license_dir=license_dir,
                                                threshold=threshold,
-                                               input_path=input_dir,
-                                               output_format='csv',
-                                               output_path=output_path)
+                                               input_path=input_dir)
 
     result_dict = lid.analyze_input_path(input_path=input_dir)
 
     mock_open_name = '{}.open'.format(six.moves.builtins.__name__)
     with patch(mock_open_name, mock_open()):
         with patch('csv.writer', Mock(spec=csv.writer)) as m:
-            lid_obj.output(result_dict)
+            license_identifier._output_results(result_dict, 'csv', output_path,
+                                               False)
             handle = m()
             handle.writerow.assert_any_call(field_names)
 
             m.reset_mock()
-            lid_obj.write_csv_file(result_dict, output_path)
+            license_identifier._write_csv_file(result_dict, output_path, False)
             handle = m()
             handle.writerow.assert_any_call(field_names)
 
@@ -179,7 +173,7 @@ def test_init_using_license_library_object():
 
 @patch('sys.stdout', new_callable=StringIO)
 def test_build_summary_list_str(mock_stdout):
-    lcs_id_obj.display_easy_read(result_dict)
+    license_identifier._display_easy_read(result_dict)
     assert mock_stdout.getvalue().find('Summary of the analysis') >= 0
 
 

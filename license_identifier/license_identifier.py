@@ -53,8 +53,6 @@ class LicenseIdentifier:
     def __init__(self,
                  threshold=DEFAULT_THRESHOLD,
                  input_path=None,
-                 output_format=None,
-                 output_path='',
                  license_library=None,
                  license_dir=None,
                  context_length=0,
@@ -71,7 +69,6 @@ class LicenseIdentifier:
         self.threshold = threshold
         self.context_length = context_length
         self.input_path = input_path
-        self.output_format = output_format
         self.run_in_parallel = run_in_parallel
         self.location_strategy = location_strategy
         self.location_similarity = location_similarity
@@ -81,12 +78,6 @@ class LicenseIdentifier:
         self.keep_fraction_of_best = \
             self._check_keep_fraction_of_best(keep_fraction_of_best)
         self.original_matched_text_flag = original_matched_text_flag
-
-        if output_path:
-            self.output_path = \
-                '{}_{}.csv'.format(output_path, util.get_user_date_time_str())
-        else:
-            self.output_path = None
 
         if license_library is not None:
             self._init_using_library_object(license_library)
@@ -105,10 +96,6 @@ class LicenseIdentifier:
         assert keep_fraction_of_best <= 1.0
 
         return keep_fraction_of_best
-
-    def output(self, result_obj):
-        self.format_output(result_obj, self.output_format,
-                           output_path=self.output_path)
 
     def _set_license_library(self, license_library):
         global _license_library_registry
@@ -140,41 +127,6 @@ class LicenseIdentifier:
     def _create_pickled_library(self, pickle_file):
         _logger.info("Saving license library to {}".format(pickle_file))
         self._get_license_library().serialize(pickle_file)
-
-    def format_output(self, result_dict, output_format, output_path):
-        if output_format == 'csv':
-            self.write_csv_file(result_dict, output_path)
-        elif output_format == 'easy_read':
-            self.display_easy_read(result_dict)
-        elif output_format is None:
-            pass
-        else:  # pragma: no cover
-            raise Exception("Unrecognized output format: {}".
-                            format(output_format))
-
-    def write_csv_file(self, result_dict, output_path):
-        if sys.version_info >= (3, 0, 0):  # pragma: no cover
-            f = open(output_path, 'w', newline='')
-        else:  # pragma: no cover
-            f = open(output_path, 'wb')
-        writer = csv.writer(f)
-        field_names = match_summary.MatchSummary.field_names().values()
-        if not self.original_matched_text_flag:
-            field_names.remove("Matched license text without context")
-        writer.writerow(field_names)
-        for filename, results in result_dict.items():
-            for result in results:
-                row = result[1].to_csv_row()
-                writer.writerow(row)
-        f.close()
-
-    def display_easy_read(self, result_dict):
-        for filename, results in result_dict.items():
-            print("=== Found {} results for '{}':".
-                  format(len(results), filename))
-            for r in results:
-                summary = r[1]
-                print(summary.to_display_format())
 
     def analyze(self):
         if self.input_path is not None:
@@ -439,8 +391,6 @@ def main(argv):
         license_dir=args.license_folder,
         threshold=float(args.threshold),
         input_path=args.input_path,
-        output_format=args.output_format,
-        output_path=args.output_file_path,
         context_length=args.context,
         location_strategy=args.location_strategy,
         penalty_only_source=args.penalty_only_source,
@@ -453,7 +403,53 @@ def main(argv):
     )
 
     results = lid.analyze()
-    lid.output(results)
+    _output_results(results, args.output_format, args.output_file_path,
+                    args.matched_text_without_context)
+
+
+def _output_results(results, format_, path, original_matched_text_flag):
+    if format_ == 'csv':
+        _write_csv_file(results, path, original_matched_text_flag)
+    elif format_ == 'easy_read':
+        _display_easy_read(results)
+    elif format_ is None:
+        pass
+    else:  # pragma: no cover
+        raise Exception("Unrecognized output format: {}".format(format_))
+
+
+def _write_csv_file(results, path, original_matched_text_flag):
+    path = '{}_{}.csv'.format(path, util.get_user_date_time_str())
+
+    with _open_file(path) as f:
+        writer = csv.writer(f)
+
+        field_names = match_summary.MatchSummary.field_names().values()
+        if not original_matched_text_flag:
+            field_names.remove("Matched license text without context")
+        writer.writerow(field_names)
+
+        for filename, results_by_file in results.iteritems():
+            for __, summary in results_by_file:
+                row = summary.to_csv_row()
+                writer.writerow(row)
+
+
+def _open_file(path):
+    if sys.version_info >= (3, 0, 0):  # pragma: no cover
+        f = open(path, 'w', newline='')
+    else:  # pragma: no cover
+        f = open(path, 'wb')
+
+    return f
+
+
+def _display_easy_read(results):
+    for filename, results_by_file in results.iteritems():
+        print("=== Found {} results for '{}':".format(len(results_by_file),
+                                                      filename))
+        for __, summary in results_by_file:
+            print(summary.to_display_format())
 
 
 def _analyze_file(lid, input_path):
