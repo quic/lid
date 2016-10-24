@@ -4,7 +4,7 @@ from . import scores
 
 
 def test_ngram_similarity():
-    universe_ng = ng.n_grams("a b c d")
+    universe_ng = ng.NGrams("a b c d")
     scorer = scores.NgramSimilarity(universe_n_grams=universe_ng)
 
     assert scorer.score(mklic(["a b c d"]), mksrc(["a b c d"])) == 1.0

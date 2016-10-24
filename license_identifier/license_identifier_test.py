@@ -26,7 +26,7 @@ bigram_counter = Counter([('two', 'one'),
                           ('four', 'three')])
 trigram_counter = Counter([('three', 'two', 'one'),
                            ('four', 'three', 'two')])
-n_gram_obj = ng.n_grams(text_list)
+n_gram_obj = ng.NGrams(text_list)
 curr_dir = dirname(__file__)
 BASE_DIR = join(curr_dir, "..")
 license_dir = join(BASE_DIR, 'data', 'test', 'license')

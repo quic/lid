@@ -4,7 +4,7 @@ from collections import Counter
 from . import util
 
 
-class n_grams(object):
+class NGrams(object):
 
     def __init__(self, text=None):
         self.unigram_count = Counter()

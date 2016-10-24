@@ -13,7 +13,7 @@ trigram_counter = Counter([('three', 'two', 'one'), ('four', 'three', 'two')])
 
 
 def test_init_list_input():
-    n_grams_obj = ng.n_grams(text_list)
+    n_grams_obj = ng.NGrams(text_list)
 
     assert n_grams_obj.unigram_count == unigram_counter
     assert n_grams_obj.bigram_count == bigram_counter
@@ -21,13 +21,13 @@ def test_init_list_input():
 
 
 def test_to_string():
-    n_grams_obj = ng.n_grams(text_list)
+    n_grams_obj = ng.NGrams(text_list)
 
     assert str(n_grams_obj) == 'n_grams'
 
 
 def test_init_text_input():
-    n_grams_obj = ng.n_grams(text_line)
+    n_grams_obj = ng.NGrams(text_line)
 
     assert n_grams_obj.unigram_count == unigram_counter
     assert n_grams_obj.bigram_count == bigram_counter
@@ -35,7 +35,7 @@ def test_init_text_input():
 
 
 def test_init_text_input_with_crlf():
-    n_grams_obj = ng.n_grams(text_line_crlf)
+    n_grams_obj = ng.NGrams(text_line_crlf)
 
     assert n_grams_obj.unigram_count == unigram_counter
     assert n_grams_obj.bigram_count == bigram_counter
@@ -43,7 +43,7 @@ def test_init_text_input_with_crlf():
 
 
 def test_insert_ngrams():
-    n_grams_obj = ng.n_grams()
+    n_grams_obj = ng.NGrams()
 
     n_grams_obj.insert_ngrams('one', '', '')
     assert sum(n_grams_obj.unigram_count.values()) == 1
@@ -62,7 +62,7 @@ def test_insert_ngrams():
 
 
 def test_parse_text_items():
-    n_grams_obj = ng.n_grams()
+    n_grams_obj = ng.NGrams()
 
     n_grams_obj.parse_text_list_items(text_list)
     assert n_grams_obj.unigram_count == unigram_counter
@@ -71,7 +71,7 @@ def test_parse_text_items():
 
 
 def test_parse_text_str():
-    n_grams_obj = ng.n_grams()
+    n_grams_obj = ng.NGrams()
 
     n_grams_obj.parse_text_str(text_line)
     assert n_grams_obj.unigram_count == unigram_counter
@@ -80,9 +80,9 @@ def test_parse_text_str():
 
 
 def test_measure_Jaccard_distance():
-    n_grams_obj = ng.n_grams(text_list)
-    n_grams_obj2 = ng.n_grams(text_list)
-    n_grams_obj3 = ng.n_grams()
+    n_grams_obj = ng.NGrams(text_list)
+    n_grams_obj2 = ng.NGrams(text_list)
+    n_grams_obj3 = ng.NGrams()
 
     assert n_grams_obj.measure_Jaccard_distance(n_grams_obj2) == 1.0
     assert n_grams_obj.measure_Jaccard_distance(n_grams_obj3) == 0.0
@@ -97,5 +97,5 @@ def test_measure_Jaccard_distance():
 
 
 def test_measure_Jaccard_distance_zero_denom():
-    ng0 = ng.n_grams("")
+    ng0 = ng.NGrams("")
     assert ng0.measure_Jaccard_distance(ng0) == 0.0

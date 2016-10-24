@@ -265,7 +265,7 @@ class LicenseIdentifier:
 
     def get_top_candidates(self, source):
         # First, compute n-grams for all lines in the source file
-        src_ng = n_grams.n_grams()
+        src_ng = n_grams.NGrams()
         src_ng.parse_text_list_items(
             source.lines,
             universe_ng=self._license_library.universe_n_grams)

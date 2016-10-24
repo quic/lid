@@ -20,7 +20,7 @@ NgramSimilarityBase = namedtuple('NgramSimilarity', ['universe_n_grams'])
 class NgramSimilarity(Similarity, NgramSimilarityBase):
 
     def score_and_rationale(self, lic, src, extras):
-        src_ngrams = ng.n_grams()
+        src_ngrams = ng.NGrams()
         src_ngrams.parse_text_list_items(src.lines,
                                          universe_ng=self.universe_n_grams)
 

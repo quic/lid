@@ -83,7 +83,7 @@ class License(LicenseBase):
         tokens_by_line, token_positions_by_line = \
             _tokens_and_positions_by_line(lines)
         tokens = [token for tokens in tokens_by_line for token in tokens]
-        n_grams = ng.n_grams(lines)
+        n_grams = ng.NGrams(lines)
 
         return cls(name=name,
                    filepath=filepath,
@@ -99,7 +99,7 @@ class License(LicenseBase):
         tokens_by_line, token_positions_by_line = \
             _tokens_and_positions_by_line(lines)
         tokens = [token for tokens in tokens_by_line for token in tokens]
-        n_grams = ng.n_grams(lines)
+        n_grams = ng.NGrams(lines)
 
         return cls(name=name,
                    filepath=None,
@@ -191,7 +191,7 @@ class LicenseLibrary(LicenseLibraryBase):
         assert isinstance(path, six.string_types)
 
         filenames = util.files_from_path(path)
-        universe_n_grams = ng.n_grams()
+        universe_n_grams = ng.NGrams()
 
         licenses = OrderedDict([])
         for filename in filenames:
@@ -206,7 +206,7 @@ class LicenseLibrary(LicenseLibraryBase):
     def from_licenses(cls, licenses):
         licenses_by_name = OrderedDict([])
 
-        universe_n_grams = ng.n_grams()
+        universe_n_grams = ng.NGrams()
         for license in licenses:
             licenses_by_name[license.name] = license
             universe_n_grams.parse_text_list_items(license.lines)
