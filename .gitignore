@@ -1,9 +1,11 @@
 .idea/
 bin
+build
 eggs
 downloads
 parts
 develop-eggs
+*.egg-info
 *.pyc
 .installed.cfg
 *.swp

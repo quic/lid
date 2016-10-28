@@ -1,20 +1,20 @@
-from collections import Counter
-from os.path import join, dirname, abspath
 import csv
 import random
 import string
+from collections import Counter
+from os.path import abspath, dirname, join
 
 import six
+from StringIO import StringIO
+from mock import Mock, mock_open, patch
 
-from . import n_grams as ng
+from . import cli
 from . import license_identifier
 from . import license_match as l_match
-from . import match_summary
 from . import location_identifier
+from . import match_summary
+from . import n_grams as ng
 from . import prep
-from mock import mock_open
-from mock import patch, Mock
-from StringIO import StringIO
 
 
 text_list = ['one', 'two', 'three', 'four']
@@ -27,7 +27,7 @@ bigram_counter = Counter([('two', 'one'),
                           ('four', 'three')])
 trigram_counter = Counter([('three', 'two', 'one'),
                            ('four', 'three', 'two')])
-n_gram_obj = ng.n_grams(text_list)
+n_gram_obj = ng.NGrams(text_list)
 curr_dir = dirname(__file__)
 BASE_DIR = join(curr_dir, "..")
 license_dir = join(BASE_DIR, 'data', 'test', 'license')
@@ -36,30 +36,34 @@ input_dir = join(BASE_DIR, 'data', 'test', 'data')
 threshold = 0.888
 output_path = 'test_path'
 
-lcs_id_obj = license_identifier.LicenseIdentifier(license_dir=license_dir,
-                                                  threshold=threshold,
-                                                  input_path=input_dir,
-                                                  output_format='easy_read',
-                                                  run_in_parellal=False)
-lcs_id_obj_context = license_identifier.LicenseIdentifier(license_dir=license_dir,
-                                                          threshold=threshold,
-                                                          input_path=input_dir,
-                                                          output_format='easy_read',
-                                                          context_length=1,
-                                                          run_in_parellal=False)
-lcs_id_obj_origmatched = license_identifier.LicenseIdentifier(license_dir=license_dir,
-                                                              threshold=threshold,
-                                                              input_path=input_dir,
-                                                              output_format='easy_read',
-                                                              run_in_parellal=False,
-                                                              original_matched_text_flag=True)
-lcs_id_obj_context_origmatched = license_identifier.LicenseIdentifier(license_dir=license_dir,
-                                                                      threshold=threshold,
-                                                                      input_path=input_dir,
-                                                                      output_format='easy_read',
-                                                                      context_length=5,
-                                                                      run_in_parellal=False,
-                                                                      original_matched_text_flag=True)
+lcs_id_obj = license_identifier.LicenseIdentifier(
+    license_dir=license_dir,
+    threshold=threshold,
+    input_path=input_dir,
+    run_in_parallel=False
+)
+lcs_id_obj_context = license_identifier.LicenseIdentifier(
+    license_dir=license_dir,
+    threshold=threshold,
+    input_path=input_dir,
+    context_length=1,
+    run_in_parallel=False
+)
+lcs_id_obj_origmatched = license_identifier.LicenseIdentifier(
+    license_dir=license_dir,
+    threshold=threshold,
+    input_path=input_dir,
+    run_in_parallel=False,
+    original_matched_text_flag=True
+)
+lcs_id_obj_context_origmatched = license_identifier.LicenseIdentifier(
+    license_dir=license_dir,
+    threshold=threshold,
+    input_path=input_dir,
+    context_length=5,
+    run_in_parallel=False,
+    original_matched_text_flag=True
+)
 
 result_dict = lcs_id_obj.analyze_input_path(input_path=input_dir)
 l_match_obj = l_match.LicenseMatch(file_name='f_name',
@@ -79,14 +83,15 @@ field_names = ['input file name',
 
 
 def test_init():
-    assert 'test_license' in lcs_id_obj._get_license_library().licenses.keys()
-    assert lcs_id_obj._get_license_library().universe_n_grams.measure_similarity(n_gram_obj) > 0.5
+    assert 'test_license' in lcs_id_obj.license_library.licenses.keys()
+    assert lcs_id_obj.\
+        license_library.universe_n_grams.measure_similarity(n_gram_obj) > 0.5
 
 
 @patch('pickle.dump')
 @patch('pickle.load')
 def test_init_pickle(mock_pickle_load, mock_pickle_dump):
-    test_pickle_file = join(BASE_DIR, "test.pickle")
+    test_pickle_file = join(BASE_DIR, 'test.pickle')
     lcs_id_obj._create_pickled_library(pickle_file=test_pickle_file)
 
     assert mock_pickle_dump.call_count == 1
@@ -100,35 +105,32 @@ def test_init_pickle(mock_pickle_load, mock_pickle_dump):
     lcs_id_pickle_obj = license_identifier.LicenseIdentifier(
         threshold=threshold,
         input_path=input_dir,
-        pickle_file_path=test_pickle_file,
-        output_format='easy_read')
+        pickle_file_path=test_pickle_file)
 
     assert mock_pickle_load.call_count == 1
-    assert abspath(mock_pickle_load.call_args[0][0].name) \
-           == abspath(test_pickle_file)
+    assert abspath(mock_pickle_load.call_args[0][0].name) == \
+        abspath(test_pickle_file)
 
-    universe_ng = lcs_id_pickle_obj._get_license_library().universe_n_grams
+    universe_ng = lcs_id_pickle_obj.license_library.universe_n_grams
     assert universe_ng.measure_similarity(universe_ng) == 1.0
 
 
 def test_write_csv_file():
-    lid_obj = license_identifier.LicenseIdentifier(license_dir=license_dir,
-                                                   threshold=threshold,
-                                                   input_path=input_dir,
-                                                   output_format='csv',
-                                                   output_path=output_path)
+    lid = license_identifier.LicenseIdentifier(license_dir=license_dir,
+                                               threshold=threshold,
+                                               input_path=input_dir)
 
-    result_dict = lid_obj.analyze_input_path(input_path=input_dir)
+    result_dict = lid.analyze_input_path(input_path=input_dir)
 
     mock_open_name = '{}.open'.format(six.moves.builtins.__name__)
-    with patch(mock_open_name, mock_open()) as mo:
+    with patch(mock_open_name, mock_open()):
         with patch('csv.writer', Mock(spec=csv.writer)) as m:
-            lid_obj.output(result_dict)
+            cli._output_results(result_dict, 'csv', output_path, False)
             handle = m()
             handle.writerow.assert_any_call(field_names)
 
             m.reset_mock()
-            lid_obj.write_csv_file(result_dict, output_path)
+            cli._write_csv_file(result_dict, output_path, False)
             handle = m()
             handle.writerow.assert_any_call(field_names)
 
@@ -143,10 +145,12 @@ def test_write_csv_file():
                 end_offset='40',
                 region_score='1.0',
                 found_region='+zero\none two three four\n')
-            result_dict = {'data/test/data/test1.py': [(None, result_obj_dict)]}
-            expected_res_string = ['data/test/data/test1.py', 'test_license', '1.0', '0', '5', \
-                                   '0', '40', '1.0', " +zero\none two three four\n"]
-            lid_obj.write_csv_file(result_dict, output_path)
+            result_dict = \
+                {'data/test/data/test1.py': [(None, result_obj_dict)]}
+            expected_res_string = ['data/test/data/test1.py', 'test_license',
+                                   '1.0', '0', '5', '0', '40', '1.0',
+                                   " +zero\none two three four\n"]
+            cli._write_csv_file(result_dict, output_path, False)
             handle = m()
             handle.writerow.assert_any_call(expected_res_string)
 
@@ -162,33 +166,37 @@ def test_init_using_license_library_object():
     lid2 = license_identifier.LicenseIdentifier(
         license_library=prep.LicenseLibrary.from_path(path2))
 
-    assert lid1._get_license_library().licenses.keys() == ['license1', 'license2']
-    assert lid2._get_license_library().licenses.keys() == ['test_license', 'custom_license']
+    assert lid1.license_library.licenses.keys() == ['license1', 'license2']
+    assert lid2.license_library.licenses.keys() == ['test_license',
+                                                    'custom_license']
 
 
 @patch('sys.stdout', new_callable=StringIO)
 def test_build_summary_list_str(mock_stdout):
-    lcs_id_obj.display_easy_read(result_dict)
+    cli._display_easy_read(result_dict)
     assert mock_stdout.getvalue().find('Summary of the analysis') >= 0
 
 
 def test_forward_args_to_loc_id():
     test_file_path = join(input_dir, 'test1.py')
-    lid_obj = license_identifier.LicenseIdentifier(
+    lid = license_identifier.LicenseIdentifier(
         license_dir=license_dir,
         context_length=0,
-        location_strategy="exhaustive",
-        location_similarity="ngram",
+        location_strategy='exhaustive',
+        location_similarity='ngram',
         penalty_only_license=3.0,
-        penalty_only_source=4.0)
-    with patch.object(location_identifier, 'Location_Finder', wraps=location_identifier.Location_Finder) as m:
-        lcs_match_obj = lid_obj.analyze_file(test_file_path)
+        penalty_only_source=4.0
+    )
+    with patch.object(location_identifier, 'Location_Finder',
+                      wraps=location_identifier.Location_Finder) as m:
+        lid.analyze_file(test_file_path)
         m.assert_called_with(
             context_lines=0,
-            strategy="exhaustive",
-            similarity="ngram",
+            strategy='exhaustive',
+            similarity='ngram',
             penalty_only_license=3.0,
-            penalty_only_source=4.0)
+            penalty_only_source=4.0
+        )
 
 
 def test_analyze_file_lcs_match_output():
@@ -234,27 +242,29 @@ def test_analyze_input_path_lcs_match_output():
 
 def test_analyze_file():
     fp = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
-    result = lcs_id_obj.analyze_file(input_fp=fp)
+    result = lcs_id_obj.analyze_file(filepath=fp)
     assert len(result) == 1
     lcs_match, summary_obj = result[0]
     assert summary_obj["matched_license"] == 'test_license'
     assert summary_obj["score"] == 1.0
     assert summary_obj["found_region"] == "one two three four\r\n"
 
-    result = lcs_id_obj_origmatched.analyze_file(input_fp=fp)
+    result = lcs_id_obj_origmatched.analyze_file(filepath=fp)
     assert len(result) == 1
     lcs_match, summary_obj = result[0]
     assert summary_obj["original_region"] == "one two three four\r\n"
 
-    result = lcs_id_obj_context.analyze_file(input_fp=fp)
+    result = lcs_id_obj_context.analyze_file(filepath=fp)
     assert len(result) == 1
     lcs_match, summary_obj = result[0]
-    assert summary_obj["found_region"] == "zero\r\none two three four\r\nfive\r\n"
+    assert summary_obj["found_region"] == \
+        "zero\r\none two three four\r\nfive\r\n"
 
-    result = lcs_id_obj_context_origmatched.analyze_file(input_fp=fp)
+    result = lcs_id_obj_context_origmatched.analyze_file(filepath=fp)
     assert len(result) == 1
     lcs_match, summary_obj = result[0]
-    assert summary_obj["found_region"] == "zero\r\none two three four\r\nfive\r\nsix\r\nseven\r\n"
+    assert summary_obj["found_region"] == \
+        "zero\r\none two three four\r\nfive\r\nsix\r\nseven\r\n"
     assert summary_obj["original_region"] == "one two three four\r\n"
 
 
@@ -262,6 +272,7 @@ def test_analyze_file_source():
     src = prep.Source.from_lines(["a", "one two three four", "b"])
     result = lcs_id_obj.analyze_source(src)
     assert len(result) == 1
+
     lcs_match, summary_obj = result[0]
     assert summary_obj["matched_license"] == 'test_license'
     assert summary_obj["score"] == 1.0
@@ -294,7 +305,7 @@ def test_analyze_input_path():
 
 
 def test_find_license_region():
-    lic = lcs_id_obj._get_license_library().licenses['test_license']
+    lic = lcs_id_obj.license_library.licenses['test_license']
     src_fp = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
     src = prep.Source.from_filepath(src_fp)
     test1_loc_result = lcs_id_obj.find_license_region(lic, src)
@@ -304,12 +315,12 @@ def test_find_license_region():
 
 
 def test_postprocess_comments():
-    fp = join(BASE_DIR, 'data', 'test', 'data', 'subdir', 'subdir2', 'test4.bogus')
+    fp = join(BASE_DIR, 'data', 'test', 'data', 'subdir', 'subdir2',
+              'test4.bogus')
     result_dict = lcs_id_obj.analyze_input_path(input_path=fp)
-    start_ind = result_dict[fp][0][1]["start_line_ind"]
-    end_ind = result_dict[fp][0][1]["end_line_ind"]
     postprocess_dict = lcs_id_obj.postprocess_strip_off_code(result_dict)
-    assert postprocess_dict[fp][0][1]["stripped_region"] == 'one two three four\r\n'
+    assert postprocess_dict[fp][0][1]["stripped_region"] == \
+        'one two three four\r\n'
 
     result_dict[fp][0][1]["score"] = 0
     postprocess_dict = lcs_id_obj.postprocess_strip_off_code(result_dict)
@@ -318,23 +329,22 @@ def test_postprocess_comments():
     lcs_id_low_threshold = license_identifier.LicenseIdentifier(
         license_dir=license_dir,
         threshold=0.001)
-    fp = join(BASE_DIR, 'data', 'test', 'data', 'subdir', 'subdir2', 'test5.py')
+    fp = join(BASE_DIR, 'data', 'test', 'data', 'subdir', 'subdir2',
+              'test5.py')
     result_dict = lcs_id_low_threshold.analyze_input_path(input_path=fp)
-    postprocess_dict = lcs_id_low_threshold.postprocess_strip_off_code(result_dict)
-    stripped_region_lines = postprocess_dict[fp][0][1]["stripped_region"].splitlines()
+    postprocess_dict = \
+        lcs_id_low_threshold.postprocess_strip_off_code(result_dict)
+    stripped_region_lines = \
+        postprocess_dict[fp][0][1]["stripped_region"].splitlines()
     expected_lines = ['# one', '', '# two three', '', '# four']
     assert [line.strip() for line in stripped_region_lines] == expected_lines
 
 
 def test_truncate_column():
     data = ''.join(random.choice(string.lowercase) for x in range(40000))
-    assert len(match_summary.truncate_column(data)) == match_summary.COLUMN_LIMIT
+    assert len(match_summary.truncate_column(data)) == \
+        match_summary.COLUMN_LIMIT
     assert match_summary.truncate_column(3.0) == 3.0
-
-
-def test_main():
-    arg_string = "-I {} -L {}".format(input_dir, license_dir)
-    license_identifier.main(arg_string.split())
 
 
 @patch('pickle.dump')
@@ -354,12 +364,12 @@ def test_default_pickle_path(mock_deserialize):
     mock_deserialize.return_value = prep.LicenseLibrary(
         licenses=dict(),
         universe_n_grams=n_gram_obj)
-    lic_obj = license_identifier.LicenseIdentifier()
-    result = lic_obj.analyze()
-    lic_obj.output(result)
+
+    license_identifier.LicenseIdentifier().analyze()
+
     assert mock_deserialize.call_count == 1
-    assert abspath(mock_deserialize.call_args[0][0]) \
-           == abspath(license_identifier.DEFAULT_PICKLED_LIBRARY_FILE)
+    assert abspath(mock_deserialize.call_args[0][0]) == \
+        abspath(license_identifier.DEFAULT_PICKLED_LIBRARY_FILE)
 
 
 def test_analyze_file_multiple_licenses():
@@ -369,15 +379,15 @@ def test_analyze_file_multiple_licenses():
         prep.License.from_lines(["i j k l"], name="L2"),
     ])
 
-    lid_obj = license_identifier.LicenseIdentifier(
+    lid = license_identifier.LicenseIdentifier(
         license_library=lib,
         threshold=0.001,
         location_similarity="edit_weighted",
-        run_in_parellal=False)
+        run_in_parallel=False)
 
     src = prep.Source.from_lines(
         ["x", "a b", "c d", "y", "e f", "g h", "z", "i j", "k l", "w"])
-    result = lid_obj.analyze_source(src)
+    result = lid.analyze_source(src)
     assert len(result) == 3
 
     assert result[0][1]["matched_license"] == 'L0'
@@ -397,7 +407,7 @@ def test_analyze_file_multiple_licenses():
 
     src = prep.Source.from_lines(
         ["a b", "c d", "e f", "g h", "i j", "k l"])
-    result = lid_obj.analyze_source(src)
+    result = lid.analyze_source(src)
     assert len(result) == 3
 
     assert result[0][1]["matched_license"] == 'L0'
@@ -418,23 +428,24 @@ def test_analyze_file_multiple_licenses():
 
 def test_analyze_file_near_ties():
     fp = join(BASE_DIR, 'data', 'test', 'near_tie', 'data', 'source')
-    near_tie_license_dir = join(BASE_DIR, 'data', 'test', 'near_tie', 'license')
+    near_tie_license_dir = join(BASE_DIR, 'data', 'test', 'near_tie',
+                                'license')
 
-    lid_obj = license_identifier.LicenseIdentifier(
+    lid = license_identifier.LicenseIdentifier(
         license_dir=near_tie_license_dir,
         threshold=0.1,
         input_path=fp,
         location_similarity="edit_weighted",
         keep_fraction_of_best=0.5,
-        run_in_parellal=False)
+        run_in_parallel=False)
 
     src = prep.Source.from_filepath(fp)
-    top_candidates = lid_obj.get_top_candidates(src)
-    result = lid_obj.analyze_file(input_fp=fp)
+    top_candidates = lid.get_top_candidates(src)
+    results = lid.analyze_file(filepath=fp)
 
     # Assert that license1 has a higher initial (ngram) score, but license2
     # ends up being selected as the best region match based on edit distance.
     assert set(top_candidates.keys()) == set(['license1', 'license2'])
     assert top_candidates['license1'] > top_candidates['license2']
-    assert len(result) == 1
-    assert result[0][0].license == 'license2'
+    assert len(results) == 1
+    assert results[0][0].license == 'license2'

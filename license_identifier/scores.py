@@ -1,50 +1,51 @@
 import difflib
 from collections import Counter, namedtuple
 
-from . import prep
 from . import n_grams as ng
 from . import util
 
 
 class Similarity(object):
+
     def score(self, lic, src):
-        return self.score_and_rationale(lic, src, extras = False)["score"]
+        return self.score_and_rationale(lic, src, extras=False)["score"]
 
     def score_and_rationale(self, lic, src, extras):  # pragma: no cover
         raise NotImplementedError
 
 
-class NgramSimilarity(Similarity, namedtuple("NgramSimilarity",
-        ["universe_n_grams"])):
+NgramSimilarityBase = namedtuple('NgramSimilarity', ['universe_n_grams'])
+
+
+class NgramSimilarity(Similarity, NgramSimilarityBase):
 
     def score_and_rationale(self, lic, src, extras):
-        src_ngrams = ng.n_grams()
-        src_ngrams.parse_text_list_items(src.lines, universe_ng = self.universe_n_grams)
-    
+        src_ngrams = ng.NGrams()
+        src_ngrams.parse_text_list_items(src.lines,
+                                         universe_ng=self.universe_n_grams)
+
         similarity = lic.n_grams.measure_similarity(src_ngrams)
 
-        result = {
-            "score": similarity,
-        }
-        return result
+        return {'score': similarity}
 
 
-class EditWeightedSimilarity(Similarity, namedtuple("EditWeightedSimilarity",
-        ["penalty_only_source",
-         "penalty_only_license",
-         "punct_weight"])):
+EditWeightedSimilarityBase = namedtuple(
+    'EditWeightedSimilary',
+    ['penalty_only_source', 'penalty_only_license', 'punct_weight'])
+
+
+class EditWeightedSimilarity(Similarity, EditWeightedSimilarityBase):
 
     def score_and_rationale(self, lic, src, extras):
         src_tokens = []
         for token_list in src.tokens_by_line:
             src_tokens.extend(token_list)
-    
-        matcher = difflib.SequenceMatcher(
-            isjunk = None,
-            a = src_tokens,
-            b = lic.tokens,
-            autojunk = False)
-    
+
+        matcher = difflib.SequenceMatcher(isjunk=None,
+                                          a=src_tokens,
+                                          b=lic.tokens,
+                                          autojunk=False)
+
         diff_chunks = []
 
         ignored_strings_src = src.get_ignored_strings()
@@ -67,12 +68,15 @@ class EditWeightedSimilarity(Similarity, namedtuple("EditWeightedSimilarity",
             local_counts = Counter()
 
             if op == "equal":
-                local_counts[("both", "non_punct")] += num_tokens_src - num_punct_src
+                local_counts[("both", "non_punct")] += \
+                    num_tokens_src - num_punct_src
                 local_counts[("both", "punct")] += num_punct_src
             else:
-                local_counts[("only_src", "non_punct")] += num_tokens_src - num_punct_src
+                local_counts[("only_src", "non_punct")] += \
+                    num_tokens_src - num_punct_src
                 local_counts[("only_src", "punct")] += num_punct_src
-                local_counts[("only_lic", "non_punct")] += num_tokens_lic - num_punct_lic
+                local_counts[("only_lic", "non_punct")] += \
+                    num_tokens_lic - num_punct_lic
                 local_counts[("only_lic", "punct")] += num_punct_lic
 
             total_counts += local_counts
@@ -95,12 +99,16 @@ class EditWeightedSimilarity(Similarity, namedtuple("EditWeightedSimilarity",
                     "ignored_lic": ignored_lic,
                 })
 
-        unchanged = total_counts[("both", "non_punct")] + self.punct_weight * total_counts[("both", "punct")]
-        only_src = total_counts[("only_src", "non_punct")] + self.punct_weight * total_counts[("only_src", "punct")]
-        only_lic = total_counts[("only_lic", "non_punct")] + self.punct_weight * total_counts[("only_lic", "punct")]
-        denom = float(unchanged \
-            + self.penalty_only_source * only_src \
-            + self.penalty_only_license * only_lic)
+        unchanged = total_counts[("both", "non_punct")] + self.punct_weight * \
+            total_counts[("both", "punct")]
+        only_src = total_counts[("only_src", "non_punct")] + \
+            self.punct_weight * total_counts[("only_src", "punct")]
+        only_lic = total_counts[("only_lic", "non_punct")] + \
+            self.punct_weight * total_counts[("only_lic", "punct")]
+
+        denom = float(unchanged +
+                      self.penalty_only_source * only_src +
+                      self.penalty_only_license * only_lic)
 
         if denom == 0.0:
             similarity = 0.0

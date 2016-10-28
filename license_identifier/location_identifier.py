@@ -1,14 +1,9 @@
-import math
-import nltk
-import difflib
 import argparse
 import sys
 
-from . import location_result as lr
-from . import n_grams as ng
-from . import util
-from . import scores
+from . import location_result
 from . import prep
+from . import scores
 
 
 DEFAULT_CONTEXT = 0
@@ -21,7 +16,7 @@ DEFAULT_VERBOSITY = 0
 DEFAULT_PUNCT_WEIGHT = 0.01
 
 
-def main(argv = []):
+def main(argv):
     parser = argparse.ArgumentParser()
     parser.add_argument("license_file")
     parser.add_argument("input_src_file")
@@ -32,49 +27,49 @@ def main(argv = []):
     parser.add_argument("--overshoot", type=int, default=DEFAULT_OVERSHOOT)
     parser.add_argument("-P", "--pickled_license_library")
     parser.add_argument("--penalty_only_source", type=float,
-        default=DEFAULT_PENALTY_ONLY_SOURCE)
+                        default=DEFAULT_PENALTY_ONLY_SOURCE)
     parser.add_argument("--penalty_only_license", type=float,
-        default=DEFAULT_PENALTY_ONLY_LICENSE)
+                        default=DEFAULT_PENALTY_ONLY_LICENSE)
     parser.add_argument("--punct_weight", type=float,
-        default=DEFAULT_PUNCT_WEIGHT)
+                        default=DEFAULT_PUNCT_WEIGHT)
     args = parser.parse_args(argv)
 
     if args.pickled_license_library is not None:
-        license_library = prep.LicenseLibrary.deserialize(
-            args.pickled_license_library)
+        license_library = \
+            prep.LicenseLibrary.deserialize(args.pickled_license_library)
         universe_n_grams = license_library.universe_n_grams
     else:
         universe_n_grams = None
 
-    loc_obj = Location_Finder(
-        context_lines = args.context_lines,
-        penalty_only_source = args.penalty_only_source,
-        penalty_only_license = args.penalty_only_license,
-        punct_weight = args.punct_weight,
-        universe_n_grams = universe_n_grams,
-        overshoot = args.overshoot,
-        similarity = args.similarity,
-        strategy = args.strategy,
-        verbosity = args.verbosity)
+    location = Location_Finder(context_lines=args.context_lines,
+                               penalty_only_source=args.penalty_only_source,
+                               penalty_only_license=args.penalty_only_license,
+                               punct_weight=args.punct_weight,
+                               universe_n_grams=universe_n_grams,
+                               overshoot=args.overshoot,
+                               similarity=args.similarity,
+                               strategy=args.strategy,
+                               verbosity=args.verbosity)
 
-    lic = prep.License.from_filepath(args.license_file)
-    src = prep.Source.from_filepath(args.input_src_file)
+    license = prep.License.from_filepath(args.license_file)
+    source = prep.Source.from_filepath(args.input_src_file)
 
-    print(loc_obj.main_process(lic, src))
+    print(location.main_process(license, source))
 
 
 class Location_Finder(object):
 
     def __init__(self,
-            context_lines = DEFAULT_CONTEXT,
-            penalty_only_source = DEFAULT_PENALTY_ONLY_SOURCE,
-            penalty_only_license = DEFAULT_PENALTY_ONLY_LICENSE,
-            punct_weight = DEFAULT_PUNCT_WEIGHT,
-            universe_n_grams = None,
-            overshoot = DEFAULT_OVERSHOOT,
-            strategy = DEFAULT_STRATEGY,
-            similarity = DEFAULT_SIMILARITY,
-            verbosity = DEFAULT_VERBOSITY):
+                 context_lines=DEFAULT_CONTEXT,
+                 penalty_only_source=DEFAULT_PENALTY_ONLY_SOURCE,
+                 penalty_only_license=DEFAULT_PENALTY_ONLY_LICENSE,
+                 punct_weight=DEFAULT_PUNCT_WEIGHT,
+                 universe_n_grams=None,
+                 overshoot=DEFAULT_OVERSHOOT,
+                 strategy=DEFAULT_STRATEGY,
+                 similarity=DEFAULT_SIMILARITY,
+                 verbosity=DEFAULT_VERBOSITY):
+
         self.context_lines = context_lines
         self.penalty_only_source = penalty_only_source
         self.penalty_only_license = penalty_only_license
@@ -84,47 +79,48 @@ class Location_Finder(object):
         self.strategy = Location_Finder._check_strategy(strategy)
         self.similarity = Location_Finder._check_similarity(similarity)
         self.verbosity = verbosity
-        self._init_similarity_obj()
+        self.similarity_obj = self._similarity_factory()
 
     @staticmethod
     def _check_similarity(similarity):
-        allowed_similarity_types = [
-            "edit_weighted",
-            "ngram",
-        ]
-        assert similarity in allowed_similarity_types, \
-            "Unrecognized similarity: {}".format(similarity)
+        allowed = ['edit_weighted', 'ngram']
+        unrecognized = 'Unrecognized similary: {}'.format(similarity)
+
+        assert similarity in allowed, unrecognized
+
         return similarity
 
     @staticmethod
     def _check_strategy(strategy):
-        allowed_strategies = [
-            "exhaustive",
-            "one_line_then_expand",
-            "full_text_only",
-        ]
-        assert strategy in allowed_strategies, \
-            "Unrecognized strategy: {}".format(strategy)
+        allowed = ['exhaustive', 'one_line_then_expand', 'full_text_only']
+        unrecognized = 'Unrecognized strategy: {}'.format(strategy)
+
+        assert strategy in allowed, unrecognized
+
         return strategy
 
-    def _init_similarity_obj(self):
-        if self.similarity == "edit_weighted":
-            self.similarity_obj = scores.EditWeightedSimilarity(
-                penalty_only_source = self.penalty_only_source,
-                penalty_only_license = self.penalty_only_license,
-                punct_weight = self.punct_weight)
-        elif self.similarity == "ngram":
-            self.similarity_obj = scores.NgramSimilarity(
-                universe_n_grams = self.universe_n_grams)
+    def _similarity_factory(self):
+        similarity_obj = None
+
+        if self.similarity == 'edit_weighted':
+            similarity_obj = scores.EditWeightedSimilarity(
+                penalty_only_source=self.penalty_only_source,
+                penalty_only_license=self.penalty_only_license,
+                punct_weight=self.punct_weight)
+        elif self.similarity == 'ngram':
+            similarity_obj = scores.NgramSimilarity(
+                universe_n_grams=self.universe_n_grams)
+
+        return similarity_obj
 
     def main_process(self, lic, src):
-        if self.strategy == "exhaustive":
+        if self.strategy == 'exhaustive':
             start_line, end_line, best_score = \
                 self.best_region_exhaustive(lic, src)
-        elif self.strategy == "one_line_then_expand":
+        elif self.strategy == 'one_line_then_expand':
             start_line, end_line, best_score = \
                 self.one_line_then_expand(lic, src)
-        elif self.strategy == "full_text_only":
+        elif self.strategy == 'full_text_only':
             start_line = 0
             end_line = len(src.lines)
             best_score = self.similarity_obj.score(lic, src)
@@ -133,8 +129,8 @@ class Location_Finder(object):
 
         start_line_orig, end_line_orig = start_line, end_line
         start_line, end_line, start_offset, end_offset = \
-            self.determine_offsets(start_line, end_line,
-            src.lines, src.offsets_by_line)
+            self.determine_offsets(start_line, end_line, src.lines,
+                                   src.offsets_by_line)
 
         # Adjust line indices if we're dealing with a subset of the source
         start_line_orig += src.original_line_offset
@@ -142,14 +138,13 @@ class Location_Finder(object):
         start_line += src.original_line_offset
         end_line += src.original_line_offset
 
-        return lr.LocationResult(
-            start_line = start_line,
-            end_line = end_line,
-            start_offset = start_offset,
-            end_offset = end_offset,
-            score = best_score,
-            start_line_orig = start_line_orig,
-            end_line_orig = end_line_orig)
+        return location_result.LocationResult(start_line=start_line,
+                                              end_line=end_line,
+                                              start_offset=start_offset,
+                                              end_offset=end_offset,
+                                              score=best_score,
+                                              start_line_orig=start_line_orig,
+                                              end_line_orig=end_line_orig)
 
     def best_region_exhaustive(self, lic, src):
         results = []
@@ -160,12 +155,14 @@ class Location_Finder(object):
                 results.append((start_line, end_line, score))
 
         if self.verbosity >= 1:  # pragma: no cover
-            sorted_results = sorted(results, key = lambda x: x[2])
+            sorted_results = sorted(results, key=lambda x: x[2])
             for r in sorted_results:
                 print("lines {}-{}: score = {:.06f}".format(*r))
+
             print("=" * 40)
 
-        start_line, end_line, best_score = max(results, key = lambda x: x[2])
+        start_line, end_line, best_score = max(results, key=lambda x: x[2])
+
         return start_line, end_line, best_score
 
     def one_line_then_expand(self, lic, src):
@@ -177,12 +174,12 @@ class Location_Finder(object):
             results.append((line_index, line_index + 1, score))
 
         if self.verbosity >= 1:  # pragma: no cover
-            sorted_results = sorted(results, key = lambda x: x[2])
+            sorted_results = sorted(results, key=lambda x: x[2])
             for r in sorted_results:
                 print("lines {}-{}: score = {:.06f}".format(*r))
             print("=" * 40)
 
-        start_line, end_line, best_score = max(results, key = lambda x: x[2])
+        start_line, end_line, best_score = max(results, key=lambda x: x[2])
         prev_start_line, prev_end_line = None, None
 
         # Alternate between expanding region upward and downward
@@ -193,14 +190,14 @@ class Location_Finder(object):
 
             # Expand region upward
             start_line, end_line, best_score = self.expand(
-                lic, src, start_line, end_line, best_score, top = True)
+                lic, src, start_line, end_line, best_score, top=True)
 
             if self.verbosity >= 1:  # pragma: no cover
                 print("Current region: {}-{}".format(start_line, end_line))
 
             # Expand region downward
             start_line, end_line, best_score = self.expand(
-                lic, src, start_line, end_line, best_score, top = False)
+                lic, src, start_line, end_line, best_score, top=False)
 
             if start_line == prev_start_line and end_line == prev_end_line:
                 break
@@ -212,9 +209,11 @@ class Location_Finder(object):
 
     def expand(self, lic, src, start_line, end_line, score_to_beat, top):
         if top:
-            update = lambda x,y: (x-1,y)
+            def update(x, y):
+                return x - 1, y
         else:
-            update = lambda x,y: (x,y+1)
+            def update(x, y):
+                return x, y + 1
 
         overshoot_remaining = self.overshoot
         results = []
@@ -223,11 +222,14 @@ class Location_Finder(object):
         best_score = score_to_beat
 
         while True:
-            if overshoot_remaining < 0: break
+            if overshoot_remaining < 0:
+                break
 
             start_line, end_line = update(start_line, end_line)
-            if start_line < 0: break
-            if end_line > len(src.lines): break
+            if start_line < 0:
+                break
+            if end_line > len(src.lines):
+                break
 
             src_subset = src.subset(start_line, end_line)
             score = self.similarity_obj.score(lic, src_subset)
@@ -247,8 +249,8 @@ class Location_Finder(object):
 
             if self.verbosity >= 1:  # pragma: no cover
                 suffix = " *" if new_best else ""
-                print("Considering expansion (top = {}): {}-{}: score = {}{}" \
-                    .format(top, start_line, end_line, score, suffix))
+                print("Considering expansion (top = {}): {}-{}: score = {}{}".
+                      format(top, start_line, end_line, score, suffix))
 
         return best_start_line, best_end_line, best_score
 
@@ -259,7 +261,7 @@ class Location_Finder(object):
             if start_line < 0:
                 start_line = 0
 
-        # use the start of the next line as the offset, unless it's the last line
+        # use the start of the next line as offset, unless it's the last line
         if end_line >= len(src_offsets):
             end_line = len(src_lines)
             end_offset = src_offsets[-1]
