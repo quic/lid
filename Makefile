@@ -21,7 +21,7 @@ clean:
 	cd license_identifier && rm -f *.pyc && rm -f licenses.py
 
 pickle: deps
-	python -m license_identifier.license_identifier -L license_identifier/data/license_dir/ -P license_identifier/data/license_n_gram_lib.pickle
+	python -m license_identifier.cli -L license_identifier/data/license_dir/ -P license_identifier/data/license_n_gram_lib.pickle
 
 git-clean:
 	git clean -Xdf
