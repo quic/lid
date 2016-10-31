@@ -10,7 +10,6 @@ from mock import Mock, mock_open, patch
 
 from . import cli
 from . import license_identifier
-from . import license_match as l_match
 from . import location_identifier
 from . import match_summary
 from . import n_grams as ng
@@ -66,11 +65,7 @@ lcs_id_obj_context_origmatched = license_identifier.LicenseIdentifier(
 )
 
 result_dict = lcs_id_obj.analyze_input_path(input_path=input_dir)
-l_match_obj = l_match.LicenseMatch(file_name='f_name',
-                                   file_path='some_path',
-                                   license='test_license',
-                                   start_byte=0,
-                                   length=10)
+
 field_names = ['input file name',
                "matched license type",
                "Score using whole input test",
@@ -146,7 +141,7 @@ def test_write_csv_file():
                 region_score='1.0',
                 found_region='+zero\none two three four\n')
             result_dict = \
-                {'data/test/data/test1.py': [(None, result_obj_dict)]}
+                {'data/test/data/test1.py': [result_obj_dict]}
             expected_res_string = ['data/test/data/test1.py', 'test_license',
                                    '1.0', '0', '5', '0', '40', '1.0',
                                    " +zero\none two three four\n"]
@@ -199,70 +194,29 @@ def test_forward_args_to_loc_id():
         )
 
 
-def test_analyze_file_lcs_match_output():
-    test_file_path = join(input_dir, 'test1.py')
-    result = lcs_id_obj.analyze_file_lcs_match_output(test_file_path)
-    assert len(result) == 1
-    assert result[0].length == 20
-
-    test_file_path = join(input_dir, 'subdir', 'subdir2', 'test3.py')
-    result = lcs_id_obj.analyze_file_lcs_match_output(test_file_path)
-    assert len(result) == 0
-
-
-def test_analyze_input_path_lcs_match_output():
-    test_file_path = join(input_dir, 'test1.py')
-    result = lcs_id_obj.analyze_input_path_lcs_match_output(test_file_path)
-    assert len(result) == 1
-    assert len(result[test_file_path]) == 1
-    assert result[test_file_path][0].length == 20
-
-    result = lcs_id_obj.analyze_input_path_lcs_match_output(input_dir)
-    assert len(result) == 6
-    files = [
-        join(input_dir, "test0.py"),
-        join(input_dir, "test1.py"),
-        join(input_dir, "subdir", "test2.py"),
-        join(input_dir, "subdir", "subdir2", "test3.py"),
-        join(input_dir, "subdir", "subdir2", "test4.bogus"),
-        join(input_dir, "subdir", "subdir2", "test5.py"),
-    ]
-    for f in files:
-        assert f in result
-    assert result[files[0]][0].file_name.endswith("test0.py")
-    assert result[files[0]][0].length == 19
-    assert result[files[1]][0].file_name.endswith("test1.py")
-    assert result[files[1]][0].length == 20
-    assert len(result[files[2]]) == 0
-    assert len(result[files[3]]) == 0
-    assert result[files[4]][0].file_name.endswith("test4.bogus")
-    assert result[files[4]][0].length == 20
-    assert len(result[files[5]]) == 0
-
-
 def test_analyze_file():
     fp = join(BASE_DIR, 'data', 'test', 'data', 'test1.py')
     result = lcs_id_obj.analyze_file(filepath=fp)
     assert len(result) == 1
-    lcs_match, summary_obj = result[0]
+    summary_obj = result[0]
     assert summary_obj["matched_license"] == 'test_license'
     assert summary_obj["score"] == 1.0
     assert summary_obj["found_region"] == "one two three four\r\n"
 
     result = lcs_id_obj_origmatched.analyze_file(filepath=fp)
     assert len(result) == 1
-    lcs_match, summary_obj = result[0]
+    summary_obj = result[0]
     assert summary_obj["original_region"] == "one two three four\r\n"
 
     result = lcs_id_obj_context.analyze_file(filepath=fp)
     assert len(result) == 1
-    lcs_match, summary_obj = result[0]
+    summary_obj = result[0]
     assert summary_obj["found_region"] == \
         "zero\r\none two three four\r\nfive\r\n"
 
     result = lcs_id_obj_context_origmatched.analyze_file(filepath=fp)
     assert len(result) == 1
-    lcs_match, summary_obj = result[0]
+    summary_obj = result[0]
     assert summary_obj["found_region"] == \
         "zero\r\none two three four\r\nfive\r\nsix\r\nseven\r\n"
     assert summary_obj["original_region"] == "one two three four\r\n"
@@ -273,7 +227,7 @@ def test_analyze_file_source():
     result = lcs_id_obj.analyze_source(src)
     assert len(result) == 1
 
-    lcs_match, summary_obj = result[0]
+    summary_obj = result[0]
     assert summary_obj["matched_license"] == 'test_license'
     assert summary_obj["score"] == 1.0
     assert summary_obj["found_region"] == "one two three four\r\n"
@@ -293,14 +247,14 @@ def test_analyze_input_path():
     ]
     for f in files:
         assert f in result
-    assert result[files[0]][0][1]["input_fp"].endswith('test0.py')
-    assert result[files[0]][0][1]["matched_license"] == 'custom_license'
-    assert result[files[1]][0][1]["input_fp"].endswith('test1.py')
-    assert result[files[1]][0][1]["matched_license"] == 'test_license'
+    assert result[files[0]][0]["input_fp"].endswith('test0.py')
+    assert result[files[0]][0]["matched_license"] == 'custom_license'
+    assert result[files[1]][0]["input_fp"].endswith('test1.py')
+    assert result[files[1]][0]["matched_license"] == 'test_license'
     assert len(result[files[2]]) == 0
     assert len(result[files[3]]) == 0
-    assert result[files[4]][0][1]["input_fp"].endswith('test4.bogus')
-    assert result[files[4]][0][1]["matched_license"] == 'test_license'
+    assert result[files[4]][0]["input_fp"].endswith('test4.bogus')
+    assert result[files[4]][0]["matched_license"] == 'test_license'
     assert len(result[files[5]]) == 0
 
 
@@ -319,12 +273,12 @@ def test_postprocess_comments():
               'test4.bogus')
     result_dict = lcs_id_obj.analyze_input_path(input_path=fp)
     postprocess_dict = lcs_id_obj.postprocess_strip_off_code(result_dict)
-    assert postprocess_dict[fp][0][1]["stripped_region"] == \
+    assert postprocess_dict[fp][0]["stripped_region"] == \
         'one two three four\r\n'
 
-    result_dict[fp][0][1]["score"] = 0
+    result_dict[fp][0]["score"] = 0
     postprocess_dict = lcs_id_obj.postprocess_strip_off_code(result_dict)
-    assert postprocess_dict[fp][0][1]["stripped_region"] == ''
+    assert postprocess_dict[fp][0]["stripped_region"] == ''
 
     lcs_id_low_threshold = license_identifier.LicenseIdentifier(
         license_dir=license_dir,
@@ -335,7 +289,7 @@ def test_postprocess_comments():
     postprocess_dict = \
         lcs_id_low_threshold.postprocess_strip_off_code(result_dict)
     stripped_region_lines = \
-        postprocess_dict[fp][0][1]["stripped_region"].splitlines()
+        postprocess_dict[fp][0]["stripped_region"].splitlines()
     expected_lines = ['# one', '', '# two three', '', '# four']
     assert [line.strip() for line in stripped_region_lines] == expected_lines
 
@@ -390,40 +344,40 @@ def test_analyze_file_multiple_licenses():
     result = lid.analyze_source(src)
     assert len(result) == 3
 
-    assert result[0][1]["matched_license"] == 'L0'
-    assert result[0][1]["found_region"].splitlines() == ['a b', 'c d']
-    assert result[0][1]["start_line_ind"] == 1
-    assert result[0][1]["end_line_ind"] == 3
+    assert result[0]["matched_license"] == 'L0'
+    assert result[0]["found_region"].splitlines() == ['a b', 'c d']
+    assert result[0]["start_line_ind"] == 1
+    assert result[0]["end_line_ind"] == 3
 
-    assert result[1][1]["matched_license"] == 'L1'
-    assert result[1][1]["found_region"].splitlines() == ['e f', 'g h']
-    assert result[1][1]["start_line_ind"] == 4
-    assert result[1][1]["end_line_ind"] == 6
+    assert result[1]["matched_license"] == 'L1'
+    assert result[1]["found_region"].splitlines() == ['e f', 'g h']
+    assert result[1]["start_line_ind"] == 4
+    assert result[1]["end_line_ind"] == 6
 
-    assert result[2][1]["matched_license"] == 'L2'
-    assert result[2][1]["found_region"].splitlines() == ['i j', 'k l']
-    assert result[2][1]["start_line_ind"] == 7
-    assert result[2][1]["end_line_ind"] == 9
+    assert result[2]["matched_license"] == 'L2'
+    assert result[2]["found_region"].splitlines() == ['i j', 'k l']
+    assert result[2]["start_line_ind"] == 7
+    assert result[2]["end_line_ind"] == 9
 
     src = prep.Source.from_lines(
         ["a b", "c d", "e f", "g h", "i j", "k l"])
     result = lid.analyze_source(src)
     assert len(result) == 3
 
-    assert result[0][1]["matched_license"] == 'L0'
-    assert result[0][1]["found_region"].splitlines() == ['a b', 'c d']
-    assert result[0][1]["start_line_ind"] == 0
-    assert result[0][1]["end_line_ind"] == 2
+    assert result[0]["matched_license"] == 'L0'
+    assert result[0]["found_region"].splitlines() == ['a b', 'c d']
+    assert result[0]["start_line_ind"] == 0
+    assert result[0]["end_line_ind"] == 2
 
-    assert result[1][1]["matched_license"] == 'L1'
-    assert result[1][1]["found_region"].splitlines() == ['e f', 'g h']
-    assert result[1][1]["start_line_ind"] == 2
-    assert result[1][1]["end_line_ind"] == 4
+    assert result[1]["matched_license"] == 'L1'
+    assert result[1]["found_region"].splitlines() == ['e f', 'g h']
+    assert result[1]["start_line_ind"] == 2
+    assert result[1]["end_line_ind"] == 4
 
-    assert result[2][1]["matched_license"] == 'L2'
-    assert result[2][1]["found_region"].splitlines() == ['i j', 'k l']
-    assert result[2][1]["start_line_ind"] == 4
-    assert result[2][1]["end_line_ind"] == 6
+    assert result[2]["matched_license"] == 'L2'
+    assert result[2]["found_region"].splitlines() == ['i j', 'k l']
+    assert result[2]["start_line_ind"] == 4
+    assert result[2]["end_line_ind"] == 6
 
 
 def test_analyze_file_near_ties():
@@ -448,4 +402,3 @@ def test_analyze_file_near_ties():
     assert set(top_candidates.keys()) == set(['license1', 'license2'])
     assert top_candidates['license1'] > top_candidates['license2']
     assert len(results) == 1
-    assert results[0][0].license == 'license2'

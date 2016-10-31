@@ -130,7 +130,7 @@ def _write_csv_file(results, path, original_matched_text_flag):
         writer.writerow(field_names)
 
         for filename, results_by_file in results.iteritems():
-            for __, summary in results_by_file:
+            for summary in results_by_file:
                 row = summary.to_csv_row()
                 writer.writerow(row)
 
@@ -148,7 +148,7 @@ def _display_easy_read(results):
     for filename, results_by_file in results.iteritems():
         print("=== Found {} results for '{}':".format(len(results_by_file),
                                                       filename))
-        for __, summary in results_by_file:
+        for summary in results_by_file:
             print(summary.to_display_format())
 
 
