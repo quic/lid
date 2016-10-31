@@ -145,3 +145,7 @@ def _display_easy_read(results):
                                                       filename))
         for __, summary in results_by_file:
             print(summary.to_display_format())
+
+
+if __name__ == '__main__':
+    main()
