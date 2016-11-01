@@ -1,6 +1,7 @@
 import argparse
 import csv
 import logging
+import multiprocessing
 import sys
 
 from . import license_identifier
@@ -27,6 +28,7 @@ def main():
         input_path=args.input_path,
         context_length=args.context,
         location_strategy=args.location_strategy,
+        cpu_count=args.cpu_count,
         penalty_only_source=args.penalty_only_source,
         penalty_only_license=args.penalty_only_license,
         punct_weight=args.punct_weight,
@@ -76,6 +78,9 @@ def _parse_args(args):
     aparse.add_argument(
         "-S", "--single_thread", help="Run as a single thread",
         action='store_true', default=False)
+    aparse.add_argument(
+        "--cpu_count", help="Specify the number of threads/CPUs to be used",
+        default=multiprocessing.cpu_count(), type=int)
     aparse.add_argument(
         "--keep_fraction_of_best",
         help="Look for the best-matching source region for any license with "
