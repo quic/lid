@@ -129,7 +129,7 @@ def _write_csv_file(results, path, original_matched_text_flag):
             field_names.remove("Matched license text without context")
         writer.writerow(field_names)
 
-        for filename, results_by_file in results.iteritems():
+        for results_by_file in results.values():
             for summary in results_by_file:
                 row = summary.to_csv_row()
                 writer.writerow(row)

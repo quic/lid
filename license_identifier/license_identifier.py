@@ -276,7 +276,7 @@ class PostProcessor(object):
         self._threshold = threshold
 
     def strip_off_code(self, results):
-        for filename, file_results in results.iteritems():
+        for file_results in results.values():
             for summary in file_results:
                 summary['stripped_region'] = self._strip_region(summary)
 
