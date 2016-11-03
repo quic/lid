@@ -10,7 +10,6 @@ from future.utils.surrogateescape import register_surrogateescape
 import comment_parser
 from comment_parser import language
 
-from . import license_match
 from . import location_identifier
 from . import match_summary
 from . import n_grams
@@ -143,10 +142,6 @@ class LicenseIdentifier:
     def analyze_input_path(self, input_path):
         return self.apply_function_on_all_files(_analyze_file, input_path)
 
-    def analyze_input_path_lcs_match_output(self, input_path):
-        return self.apply_function_on_all_files(_analyze_file_lcs_match_output,
-                                                input_path)
-
     def apply_function_on_all_files(self, function_ptr, top_dir_name):
         with closing(multiprocessing.Pool(processes=self.cpu_count)) as pool:
             apply_func = self.run_in_parallel and \
@@ -161,9 +156,6 @@ class LicenseIdentifier:
                 output[filename] = result.get()
 
         return output
-
-    def analyze_file_lcs_match_output(self, input_filepath):
-        return [x[0] for x in self.analyze_file(input_filepath)]
 
     def analyze_file(self, filepath):
         """
@@ -202,8 +194,6 @@ class LicenseIdentifier:
                                                best_region.end_line_orig)
         original_region = '\r\n'.join(original_region_lines) + '\r\n'
 
-        lcs_match = self._lcs_match(source, matched_license, best_region)
-
         summary = match_summary.MatchSummary(
             input_fp=source.filepath,
             matched_license=matched_license,
@@ -220,7 +210,7 @@ class LicenseIdentifier:
         if not self.original_matched_text_flag:
             summary.pop('original_region')
 
-        results = [(lcs_match, summary)]
+        results = [summary]
 
         source_above = source.subset(
             0, source.relative_line_index(best_region.start_line))
@@ -233,7 +223,7 @@ class LicenseIdentifier:
 
         results.extend(results_above)
         results.extend(results_below)
-        results.sort(key=lambda x: -x[1]['region_score'])
+        results.sort(key=lambda x: -x['region_score'])
 
         return results
 
@@ -276,20 +266,6 @@ class LicenseIdentifier:
 
         return loc_finder.main_process(lic, src)
 
-    def _lcs_match(self, source, matched_license, best_region):
-        if source.filepath is not None:
-            filename = ntpath.basename(source.filepath)
-        else:
-            filename = None
-
-        return license_match.LicenseMatch(
-            file_name=filename,
-            file_path=source.filepath,
-            license=matched_license,
-            start_byte=best_region.start_offset,
-            length=best_region.end_offset - best_region.start_offset + 1
-        )
-
     def postprocess_strip_off_code(self, results):
         return PostProcessor(self.threshold).strip_off_code(results)
 
@@ -300,8 +276,8 @@ class PostProcessor(object):
         self._threshold = threshold
 
     def strip_off_code(self, results):
-        for filename, file_results in results.iteritems():
-            for __, summary in file_results:
+        for file_results in results.values():
+            for summary in file_results:
                 summary['stripped_region'] = self._strip_region(summary)
 
         return results
@@ -342,10 +318,6 @@ class PostProcessor(object):
 
 def _analyze_file(lid, input_path):
     return lid.analyze_file(input_path)
-
-
-def _analyze_file_lcs_match_output(lid, input_path):
-    return lid.analyze_file_lcs_match_output(input_path)
 
 
 class SyncResult(object):
