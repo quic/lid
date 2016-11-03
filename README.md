@@ -103,7 +103,7 @@ license-identifier -I /path/to/source/code
 # 2. Use a particular pickled license library file
 license-identifier -P /path/to/pickled_licenses -I /path/to/source_code
 
-# 3. Use a license directory without building a pickled file
+# 3. Use a license directory without building a pickled file (please make sure license files have .txt extensions)
 license-identifier -L /path/to/license_directory -I /path/to/source_code
 
 # 4. Build a pickled file from the specified license directory
