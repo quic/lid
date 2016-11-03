@@ -52,6 +52,7 @@ class LicenseIdentifier:
                  license_library=None,
                  license_dir=None,
                  context_length=0,
+                 cpu_count=multiprocessing.cpu_count(),
                  location_strategy=None,
                  location_similarity=None,
                  penalty_only_source=None,
@@ -66,6 +67,7 @@ class LicenseIdentifier:
         self.context_length = context_length
         self.input_path = input_path
         self.run_in_parallel = run_in_parallel
+        self.cpu_count=cpu_count
         self.location_strategy = location_strategy
         self.location_similarity = location_similarity
         self.penalty_only_source = penalty_only_source
@@ -146,7 +148,7 @@ class LicenseIdentifier:
                                                 input_path)
 
     def apply_function_on_all_files(self, function_ptr, top_dir_name):
-        with closing(multiprocessing.Pool()) as pool:
+        with closing(multiprocessing.Pool(processes=self.cpu_count)) as pool:
             apply_func = self.run_in_parallel and \
                 pool.apply_async or apply_sync
 

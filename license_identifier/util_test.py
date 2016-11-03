@@ -24,7 +24,9 @@ def test_read_lines_offsets():
         "six",
         "seven"]
     assert offsets == [0, 5, 24, 29, 33, 38]
-
+    input_fp2 = os.path.join(os.getcwd(), '../data/test/encodings/_ude_euc-tw1.txt')
+    lines, offsets = util.read_lines_offsets(input_fp2)
+    assert lines[1].find('\ufffd') #Python replacment character
 
 def test_read_lines_offsets_non_ascii():
     input_fp = os.path.join(os.getcwd(), '../data/test/encodings/test-utf-8')
