@@ -2,7 +2,7 @@ from collections import OrderedDict
 from os import linesep
 import six
 
-COLUMN_LIMIT = 32767 - 10 # padding 10 for \'b and other formatting characters
+COLUMN_LIMIT = 32767 - 100 # padding 100 for \'b and other formatting characters
 
 def truncate_column(column):
     if isinstance(column, six.string_types):
@@ -54,7 +54,7 @@ class MatchSummary(dict):
         for key in self.field_names().keys():
             if self.has_key(key):
                 if key in ("input_fp", "found_region", "original_region"):
-                    value = self[key].encode('utf8', 'surrogateescape')
+                    value = self[key].encode('utf8', 'replace')
                     if value.startswith(('+','-','@','=')):
                         value = ' ' + value
                     csv_row.append(truncate_column(value))
