@@ -222,6 +222,18 @@ def test_analyze_file():
     assert summary_obj["original_region"] == "one two three four\r\n"
 
 
+def test_analyze_files():
+    lid = license_identifier.LicenseIdentifier(license_dir=license_dir,
+                                               threshold=threshold,
+                                               input_path=input_dir,
+                                               run_in_parallel=False)
+    lid.analyze_file = lambda x: '{} results'.format(x)
+    filepaths = ['one', 'two', 'three', 'four']
+
+    assert lid.analyze_files(filepaths) == ['{} results'.format(x)
+                                            for x in filepaths]
+
+
 def test_analyze_file_source():
     src = prep.Source.from_lines(["a", "one two three four", "b"])
     result = lcs_id_obj.analyze_source(src)
