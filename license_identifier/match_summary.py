@@ -52,12 +52,15 @@ class MatchSummary(dict):
     def to_csv_row(self):
         csv_row = []
         for key in self.field_names().keys():
-            if self.has_key(key):
-                if key in ("input_fp", "found_region", "original_region"):
-                    value = self[key].encode('utf8', 'replace')
-                    if value.startswith(('+','-','@','=')):
-                        value = ' ' + value
-                    csv_row.append(truncate_column(value))
-                else:
-                    csv_row.append(truncate_column(self[key]))
+            try:
+                if self.has_key(key):
+                    if key in ("input_fp", "found_region", "original_region"):
+                        value = self[key].encode('utf8', 'replace')
+                        if value.startswith(('+','-','@','=')):
+                            value = ' ' + value
+                        csv_row.append(truncate_column(value))
+                    else:
+                        csv_row.append(truncate_column(self[key]))
+            except:
+                csv_row.append("Errors in encoding/decoding unicode characters.")
         return csv_row
