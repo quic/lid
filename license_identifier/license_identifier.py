@@ -157,6 +157,12 @@ class LicenseIdentifier:
 
         return output
 
+    def analyze_files(self, filepaths):
+        """
+        Find licenses within each source file for the passed-in filepaths.
+        """
+        return [self.analyze_file(x) for x in filepaths]
+
     def analyze_file(self, filepath):
         """
         Find licenses within a source file (or within a subset of a file).
