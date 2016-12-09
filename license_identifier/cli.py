@@ -4,6 +4,8 @@ import logging
 import multiprocessing
 import sys
 
+from future.utils import iteritems
+
 from . import license_identifier
 from . import match_summary
 from . import util
@@ -145,7 +147,7 @@ def _open_file(path):
 
 
 def _display_easy_read(results):
-    for filename, results_by_file in results.iteritems():
+    for filename, results_by_file in iteritems(results):
         print("=== Found {} results for '{}':".format(len(results_by_file),
                                                       filename))
         for summary in results_by_file:

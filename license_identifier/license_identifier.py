@@ -6,6 +6,7 @@ from os.path import dirname, join, splitext
 
 import ntpath
 from future.utils.surrogateescape import register_surrogateescape
+from future.utils import iteritems
 
 import comment_parser
 from comment_parser import language
@@ -182,7 +183,7 @@ class LicenseIdentifier:
 
         # Search for best matching region for each of the top candidates
         region_results = []
-        for license_name, original_score in top_candidates.iteritems():
+        for license_name, original_score in iteritems(top_candidates):
             license = self.license_library.licenses[license_name]
             result = self.find_license_region(license, source)
             region_results.append((license_name, original_score, result))
@@ -242,7 +243,7 @@ class LicenseIdentifier:
 
         # Measure n-gram similarity relative to all licenses in the library
         similarities = OrderedDict()
-        for license_name, lic in self.license_library.licenses.iteritems():
+        for license_name, lic in iteritems(self.license_library.licenses):
             similarity_score = lic.n_grams.measure_similarity(src_ng)
             similarities[license_name] = similarity_score
 
@@ -252,7 +253,7 @@ class LicenseIdentifier:
                                 best_score * self.keep_fraction_of_best)
 
         top_candidates = OrderedDict()
-        for license_name, score in similarities.iteritems():
+        for license_name, score in iteritems(similarities):
             if score >= current_threshold:
                 top_candidates[license_name] = score
 
@@ -267,7 +268,7 @@ class LicenseIdentifier:
                             penalty_only_license=self.penalty_only_license,
                             punct_weight=self.punct_weight)
 
-        loc_args = {k: v for k, v in loc_args_raw.iteritems() if v is not None}
+        loc_args = {k: v for k, v in iteritems(loc_args_raw) if v is not None}
         loc_finder = location_identifier.Location_Finder(**loc_args)
 
         return loc_finder.main_process(lic, src)
