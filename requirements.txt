@@ -1,6 +1,4 @@
---extra-index-url https://files.open.qualcomm.com/py
-
-git+https://github.qualcomm.com/qosp/comment-parser.git@0.2.7
+git+https://github.qualcomm.com/qosp/comment-parser.git@0.2.9
 chardet==2.3.0
 future==0.15.2
 nltk==3.2.1

@@ -126,7 +126,7 @@ def _write_csv_file(results, path, original_matched_text_flag):
     with _open_file(path) as f:
         writer = csv.writer(f)
 
-        field_names = match_summary.MatchSummary.field_names().values()
+        field_names = list(match_summary.MatchSummary.field_names().values())
         if not original_matched_text_flag:
             field_names.remove("Matched license text without context")
         writer.writerow(field_names)
