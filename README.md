@@ -51,7 +51,7 @@ the `analyze_input_path` method.
 
 You need a recent version of pypy, only later Ubuntu versions have a sufficiently new version available, e.g. 16.10 onwards. Otherwise you need to install pypy from http://pypy.org.
 
-Once pypy is installed on the syste,, the only change to the process above is to create the virtualenv specifying the correct interpreter:
+Once pypy is installed on the system, the only change to the process above is to create the virtualenv specifying the correct interpreter:
 
 ```
 # Set up a virtualenv
