@@ -54,8 +54,8 @@ class EditWeightedSimilarity(Similarity, EditWeightedSimilarityBase):
         result = dict()
 
         if extras:
-            result["init_ignored_src"] = ignored_strings_src.next()
-            result["init_ignored_lic"] = ignored_strings_lic.next()
+            result["init_ignored_src"] = next(ignored_strings_src)
+            result["init_ignored_lic"] = next(ignored_strings_lic)
 
         total_counts = Counter()
         for op, ts1, te1, ts2, te2 in matcher.get_opcodes():
@@ -84,11 +84,11 @@ class EditWeightedSimilarity(Similarity, EditWeightedSimilarityBase):
             if extras:
                 ignored_src = []
                 for token_index in range(ts1, te1):
-                    ignored_src.append(ignored_strings_src.next())
+                    ignored_src.append(next(ignored_strings_src))
 
                 ignored_lic = []
                 for token_index in range(ts2, te2):
-                    ignored_lic.append(ignored_strings_lic.next())
+                    ignored_lic.append(next(ignored_strings_lic))
 
                 diff_chunks.append({
                     "op": op,

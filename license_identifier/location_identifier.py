@@ -20,7 +20,8 @@ def main(argv):
     parser = argparse.ArgumentParser()
     parser.add_argument("license_file")
     parser.add_argument("input_src_file")
-    parser.add_argument("-v", "--verbose", action="count", dest="verbosity")
+    parser.add_argument("-v", "--verbose", action="count", dest="verbosity",
+                        default=DEFAULT_VERBOSITY)
     parser.add_argument("--context_lines", type=int)
     parser.add_argument("--strategy", default=DEFAULT_STRATEGY)
     parser.add_argument("--similarity", default=DEFAULT_SIMILARITY)

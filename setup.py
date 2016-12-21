@@ -41,7 +41,7 @@ setup(
         ],
     },
     install_requires=[
-        "comment-parser==0.2.7",
+        "comment-parser==0.2.9",
         # Note: Using a pinned version of comment_parser for disambiguation
         #       (this package name clashes with an existing PyPI package)
         "chardet",

@@ -31,7 +31,7 @@ source ENV/bin/activate
 pip install -U setuptools pip
 
 # Install comment-parser (to prevent pip from finding the wrong package on PyPI)
-pip install git+https://github.qualcomm.com/qosp/comment-parser.git@0.2.5
+pip install git+https://github.qualcomm.com/qosp/comment-parser.git@0.2.7
 
 # Install license_identifier
 pip install git+https://github.qualcomm.com/qosp/license_identifier.git
@@ -46,6 +46,30 @@ Note for the developers who want to integrate this module into their code:
 The program reads all the license files when it begins - it takes a few seconds.
 For efficiency gain, I would recommend instantiating one instance, and running
 the `analyze_input_path` method.
+
+## Running under pypy for improved performance
+
+You need a recent version of pypy, only later Ubuntu versions have a sufficiently new version available, e.g. 16.10 onwards. Otherwise you need to install pypy from http://pypy.org.
+
+Once pypy is installed on the system, the only change to the process above is to create the virtualenv specifying the correct interpreter:
+
+```
+# Set up a virtualenv
+virtualenv -p pypy ENV
+source ENV/bin/activate
+```
+
+Alternatively if you have pypy installed locally provide the full path to the interpreter.
+
+```
+# Set up a virtualenv
+virtualenv -p /path_to_pypy_install/bin/pypy ENV
+source ENV/bin/activate
+```
+
+Then follow the remaining instructions above to install LiD and dependencies into the environment.
+
+You can also use the dockerfile provided to spin up a container with the correct dependencies installed.
 
 ## Installation for project maintainers
 

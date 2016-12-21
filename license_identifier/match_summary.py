@@ -40,7 +40,7 @@ class MatchSummary(dict):
             + "-----BEGIN-----" + linesep\
             + self["found_region"] \
             + "-----END-----" + linesep + linesep
-        if self.has_key("original_region"):
+        if "original_region" in self:
             output_str = output_str[:-1] \
                 + "The following text is found to be " \
                 + "original matched license text without context" + linesep \
@@ -53,11 +53,12 @@ class MatchSummary(dict):
         csv_row = []
         for key in self.field_names().keys():
             try:
-                if self.has_key(key):
+                if key in self:
                     if key in ("input_fp", "found_region", "original_region"):
-                        value = self[key].encode('utf8', 'replace')
+                        value = self[key]
                         if value.startswith(('+','-','@','=')):
                             value = ' ' + value
+                        value = value.encode('utf8', 'replace')
                         csv_row.append(truncate_column(value))
                     else:
                         csv_row.append(truncate_column(self[key]))

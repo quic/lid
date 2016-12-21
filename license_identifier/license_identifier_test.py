@@ -5,8 +5,11 @@ from collections import Counter
 from os.path import abspath, dirname, join
 
 import six
-from StringIO import StringIO
 from mock import Mock, mock_open, patch
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 from . import cli
 from . import license_identifier
@@ -142,9 +145,9 @@ def test_write_csv_file():
                 found_region='+zero\none two three four\n')
             result_dict = \
                 {'data/test/data/test1.py': [result_obj_dict]}
-            expected_res_string = ['data/test/data/test1.py', 'test_license',
+            expected_res_string = [b'data/test/data/test1.py', 'test_license',
                                    '1.0', '0', '5', '0', '40', '1.0',
-                                   " +zero\none two three four\n"]
+                                   b" +zero\none two three four\n"]
             cli._write_csv_file(result_dict, output_path, False)
             handle = m()
             handle.writerow.assert_any_call(expected_res_string)
@@ -161,8 +164,8 @@ def test_init_using_license_library_object():
     lid2 = license_identifier.LicenseIdentifier(
         license_library=prep.LicenseLibrary.from_path(path2))
 
-    assert lid1.license_library.licenses.keys() == ['license1', 'license2']
-    assert lid2.license_library.licenses.keys() == ['test_license',
+    assert list(lid1.license_library.licenses.keys()) == ['license1', 'license2']
+    assert list(lid2.license_library.licenses.keys()) == ['test_license',
                                                     'custom_license']
 
 
@@ -307,7 +310,12 @@ def test_postprocess_comments():
 
 
 def test_truncate_column():
-    data = ''.join(random.choice(string.lowercase) for x in range(40000))
+    try:
+        lowercase = string.lowercase
+    except AttributeError:
+        # Python3
+        lowercase = string.ascii_lowercase
+    data = ''.join(random.choice(lowercase) for x in range(40000))
     assert len(match_summary.truncate_column(data)) == \
         match_summary.COLUMN_LIMIT
     assert match_summary.truncate_column(3.0) == 3.0

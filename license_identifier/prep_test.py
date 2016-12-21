@@ -98,7 +98,7 @@ def test_license_library_from_list():
         prep.License.from_lines(["c"], name="L3"),
     ]
     license_library = prep.LicenseLibrary.from_licenses(licenses)
-    assert license_library.licenses.keys() == ["L1", "L2", "L3"]
+    assert list(license_library.licenses.keys()) == ["L1", "L2", "L3"]
     assert license_library.licenses["L1"].lines == ["a"]
     assert license_library.licenses["L2"].lines == ["b"]
     assert license_library.licenses["L3"].lines == ["c"]
