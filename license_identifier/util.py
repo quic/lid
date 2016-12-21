@@ -27,7 +27,7 @@ def read_lines_offsets(filename):
         return read_with_detected_encoding(filename, encoding)
     except:
         return read_with_default_encoder(filename)
-    
+
 
 def read_with_detected_encoding(filename, encoding):
     with codecs.open(filename, 'r', encoding=encoding, errors='replace') as fp:
@@ -39,7 +39,7 @@ def read_with_default_encoder(filename):
     with codecs.open(filename, 'r', encoding='utf-8', errors='replace') as fp:
         lines, line_offsets = get_lines_and_line_offsets(iter(fp))
     return lines, line_offsets
-    
+
 
 def get_lines_and_line_offsets(lines):
     lines_stripped = []
@@ -53,7 +53,7 @@ def get_lines_and_line_offsets(lines):
 
 
 def is_punctuation(input_value):
-    return all(c in string.punctuation for c in input_value)
+    return not any(c not in string.punctuation for c in input_value)
 
 
 def get_user_date_time_str():
