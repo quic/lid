@@ -49,7 +49,7 @@ the `analyze_input_path` method.
 
 ## Running under pypy for improved performance
 
-You need a recent version of pypy, only later Ubuntu versions have a sufficiently new version available, e.g. 16.10 onwards. Otherwise you need to install pypy from http://pypy.org.
+You need a recent version of pypy (5.4.1 or later), only newer Ubuntu releases have a sufficiently new version available, e.g. Ubunut 16.10 onwards. Otherwise you need to install pypy from http://pypy.org.
 
 Once pypy is installed on the system, the only change to the process above is to create the virtualenv specifying the correct interpreter:
 
