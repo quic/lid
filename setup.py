@@ -28,7 +28,7 @@ class CustomInstall(install):
 
 
 setup(
-    name='license_identifier',
+    name='lid',
     version='1.1.3',
     description='Scans a file or folder for predefined licenses',
     author='Peter Shin',
