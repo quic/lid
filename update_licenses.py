@@ -14,6 +14,13 @@ def get_license_ids():
     objs = graph.subject_objects(ref)
     return map(lambda x: x[1].value, objs)
 
+def get_exception_ids():
+    graph = rdflib.Graph()
+    graph.parse('http://spdx.org/licenses/exceptions-index.html', 'rdfa')
+    ref = rdflib.URIRef('http://spdx.org/rdf/terms#licenseId')
+    objs = graph.subject_objects(ref)
+    return map(lambda x: x[1].value, objs)
+
 def get_license_text_and_header(licenseId):
     graph = rdflib.Graph()
 
@@ -54,7 +61,7 @@ def output_tree(parent):
         output += output_tree(node)
     return output
 
-def write_licenses_dir(ids):
+def write_licenses_dir(ids, exception_ids):
     licenseDir = './license_identifier/data/license_dir'
     if not os.path.exists(licenseDir):
         os.makedirs(licenseDir)
@@ -68,13 +75,17 @@ def write_licenses_dir(ids):
         with open('{}/{}.txt'.format(licenseDir, licenseId), 'w') as hdl:
             hdl.write(text)
         if header and "There is no standard license header for the license" not in header:
-            with open('{}/{}-header.txt'.format(licenseDir, licenseId), 'w') as hdl:
+            with open('{}/headers/{}.txt'.format(licenseDir, licenseId), 'w') as hdl:
                 hdl.write(header)
+
+    for exception in exception_ids:
+        sys.stdout.write("Updating exception text for '{}'\n".format(exception))
 
 with open('./license_identifier/licenses.py', 'w') as out:
     ids = get_license_ids()
     ids.sort()
+    exception_ids = get_exception_ids()
     out.write('license_ids = ')
     pprint(ids, indent=4, stream=out)
 
-    write_licenses_dir(ids)
+    write_licenses_dir(ids, exception_ids)
