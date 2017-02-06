@@ -59,9 +59,9 @@ class NGrams(object):
             self.trigram_count[first, second, third] += 1
 
     def measure_similarity(self, other_n_grams):
-        return self.measure_Jaccard_distance(other_n_grams)
+        return self.measure_jaccard_index(other_n_grams)
 
-    def measure_Jaccard_distance(self, other_n_grams):
+    def measure_jaccard_index(self, other_n_grams):
         """
         |A intersection B| / |A union B|
         """
