@@ -1,3 +1,30 @@
+# Copyright (c) 2017, The Linux Foundation. All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+#       copyright notice, this list of conditions and the following
+#       disclaimer in the documentation and/or other materials provided
+#       with the distribution.
+#     * Neither the name of The Linux Foundation nor the names of its
+#       contributors may be used to endorse or promote products derived
+#       from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
+# WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+# BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+# BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+# OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+# IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 import logging
 import multiprocessing
 from collections import OrderedDict
@@ -7,9 +34,6 @@ from os.path import dirname, join, splitext
 import ntpath
 from future.utils.surrogateescape import register_surrogateescape
 from future.utils import iteritems
-
-import comment_parser
-from comment_parser import language
 
 from . import location_identifier
 from . import match_summary
@@ -301,21 +325,10 @@ class PostProcessor(object):
         return stripped_region
 
     def _strip_file_lines(self, summary):
-        lang = self._get_language(summary['input_fp'])
-        src_lines_crlf = self._src_lines_crlf(summary['input_fp'])
-
-        if lang:
-            stripped_file_lines = list(
-                comment_parser.parse_file(lang, src_lines_crlf))
-        else:
-            stripped_file_lines = src_lines_crlf
-
-        return stripped_file_lines
+        raise Exception("Not supported")
 
     def _get_language(self, input_filepath):
-        __, ext = splitext(input_filepath)
-
-        return comment_parser.language.extension_to_lang_map.get(ext, None)
+        raise Exception("Not supported")
 
     def _src_lines_crlf(self, input_filepath):
         src = prep.Source.from_filepath(input_filepath)

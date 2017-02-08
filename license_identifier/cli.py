@@ -1,3 +1,5 @@
+# Copyright (c) 2017, The Linux Foundation. All rights reserved.
+
 import argparse
 import csv
 import logging

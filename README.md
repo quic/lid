@@ -4,14 +4,18 @@ License Identifier
 The purpose of this program, `license_identifier`, is to scan the source code
 files and identify the license text region and the type of license.
 
-Status
+*Please note: We are working on a method to accept contributions once we release
+additional dependencies needed for full LiD functionality. At that point it is 
+likely we will update this repository in a non-backwards compatible manner.*
+
+License
 ===
 
-[![Build Status](https://jenkins.open.qualcomm.com/buildStatus/icon?job=license_identifier)](https://jenkins.open.qualcomm.com/job/license_identifier/)
+Copyright (c) 2017, The Linux Foundation. All rights reserved.
 
-[Current Source Code](https://github.qualcomm.com/phshin/license_identifier)
+SPDX-License-Identifier: BSD-3-Clause
 
-[Wiki - Technical Description and Roadmap](http://qosp-wiki.qualcomm.com/wiki/OS_License_Identification)
+See License.txt for full license text.
 
 Installation
 ===
@@ -30,11 +34,8 @@ source ENV/bin/activate
 # Get the latest versions of pip and setuptools:
 pip install -U setuptools pip
 
-# Install comment-parser (to prevent pip from finding the wrong package on PyPI)
-pip install git+https://github.qualcomm.com/qosp/comment-parser.git@0.2.7
-
 # Install license_identifier
-pip install git+https://github.qualcomm.com/qosp/license_identifier.git
+pip install git+https://source.codeaurora.org/external/qostg/lid.git
 ```
 
 At this point, you can test the installation by running, for example:
