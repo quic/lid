@@ -27,6 +27,7 @@
 
 import difflib
 from collections import Counter, namedtuple
+import string
 
 from . import n_grams as ng
 from . import util
@@ -153,8 +154,5 @@ class EditWeightedSimilarity(Similarity, EditWeightedSimilarityBase):
         return result
 
     def _count_punctuation(self, tokens):
-        count = 0
-        for token in tokens:
-            if util.is_punctuation(token):
-                count += 1
-        return count
+        count = lambda l1,l2: sum([1 for x in l1 if x in l2])
+        return count(tokens,set(string.punctuation))
