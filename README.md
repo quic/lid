@@ -141,6 +141,30 @@ license-identifier -L /path/to/license_directory -I /path/to/source_code
 license-identifier -L /path/to/license_directory -P /path/to/output_pickled_licenses
 ```
 
+Integration
+===
+
+To call LiD, first instantiate a LicenseIdentifier object, and then call one of the "analyze\_" methods on a file/directory path.
+
+```
+lid = license_identifier.LicenseIdentifier(
+        threshold = 0.07,
+        run_in_parallel=False)
+results = lid.analyze_input_path(path_to_files)
+```
+
+The results will be named a list of named tuples for each file, each named tuple representing a detected license in that file. The named tuple contains the following fields:
+        input_fp - input file path
+        matched_license - matched license type
+        score - Score using whole input test
+        start_line_ind - Start line number
+        end_line_ind - End line number
+        start_offset - Start byte offset
+        end_offset - End byte offset
+        region_score - Score using only the license text portion
+        found_region - Found license text
+        original_region - Matched license text without context
+
 ## Adding Licenses
 
 If you want to add more licenses, please create a text file with the license text.

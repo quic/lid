@@ -41,7 +41,7 @@ class MatchSummary(dict):
     @staticmethod
     def field_names():
         return OrderedDict([
-            ("input_fp", "input file name"),
+            ("input_fp", "input file path"),
             ("matched_license", "matched license type"),
             ("score", "Score using whole input test"),
             ("start_line_ind", "Start line number"),
