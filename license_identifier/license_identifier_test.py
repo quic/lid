@@ -28,7 +28,7 @@
 import csv
 import random
 import string
-from collections import Counter
+from collections import Counter, OrderedDict
 from os.path import abspath, dirname, join
 
 import six
@@ -97,7 +97,7 @@ lcs_id_obj_context_origmatched = license_identifier.LicenseIdentifier(
 
 result_dict = lcs_id_obj.analyze_input_path(input_path=input_dir)
 
-field_names = ['input file name',
+field_names = ['input file path',
                "matched license type",
                "Score using whole input test",
                "Start line number",
@@ -261,9 +261,10 @@ def test_analyze_files():
     lid.analyze_file = lambda x: '{} results'.format(x)
     filepaths = ['one', 'two', 'three', 'four']
 
-    assert lid.analyze_files(filepaths) == ['{} results'.format(x)
-                                            for x in filepaths]
-
+    results = lid.analyze_files(filepaths)
+    for f in filepaths:
+        assert f in results
+        assert results[f] == '{} results'.format(f)
 
 def test_analyze_file_source():
     src = prep.Source.from_lines(["a", "one two three four", "b"])

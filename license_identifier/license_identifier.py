@@ -165,14 +165,17 @@ class LicenseIdentifier:
         return results
 
     def analyze_input_path(self, input_path):
-        return self.apply_function_on_all_files(_analyze_file, input_path)
+        return self.apply_function_on_path(_analyze_file, input_path)
 
-    def apply_function_on_all_files(self, function_ptr, top_dir_name):
+    def apply_function_on_path(self, function_ptr, top_dir_name):
+        filenames = util.files_from_path(top_dir_name)
+        return self.apply_function_on_all_files(function_ptr, filenames)
+
+    def apply_function_on_all_files(self, function_ptr, filenames):
         with closing(multiprocessing.Pool(processes=self.cpu_count)) as pool:
             apply_func = self.run_in_parallel and \
                 pool.apply_async or apply_sync
 
-            filenames = util.files_from_path(top_dir_name)
             results = [(x, apply_func(function_ptr, [self, x]))
                        for x in filenames]
 
@@ -186,7 +189,7 @@ class LicenseIdentifier:
         """
         Find licenses within each source file for the passed-in filepaths.
         """
-        return [self.analyze_file(x) for x in filepaths]
+        return self.apply_function_on_all_files(_analyze_file, filepaths)
 
     def analyze_file(self, filepath):
         """
