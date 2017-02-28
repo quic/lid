@@ -5,6 +5,7 @@ import csv
 import logging
 import multiprocessing
 import sys
+import json
 
 from future.utils import iteritems
 
@@ -73,7 +74,7 @@ def _parse_args(args):
         required=False)
     aparse.add_argument(
         "-F", "--output_format", help="Format the output accordingly",
-        choices=["csv", "easy_read"])
+        choices=["csv", "easy_read", "json"])
     aparse.add_argument(
         "-O", "--output_file_path",
         help="Specify a output path with data info (user name, date, time and "
@@ -116,6 +117,8 @@ def _output_results(results, format_, path, original_matched_text_flag):
         _write_csv_file(results, path, original_matched_text_flag)
     elif format_ == 'easy_read':
         _display_easy_read(results)
+    elif format_ == 'json':
+        _write_json_file(results, path)
     elif format_ is None:
         pass
     else:  # pragma: no cover
@@ -138,6 +141,11 @@ def _write_csv_file(results, path, original_matched_text_flag):
                 row = summary.to_csv_row()
                 writer.writerow(row)
 
+def _write_json_file(results, path):
+    path = '{}_{}.json'.format(path, util.get_user_date_time_str())
+    
+    with _open_file(path) as f:
+        json.dump(obj=results, fp=f) 
 
 def _open_file(path):
     if sys.version_info >= (3, 0, 0):  # pragma: no cover
