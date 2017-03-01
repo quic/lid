@@ -44,6 +44,7 @@ class MatchSummary(dict):
             ("input_fp", "input file path"),
             ("matched_license", "matched license type"),
             ("score", "Score using whole input test"),
+            ("rank", "Rank based on score"),
             ("start_line_ind", "Start line number"),
             ("end_line_ind", "End line number"),
             ("start_offset", "Start byte offset"),
@@ -58,6 +59,7 @@ class MatchSummary(dict):
             + u"Name of the input file: {}".format(self["input_fp"]) + linesep\
             + u"Matched license type is {}".format(self["matched_license"]) + linesep\
             + u"Score for the match is {:.3}".format(self["score"]) + linesep\
+            + u"Rank for the match is {}".format(self["rank"]) + linesep\
             + u"License text beings at line {}.".format(self["start_line_ind"]) + linesep\
             + u"License text ends at line {}.".format(self["end_line_ind"]) + linesep\
             + u"Start byte offset for the license text is {}.".format(self["start_offset"]) + linesep\

@@ -38,6 +38,7 @@ try:
     from StringIO import StringIO
 except ImportError:
     from io import StringIO
+import pytest
 
 from . import cli
 from . import license_identifier
@@ -100,6 +101,7 @@ result_dict = lcs_id_obj.analyze_input_path(input_path=input_dir)
 field_names = ['input file path',
                "matched license type",
                "Score using whole input test",
+               "Rank based on score",
                "Start line number",
                "End line number",
                "Start byte offset",
@@ -165,6 +167,7 @@ def test_write_csv_file():
                 input_fp='data/test/data/test1.py',
                 matched_license='test_license',
                 score='1.0',
+                rank=5,
                 start_line_ind='0',
                 end_line_ind='5',
                 start_offset='0',
@@ -174,7 +177,7 @@ def test_write_csv_file():
             result_dict = \
                 {'data/test/data/test1.py': [result_obj_dict]}
             expected_res_string = [b'data/test/data/test1.py', 'test_license',
-                                   '1.0', '0', '5', '0', '40', '1.0',
+                                   '1.0', 5, '0', '5', '0', '40', '1.0',
                                    b" +zero\none two three four\n"]
             cli._write_csv_file(result_dict, output_path, False)
             handle = m()
@@ -275,6 +278,24 @@ def test_analyze_file_source():
     assert summary_obj["matched_license"] == 'test_license'
     assert summary_obj["score"] == 1.0
     assert summary_obj["found_region"] == "one two three four\r\n"
+
+
+def test_get_rank_chooses_correct_bucket():
+    assert lcs_id_obj.get_rank(0.066) == 1
+    assert lcs_id_obj.get_rank(0.088) == 2
+    assert lcs_id_obj.get_rank(0.11) == 3
+    assert lcs_id_obj.get_rank(0.55) == 4
+    assert lcs_id_obj.get_rank(1.0) == 5
+
+
+def test_get_rank_raises_exception_upper_bound():
+    with pytest.raises(license_identifier.ScoreOutOfRange):
+        lcs_id_obj.get_rank(1.1)
+
+
+def test_get_rank_raises_exception_lower_bound():
+    with pytest.raises(license_identifier.ScoreOutOfRange):
+        lcs_id_obj.get_rank(0.05)
 
 
 def test_analyze_input_path():

@@ -50,6 +50,7 @@ DEFAULT_THRESHOLD = 0.04
 DEFAULT_PICKLED_LIBRARY_FILE = join(base_dir, 'data',
                                     'license_n_gram_lib.pickle')
 DEFAULT_KEEP_FRACTION_OF_BEST = 0.9
+RANK_SCALE = (0.06, 0.08, 0.1, 0.5, 1.0)
 
 # Use a global "registry" of license libraries, as a workaround to improve
 # multiprocessing performance.
@@ -66,6 +67,10 @@ _logger = logging.getLogger(name=__name__)
 
 # Add a NullHandler so that client apps aren't forced to see all log messages
 _logger.addHandler(logging.NullHandler())
+
+
+class ScoreOutOfRange(Exception):
+    pass
 
 
 class LicenseIdentifier:
@@ -217,7 +222,9 @@ class LicenseIdentifier:
 
         matched_license, orig_score, best_region = \
             max(region_results, key=lambda x: x[2].score)
-
+        
+        orig_rank = self.get_rank(orig_score)
+        
         found_region_lines = \
             source.get_lines_original_indexing(best_region.start_line,
                                                best_region.end_line)
@@ -232,6 +239,7 @@ class LicenseIdentifier:
             input_fp=source.filepath,
             matched_license=matched_license,
             score=orig_score,
+            rank=orig_rank,
             start_line_ind=best_region.start_line,
             end_line_ind=best_region.end_line,
             start_offset=best_region.start_offset,
@@ -261,6 +269,20 @@ class LicenseIdentifier:
 
         return results
 
+    @staticmethod
+    def get_rank(my_score):
+        # this logic will work for any number of ranks.
+        for index in range(len(RANK_SCALE)):
+            dividingPoint = RANK_SCALE[index]
+            if index == (len(RANK_SCALE)-1):  # last value is the perfect match
+                if my_score == 1.0:
+                    return len(RANK_SCALE)
+                else:
+                    raise ScoreOutOfRange
+            else:
+                if dividingPoint <= my_score < RANK_SCALE[index+1]:
+                    return index+1
+    
     def get_top_candidates(self, source):
         # First, compute n-grams for all lines in the source file
         src_ng = n_grams.NGrams()
