@@ -222,9 +222,12 @@ class LicenseIdentifier:
 
         matched_license, orig_score, best_region = \
             max(region_results, key=lambda x: x[2].score)
-        
-        orig_rank = self.get_rank(orig_score)
-        
+
+        try:
+            orig_rank = self.get_rank(orig_score)
+        except ScoreOutOfRange:
+            orig_rank = 'ScoreOutOfRange'
+
         found_region_lines = \
             source.get_lines_original_indexing(best_region.start_line,
                                                best_region.end_line)
