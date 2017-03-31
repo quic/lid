@@ -27,38 +27,89 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import rdflib
-import urllib
-from collections import OrderedDict
-from pprint import pprint
+import datetime
 import os
+from pprint import pprint
 import sys
+import rdflib
+import urlparse
 
-def get_license_ids():
+
+BASE_URL = 'http://spdx.org/licenses/'
+
+
+def main():
+    """
+    This file updates our collection of license template files and should be
+    run when SPDX updates to a new version. After updating license_dir, make
+    sure to remake the license_n_gram_lib.pickle file.
+
+    It also updates some fixture data in licenses.py that the core module may
+    use to add license metadata to the results.
+    """
+    update_spdx_metadata()
+    update_license_dir()
+
+
+def get_license_version():
+    full_url = urlparse.urljoin(BASE_URL, 'index.html')
     graph = rdflib.Graph()
-    graph.parse('http://spdx.org/licenses/index.html', 'rdfa')
+    graph.parse(full_url, 'rdfa')
+    ref = rdflib.URIRef('http://spdx.org/rdf/terms#licenseListVersion')
+    objs = graph.subject_objects(ref)
+    version_str = objs.next()[1].decode()
+    return version_str
+
+
+def get_license_ids_from_spdx():
+    full_url = urlparse.urljoin(BASE_URL, 'index.html')
+    graph = rdflib.Graph()
+    graph.parse(full_url, 'rdfa')
     ref = rdflib.URIRef('http://spdx.org/rdf/terms#licenseId')
     objs = graph.subject_objects(ref)
     return map(lambda x: x[1].value, objs)
+
 
 def get_exception_ids():
+    full_url = urlparse.urljoin(BASE_URL, 'exceptions-index.html')
     graph = rdflib.Graph()
-    graph.parse('http://spdx.org/licenses/exceptions-index.html', 'rdfa')
-    ref = rdflib.URIRef('http://spdx.org/rdf/terms#licenseId')
+    graph.parse(full_url, 'rdfa')
+    ref = rdflib.URIRef('http://spdx.org/rdf/terms#licenseExceptionId')
     objs = graph.subject_objects(ref)
     return map(lambda x: x[1].value, objs)
 
-def get_license_text_and_header(licenseId):
+
+def get_license_text_and_header(license_id):
     graph = rdflib.Graph()
+    full_url = urlparse.urljoin(BASE_URL, '{}.html'.format(license_id))
 
     try:
-        graph.parse('http://spdx.org/licenses/' + urllib.quote(licenseId) + '.html')
+        graph.parse(full_url)
     except:
         return (None, None)
 
-    text = get_sub_objs("http://spdx.org/rdf/terms#licenseText", graph)
-    header = get_sub_objs("http://spdx.org/rdf/terms#standardLicenseHeader", graph)
-    return (text, header)
+    text_location = "http://spdx.org/rdf/terms#licenseText"
+    text = get_sub_objs(text_location, graph)
+    header_location = "http://spdx.org/rdf/terms#standardLicenseHeader"
+    header = get_sub_objs(header_location, graph)
+
+    return text, header
+
+
+def get_exception_text(exception_id):
+    graph = rdflib.Graph()
+    full_url = urlparse.urljoin(BASE_URL, '{}.html'.format(exception_id))
+
+    try:
+        graph.parse(full_url)
+    except:
+        return None
+
+    exception_location = "http://spdx.org/rdf/terms#licenseExceptionText"
+    text = get_sub_objs(exception_location, graph)
+
+    return text
+
 
 def get_sub_objs(uri, graph):
     ref = rdflib.URIRef(uri)
@@ -68,6 +119,7 @@ def get_sub_objs(uri, graph):
         return xml_to_text(value[1])
     except StopIteration:
         return None
+
 
 def xml_to_text(literal):
     # appears to be a series of <p> elements under the top level node
@@ -80,6 +132,7 @@ def xml_to_text(literal):
         output += output_tree(child)
     return output
 
+
 def output_tree(parent):
     output = ""
     for node in parent.childNodes:
@@ -88,31 +141,62 @@ def output_tree(parent):
         output += output_tree(node)
     return output
 
-def write_licenses_dir(ids, exception_ids):
-    licenseDir = './license_identifier/data/license_dir'
-    if not os.path.exists(licenseDir):
-        os.makedirs(licenseDir)
 
-    for licenseId in ids:
-        sys.stdout.write("Updating license text for '{}'\n".format(licenseId))
-        text, header = get_license_text_and_header(licenseId)
+def write_licenses_dir(ids, exception_ids):
+
+    license_dir = './license_identifier/data/license_dir'
+
+    try:
+        os.makedirs(license_dir)
+    except:
+        pass
+
+    for license_id in ids:
+        log_license_text = "Updating license text for '{}'\n"
+        sys.stdout.write(log_license_text.format(license_id))
+        text, header = get_license_text_and_header(license_id)
         if text is None:
             continue
 
-        with open('{}/{}.txt'.format(licenseDir, licenseId), 'w') as hdl:
+        full_text_file = os.path.join(license_dir, '{}.txt'.format(license_id))
+        with open(full_text_file, 'w') as hdl:
             hdl.write(text)
-        if header and "There is no standard license header for the license" not in header:
-            with open('{}/headers/{}.txt'.format(licenseDir, licenseId), 'w') as hdl:
+
+        no_header = "There is no standard license header for the license"
+        if header and no_header not in header:
+            header_file = os.path.join(license_dir, 'headers',
+                                       '{}.txt'.format(license_id))
+            with open(header_file, 'w') as hdl:
                 hdl.write(header)
 
     for exception in exception_ids:
-        sys.stdout.write("Updating exception text for '{}'\n".format(exception))
+        log_exception_text = "Updating exception text for '{}'\n"
+        sys.stdout.write(log_exception_text.format(exception))
+        text = get_exception_text(exception)
+        if text is None:
+            continue
+        exception_file = os.path.join(license_dir, 'exceptions',
+                                      '{}.txt'.format(exception))
+        with open(exception_file, 'w') as hdl:
+            hdl.write(text)
 
-with open('./license_identifier/licenses.py', 'w') as out:
-    ids = get_license_ids()
-    ids.sort()
+
+def update_spdx_metadata():
+    spdx_version = get_license_version()
+    curr_datetime = datetime.datetime.now().strftime("%c")
+    ids = sorted(get_license_ids_from_spdx())
+    with open('./license_identifier/licenses.py', 'w') as out:
+        out.write("spdx_version = '{}'\n".format(spdx_version))
+        out.write("date_updated_license_dir = '{}'\n".format(curr_datetime))
+        out.write("license_ids = ")
+        pprint(ids, indent=4, stream=out)
+
+
+def update_license_dir():
+    ids = get_license_ids_from_spdx()
     exception_ids = get_exception_ids()
-    out.write('license_ids = ')
-    pprint(ids, indent=4, stream=out)
-
     write_licenses_dir(ids, exception_ids)
+
+
+if __name__ == '__main__':
+    main()
