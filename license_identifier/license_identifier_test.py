@@ -153,12 +153,12 @@ def test_write_csv_file():
     mock_open_name = '{}.open'.format(six.moves.builtins.__name__)
     with patch(mock_open_name, mock_open()):
         with patch('csv.writer', Mock(spec=csv.writer)) as m:
-            cli._output_results(result_dict, 'csv', output_path, False)
+            cli._output_results(result_dict, 'csv', output_path, False, False)
             handle = m()
             handle.writerow.assert_any_call(field_names)
 
             m.reset_mock()
-            cli._write_csv_file(result_dict, output_path, False)
+            cli._write_csv_file(result_dict, output_path, False, False)
             handle = m()
             handle.writerow.assert_any_call(field_names)
 
@@ -179,7 +179,7 @@ def test_write_csv_file():
             expected_res_string = [b'data/test/data/test1.py', 'test_license',
                                    '1.0', 5, '0', '5', '0', '40', '1.0',
                                    b" +zero\none two three four\n"]
-            cli._write_csv_file(result_dict, output_path, False)
+            cli._write_csv_file(result_dict, output_path, False, False)
             handle = m()
             handle.writerow.assert_any_call(expected_res_string)
 
@@ -195,14 +195,15 @@ def test_init_using_license_library_object():
     lid2 = license_identifier.LicenseIdentifier(
         license_library=prep.LicenseLibrary.from_path(path2))
 
-    assert list(lid1.license_library.licenses.keys()) == ['license1', 'license2']
+    assert list(lid1.license_library.licenses.keys()) == ['license1',
+                                                          'license2']
     assert list(lid2.license_library.licenses.keys()) == ['test_license',
-                                                    'custom_license']
+                                                          'custom_license']
 
 
 @patch('sys.stdout', new_callable=StringIO)
 def test_build_summary_list_str(mock_stdout):
-    cli._display_easy_read(result_dict)
+    cli._display_easy_read(result_dict, False)
     assert mock_stdout.getvalue().find('Summary of the analysis') >= 0
 
 
@@ -268,6 +269,7 @@ def test_analyze_files():
     for f in filepaths:
         assert f in results
         assert results[f] == '{} results'.format(f)
+
 
 def test_analyze_file_source():
     src = prep.Source.from_lines(["a", "one two three four", "b"])
@@ -472,3 +474,66 @@ def test_analyze_file_near_ties():
     assert set(top_candidates.keys()) == set(['license1', 'license2'])
     assert top_candidates['license1'] > top_candidates['license2']
     assert len(results) == 1
+
+
+@patch('license_identifier.license_identifier._analyze_file')
+@patch('license_identifier.license_identifier.util.files_from_path')
+@patch('license_identifier.license_identifier.LicenseIdentifier.'
+       '_init_pickled_library')
+def test_add_license_metadata_custom(mock_pickle, mock_files_from_path,
+                                     mock_analyze_file):
+    mock_files_from_path.return_value = ['test_file1']
+    mock_analyze_file.return_value = [{'matched_license': 'Amazon-Software'}]
+
+    lid = license_identifier.LicenseIdentifier(threshold=0.06,
+                                               input_path='test_file1',
+                                               run_in_parallel=False,
+                                               include_license_metadata=True)
+    result_obj = lid.analyze()
+    expected_result = result_obj['test_file1'][0]
+
+    assert expected_result['source'] == 'custom'
+    assert expected_result['source_category'] == 'full_license'
+    assert expected_result['source_origin'] == 'Craig Northway'
+
+
+@patch('license_identifier.license_identifier._analyze_file')
+@patch('license_identifier.license_identifier.util.files_from_path')
+@patch('license_identifier.license_identifier.LicenseIdentifier.'
+       '_init_pickled_library')
+def test_add_license_metadata_exception(mock_pickle, mock_files_from_path,
+                                        mock_analyze_file):
+    mock_files_from_path.return_value = ['test_file1']
+    mock_analyze_file.return_value = [{'matched_license': '389-exception'}]
+
+    lid = license_identifier.LicenseIdentifier(threshold=0.06,
+                                               input_path='test_file1',
+                                               run_in_parallel=False,
+                                               include_license_metadata=True)
+    result_obj = lid.analyze()
+    expected_result = result_obj['test_file1'][0]
+
+    assert expected_result['source'] == 'SPDX'
+    assert expected_result['source_category'] == 'exception'
+    assert expected_result['source_origin'] == license_identifier.spdx_version
+
+
+@patch('license_identifier.license_identifier._analyze_file')
+@patch('license_identifier.license_identifier.util.files_from_path')
+@patch('license_identifier.license_identifier.LicenseIdentifier.'
+       '_init_pickled_library')
+def test_add_license_metadata_full_spdx(mock_pickle, mock_files_from_path,
+                                        mock_analyze_file):
+    mock_files_from_path.return_value = ['test_file1']
+    mock_analyze_file.return_value = [{'matched_license': '0BSD'}]
+
+    lid = license_identifier.LicenseIdentifier(threshold=0.06,
+                                               input_path='test_file1',
+                                               run_in_parallel=False,
+                                               include_license_metadata=True)
+    result_obj = lid.analyze()
+    expected_result = result_obj['test_file1'][0]
+
+    assert expected_result['source'] == 'SPDX'
+    assert expected_result['source_category'] == 'full_license'
+    assert expected_result['source_origin'] == license_identifier.spdx_version

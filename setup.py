@@ -71,6 +71,7 @@ setup(
         "chardet",
         "future",
         "nltk",
+        "pyyaml",
         "rdflib",
         "six",
     ],

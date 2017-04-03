@@ -40,15 +40,17 @@ from . import match_summary
 from . import n_grams
 from . import prep
 from . import util
-
+from .licenses import date_updated_license_dir, spdx_version
 
 register_surrogateescape()
 
-base_dir = dirname(__file__)
+base_dir = os.path.dirname(__file__)
 
 DEFAULT_THRESHOLD = 0.04
-DEFAULT_PICKLED_LIBRARY_FILE = join(base_dir, 'data',
-                                    'license_n_gram_lib.pickle')
+DEFAULT_PICKLED_LIBRARY_FILE = os.path.join(base_dir, 'data',
+                                            'license_n_gram_lib.pickle')
+CUSTOM_LICENSE_METADATA_FILE = os.path.join(base_dir, 'data', 'custom_license.yml')
+EXCEPTIONS_DIR = os.path.join(base_dir, 'data', 'license_dir', 'exceptions')
 DEFAULT_KEEP_FRACTION_OF_BEST = 0.9
 RANK_SCALE = (0.06, 0.08, 0.1, 0.5, 1.0)
 
@@ -74,7 +76,6 @@ class ScoreOutOfRange(Exception):
 
 
 class LicenseIdentifier:
-
     def __init__(self,
                  threshold=DEFAULT_THRESHOLD,
                  input_path=None,
@@ -90,13 +91,14 @@ class LicenseIdentifier:
                  keep_fraction_of_best=DEFAULT_KEEP_FRACTION_OF_BEST,
                  pickle_file_path=None,
                  run_in_parallel=True,
-                 original_matched_text_flag=False):
+                 original_matched_text_flag=False,
+                 include_license_metadata=False):
 
         self.threshold = threshold
         self.context_length = context_length
         self.input_path = input_path
         self.run_in_parallel = run_in_parallel
-        self.cpu_count=cpu_count
+        self.cpu_count = cpu_count
         self.location_strategy = location_strategy
         self.location_similarity = location_similarity
         self.penalty_only_source = penalty_only_source
@@ -105,6 +107,7 @@ class LicenseIdentifier:
         self.keep_fraction_of_best = \
             self._check_keep_fraction_of_best(keep_fraction_of_best)
         self.original_matched_text_flag = original_matched_text_flag
+        self.include_license_metadata = include_license_metadata
 
         if license_library is not None:
             self._init_using_library_object(license_library)
@@ -179,7 +182,7 @@ class LicenseIdentifier:
     def apply_function_on_all_files(self, function_ptr, filenames):
         with closing(multiprocessing.Pool(processes=self.cpu_count)) as pool:
             apply_func = self.run_in_parallel and \
-                pool.apply_async or apply_sync
+                         pool.apply_async or apply_sync
 
             results = [(x, apply_func(function_ptr, [self, x]))
                        for x in filenames]
@@ -187,6 +190,9 @@ class LicenseIdentifier:
             output = OrderedDict()
             for filename, result in results:
                 output[filename] = result.get()
+
+        if output and self.include_license_metadata:
+            output = self.add_license_metadata(output)
 
         return output
 
@@ -285,7 +291,7 @@ class LicenseIdentifier:
             else:
                 if dividingPoint <= my_score < RANK_SCALE[index+1]:
                     return index+1
-    
+
     def get_top_candidates(self, source):
         # First, compute n-grams for all lines in the source file
         src_ng = n_grams.NGrams()
@@ -328,9 +334,11 @@ class LicenseIdentifier:
     def postprocess_strip_off_code(self, results):
         return PostProcessor(self.threshold).strip_off_code(results)
 
+    def add_license_metadata(self, results):
+        return PostProcessor(self.threshold).add_license_metadata(results)
+
 
 class PostProcessor(object):
-
     def __init__(self, threshold):
         self._threshold = threshold
 
@@ -362,6 +370,56 @@ class PostProcessor(object):
         src = prep.Source.from_filepath(input_filepath)
 
         return [line + '\r\n' for line in src.lines]
+
+    def _build_custom_mappings(self):
+        with open(CUSTOM_LICENSE_METADATA_FILE) as file:
+            mappings = yaml.safe_load(file)
+
+        return mappings
+
+    def _yield_results(self, results):
+        for filename, results_per_file in iteritems(results):
+            for lid_result in results_per_file:
+                yield lid_result
+
+    @staticmethod
+    def _add_metadata(result, source, source_category, source_origin,
+                      date_source_updated):
+        result['source'] = source
+        result['source_category'] = source_category
+        result['source_origin'] = source_origin
+        result['source_updated'] = date_source_updated
+
+    def _update_result(self, result, custom_mappings, spdx_exceptions):
+        matched_license = result['matched_license']
+        if matched_license in custom_mappings.keys():
+            mapping = custom_mappings[matched_license]
+            source = 'custom'
+            source_category = 'full_license'
+            source_origin = mapping['submitter']
+            date_source_updated = mapping['date_submitted']
+        else:
+            source = 'SPDX'
+            source_origin = spdx_version
+            date_source_updated = date_updated_license_dir
+
+            if matched_license in spdx_exceptions:
+                source_category = 'exception'
+            else:
+                source_category = 'full_license'
+
+        self._add_metadata(result, source, source_category, source_origin,
+                           date_source_updated)
+
+    def add_license_metadata(self, results):
+        custom_mappings = self._build_custom_mappings()
+        spdx_exceptions = [lic.replace('.txt', '') for lic in
+                           os.listdir(EXCEPTIONS_DIR)]
+
+        for result in self._yield_results(results):
+            self._update_result(result, custom_mappings, spdx_exceptions)
+
+        return results
 
 
 def _analyze_file(lid, input_path):

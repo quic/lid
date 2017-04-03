@@ -14,6 +14,14 @@ from . import match_summary
 from . import util
 
 
+METADATA_FIELD_NAMES = [
+    'License Template Source',
+    'License Template Source Category',
+    'License Template Source Origin',
+    'Date License Template Source Updated'
+]
+
+
 def main():
     args = _parse_args(sys.argv[1:])
 
@@ -40,12 +48,14 @@ def main():
         pickle_file_path=args.pickle_file_path,
         keep_fraction_of_best=args.keep_fraction_of_best,
         run_in_parallel=not args.single_thread,
-        original_matched_text_flag=args.matched_text_without_context
+        original_matched_text_flag=args.matched_text_without_context,
+        include_license_metadata=args.include_license_metadata
     )
 
     results = lid.analyze()
     _output_results(results, args.output_format, args.output_file_path,
-                    args.matched_text_without_context)
+                    args.matched_text_without_context,
+                    args.include_license_metadata)
 
 
 def _parse_args(args):
@@ -108,15 +118,21 @@ def _parse_args(args):
         "--matched_text_without_context",
         help="Show matched license text without context", action='store_true',
         default=False)
+    aparse.add_argument(
+        "--include_license_metadata", help="Add license source metadata",
+        default=False
+    )
 
     return aparse.parse_args(args)
 
 
-def _output_results(results, format_, path, original_matched_text_flag):
+def _output_results(results, format_, path, original_matched_text_flag,
+                    include_license_metadata):
     if format_ == 'csv':
-        _write_csv_file(results, path, original_matched_text_flag)
+        _write_csv_file(results, path, original_matched_text_flag,
+                        include_license_metadata)
     elif format_ == 'easy_read':
-        _display_easy_read(results)
+        _display_easy_read(results, include_license_metadata)
     elif format_ == 'json':
         _write_json_file(results, path)
     elif format_ is None:
@@ -125,7 +141,8 @@ def _output_results(results, format_, path, original_matched_text_flag):
         raise Exception("Unrecognized output format: {}".format(format_))
 
 
-def _write_csv_file(results, path, original_matched_text_flag):
+def _write_csv_file(results, path, original_matched_text_flag,
+                    include_license_metadata):
     path = '{}_{}.csv'.format(path, util.get_user_date_time_str())
 
     with _open_file(path) as f:
@@ -134,18 +151,30 @@ def _write_csv_file(results, path, original_matched_text_flag):
         field_names = list(match_summary.MatchSummary.field_names().values())
         if not original_matched_text_flag:
             field_names.remove("Matched license text without context")
+        if include_license_metadata:
+            field_names.extend(METADATA_FIELD_NAMES)
         writer.writerow(field_names)
 
         for results_by_file in results.values():
             for summary in results_by_file:
                 row = summary.to_csv_row()
+                if include_license_metadata:
+                    metadata = [
+                        summary['source'],
+                        summary['source_category'],
+                        summary['source_origin'],
+                        summary['source_updated']
+                    ]
+                    row.extend(metadata)
                 writer.writerow(row)
+
 
 def _write_json_file(results, path):
     path = '{}_{}.json'.format(path, util.get_user_date_time_str())
-    
+
     with _open_file(path) as f:
-        json.dump(obj=results, fp=f) 
+        json.dump(obj=results, fp=f)
+
 
 def _open_file(path):
     if sys.version_info >= (3, 0, 0):  # pragma: no cover
@@ -156,12 +185,17 @@ def _open_file(path):
     return f
 
 
-def _display_easy_read(results):
+def _display_easy_read(results, include_license_metadata):
+    metadata_template = 'License is of type {} from {}, {}.'
     for filename, results_by_file in iteritems(results):
         print("=== Found {} results for '{}':".format(len(results_by_file),
                                                       filename))
         for summary in results_by_file:
             print(summary.to_display_format())
+            if include_license_metadata:
+                print(metadata_template.format(summary['source'],
+                                               summary['source_origin'],
+                                               summary['source_updated']))
 
 
 if __name__ == '__main__':
