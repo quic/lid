@@ -80,6 +80,8 @@ setup(
             'data/license_n_gram_lib.pickle',
             'data/license_dir/*.txt',
             'data/license_dir/custom/*.txt',
+            'data/license_dir/headers/*.txt',
+            'data/license_dir/exceptions/*.txt',
         ]
     },
     cmdclass={'install': CustomInstall},
