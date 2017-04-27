@@ -179,17 +179,29 @@ class LicenseIdentifier:
         filenames = util.files_from_path(top_dir_name)
         return self.apply_function_on_all_files(function_ptr, filenames)
 
+    def _apply_function_on_all_files(self, apply_func, function_ptr, filenames):
+        results = [(x, apply_func(function_ptr, [self, x]))
+                   for x in filenames]
+
+        output = OrderedDict()
+        for filename, result in results:
+            output[filename] = result.get()
+
+        return output
+
     def apply_function_on_all_files(self, function_ptr, filenames):
-        with closing(multiprocessing.Pool(processes=self.cpu_count)) as pool:
-            apply_func = self.run_in_parallel and \
-                         pool.apply_async or apply_sync
-
-            results = [(x, apply_func(function_ptr, [self, x]))
-                       for x in filenames]
-
-            output = OrderedDict()
-            for filename, result in results:
-                output[filename] = result.get()
+        if self.run_in_parallel:
+            with closing(multiprocessing.Pool(processes=self.cpu_count)) as \
+                    pool:
+                apply_func = self.run_in_parallel and \
+                             pool.apply_async or apply_sync
+                output = self._apply_function_on_all_files(apply_func,
+                                                           function_ptr,
+                                                           filenames)
+        else:
+            apply_func = apply_sync
+            output = self._apply_function_on_all_files(apply_func,
+                                                       function_ptr, filenames)
 
         if output and self.include_license_metadata:
             output = self.add_license_metadata(output)
