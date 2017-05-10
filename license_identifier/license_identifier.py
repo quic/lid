@@ -27,9 +27,10 @@
 
 import logging
 import multiprocessing
+import os
+import yaml
 from collections import OrderedDict
 from contextlib import closing
-from os.path import dirname, join, splitext
 
 import ntpath
 from future.utils.surrogateescape import register_surrogateescape
@@ -404,7 +405,7 @@ class PostProcessor(object):
 
     def _update_result(self, result, custom_mappings, spdx_exceptions):
         matched_license = result['matched_license']
-        if matched_license in custom_mappings.keys():
+        if custom_mappings and matched_license in custom_mappings.keys():
             mapping = custom_mappings[matched_license]
             source = 'custom'
             source_category = 'full_license'

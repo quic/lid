@@ -1,5 +1,5 @@
 spdx_version = '2.6 6 Jan 2017'
-date_updated_license_dir = 'Thu Mar 2 12:51:00 2017'
+date_updated_license_dir = 'Wed May 10 14:08:38 2017'
 license_ids = [   u'0BSD',
     u'AAL',
     u'ADSL',
