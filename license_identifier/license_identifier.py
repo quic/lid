@@ -194,14 +194,11 @@ class LicenseIdentifier:
         if self.run_in_parallel:
             with closing(multiprocessing.Pool(processes=self.cpu_count)) as \
                     pool:
-                apply_func = self.run_in_parallel and \
-                             pool.apply_async or apply_sync
-                output = self._apply_function_on_all_files(apply_func,
+                output = self._apply_function_on_all_files(pool.apply_async,
                                                            function_ptr,
                                                            filenames)
         else:
-            apply_func = apply_sync
-            output = self._apply_function_on_all_files(apply_func,
+            output = self._apply_function_on_all_files(apply_sync,
                                                        function_ptr, filenames)
 
         if output and self.include_license_metadata:
