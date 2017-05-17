@@ -70,7 +70,7 @@ setup(
     install_requires=[
         "chardet",
         "future",
-        "nltk",
+        "nltk==3.2.1",
         "pyyaml",
         "rdflib",
         "six",
