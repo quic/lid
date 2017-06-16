@@ -129,6 +129,7 @@ class LicenseIdentifier:
         return keep_fraction_of_best
 
     def _set_license_library(self, license_library):
+        # todo: why does this exist?
         global _license_library_registry
 
         ref = id(license_library)
@@ -139,18 +140,18 @@ class LicenseIdentifier:
 
     def _init_using_library_object(self, license_library):
         _logger.info("Using given license library")
-        self._set_license_library(license_library)
+        self.license_library = license_library
 
     def _init_pickled_library(self, pickle_file_path):
         _logger.info("Loading license library from {}".
                      format(pickle_file_path))
         license_library = prep.LicenseLibrary.deserialize(pickle_file_path)
-        self._set_license_library(license_library)
+        self.license_library = license_library
 
     def _init_using_lic_dir(self, license_dir):
         _logger.info("Loading license library from {}".format(license_dir))
         license_library = prep.LicenseLibrary.from_path(license_dir)
-        self._set_license_library(license_library)
+        self.license_library = license_library
 
     def _create_pickled_library(self, pickle_file):
         _logger.info("Saving license library to {}".format(pickle_file))
@@ -159,10 +160,6 @@ class LicenseIdentifier:
     def _get_license_library(self):
         """Deprecated - remove once Andrew's app no longer depends on it."""
         return self.license_library
-
-    @property
-    def license_library(self):
-        return _license_library_registry[self.license_library_ref]
 
     def analyze(self):
         if self.input_path is not None:
