@@ -28,9 +28,32 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import os
+import sys
+import yaml
 
 from setuptools import setup
 from setuptools.command.install import install
+
+from license_identifier.util import show_licenses_from_directory
+
+CUSTOM_DIR = 'license_identifier/data/license_dir/custom/'
+
+
+def check_custom_yml_up_to_date():
+    with open('license_identifier/data/custom_license.yml') as file:
+        mappings = yaml.safe_load(file)
+
+    files_in_mappings = mappings.keys()
+    custom_licenses = show_licenses_from_directory(CUSTOM_DIR)
+    assert set(files_in_mappings) == set(custom_licenses)
+
+
+if sys.argv[-1] == 'sdist':
+    try:
+        check_custom_yml_up_to_date()
+    except AssertionError:
+        print("Please update custom_license.yml file.")
+        sys.exit(1)
 
 
 class CustomInstall(install):

@@ -135,3 +135,7 @@ def _files_from_dir(path):
             filepaths.extend(subdir_filepaths)
 
     return filepaths
+
+
+def show_licenses_from_directory(directory):
+    return [lic.replace('.txt', '') for lic in os.listdir(directory)]

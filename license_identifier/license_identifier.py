@@ -420,8 +420,7 @@ class PostProcessor(object):
 
     def add_license_metadata(self, results):
         custom_mappings = self._build_custom_mappings()
-        spdx_exceptions = [lic.replace('.txt', '') for lic in
-                           os.listdir(EXCEPTIONS_DIR)]
+        spdx_exceptions = util.show_licenses_from_directory(EXCEPTIONS_DIR)
 
         for result in self._yield_results(results):
             self._update_result(result, custom_mappings, spdx_exceptions)
