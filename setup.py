@@ -29,17 +29,18 @@
 
 import os
 import sys
-import yaml
 
 from setuptools import setup
 from setuptools.command.install import install
 
-from license_identifier.util import show_licenses_from_directory
 
 CUSTOM_DIR = 'license_identifier/data/license_dir/custom/'
 
 
 def check_custom_yml_up_to_date():
+    import yaml
+    from license_identifier.util import show_licenses_from_directory
+
     with open('license_identifier/data/custom_license.yml') as file:
         mappings = yaml.safe_load(file)
 
