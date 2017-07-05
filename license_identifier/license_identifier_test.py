@@ -390,12 +390,18 @@ def test_default_pickle_path(mock_deserialize):
     mock_deserialize.return_value = prep.LicenseLibrary(
         licenses=dict(),
         universe_n_grams=n_gram_obj)
+    # make sure global from previous tests is cleared before this one starts
+    license_identifier.license_library = None
 
     license_identifier.LicenseIdentifier().analyze()
 
     assert mock_deserialize.call_count == 1
     assert abspath(mock_deserialize.call_args[0][0]) == \
         abspath(license_identifier.DEFAULT_PICKLED_LIBRARY_FILE)
+
+    # reinstantiate LicenseIdentifier. Ensure deserialization does not repeat
+    license_identifier.LicenseIdentifier().analyze()
+    assert mock_deserialize.call_count == 1
 
 
 def test_analyze_file_multiple_licenses():

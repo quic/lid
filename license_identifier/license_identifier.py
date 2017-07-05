@@ -28,6 +28,7 @@
 import logging
 import multiprocessing
 import os
+import threading
 import yaml
 from collections import OrderedDict
 from contextlib import closing
@@ -55,15 +56,9 @@ EXCEPTIONS_DIR = os.path.join(base_dir, 'data', 'license_dir', 'exceptions')
 DEFAULT_KEEP_FRACTION_OF_BEST = 0.9
 RANK_SCALE = (0.06, 0.08, 0.1, 0.5, 1.0)
 
-# Use a global "registry" of license libraries, as a workaround to improve
-# multiprocessing performance.
 
-# TODO: Find a better way to share the license library between workers
-# (ideally avoiding global objects).
-# For ideas, see:
-# https://docs.python.org/2/library/multiprocessing.html#sharing-state-between-processes
-
-_license_library_registry = dict()
+license_library = None
+lock = threading.Lock()
 
 # Set up a logger for this module
 _logger = logging.getLogger(name=__name__)
@@ -128,24 +123,21 @@ class LicenseIdentifier:
 
         return keep_fraction_of_best
 
-    def _set_license_library(self, license_library):
-        # todo: why does this exist?
-        global _license_library_registry
-
-        ref = id(license_library)
-        self.license_library_ref = ref
-
-        if ref not in _license_library_registry:
-            _license_library_registry[ref] = license_library
-
     def _init_using_library_object(self, license_library):
         _logger.info("Using given license library")
         self.license_library = license_library
 
     def _init_pickled_library(self, pickle_file_path):
-        _logger.info("Loading license library from {}".
-                     format(pickle_file_path))
-        license_library = prep.LicenseLibrary.deserialize(pickle_file_path)
+
+        global license_library
+
+        with lock:
+            if not license_library:
+                _logger.info("Loading license library "
+                             "from {}".format(pickle_file_path))
+                license_library = prep.LicenseLibrary.deserialize(
+                    pickle_file_path)
+
         self.license_library = license_library
 
     def _init_using_lic_dir(self, license_dir):
@@ -156,10 +148,6 @@ class LicenseIdentifier:
     def _create_pickled_library(self, pickle_file):
         _logger.info("Saving license library to {}".format(pickle_file))
         self.license_library.serialize(pickle_file)
-
-    def _get_license_library(self):
-        """Deprecated - remove once Andrew's app no longer depends on it."""
-        return self.license_library
 
     def analyze(self):
         if self.input_path is not None:
