@@ -80,7 +80,7 @@ class CustomInstall(install):
 
 setup(
     name='lid',
-    version='1.2.6',
+    version='1.2.7',
     description='Scans a file or folder for predefined licenses',
     author='Peter Shin',
     author_email='phshin@codeaurora.org',
