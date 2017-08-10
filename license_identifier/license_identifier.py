@@ -233,11 +233,15 @@ class LicenseIdentifier:
             source.get_lines_original_indexing(best_region.start_line,
                                                best_region.end_line)
         found_region = '\r\n'.join(found_region_lines) + '\r\n'
+        found_region = PostProcessor(self.threshold).encode_as_utf8(
+            found_region)
 
         original_region_lines = \
             source.get_lines_original_indexing(best_region.start_line_orig,
                                                best_region.end_line_orig)
         original_region = '\r\n'.join(original_region_lines) + '\r\n'
+        original_region = PostProcessor(self.threshold).encode_as_utf8(
+            original_region)
 
         summary = match_summary.MatchSummary(
             input_fp=source.filepath,
@@ -354,6 +358,11 @@ class PostProcessor(object):
             stripped_region = ''
 
         return stripped_region
+
+    def encode_as_utf8(self, text):
+        encoded_text = text.encode('utf-8', 'surrogateescape')
+
+        return encoded_text.decode('utf-8')
 
     def _strip_file_lines(self, summary):
         raise Exception("Not supported")

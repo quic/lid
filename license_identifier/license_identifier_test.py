@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Copyright (c) 2017, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -543,3 +544,27 @@ def test_add_license_metadata_full_spdx(mock_pickle, mock_files_from_path,
     assert expected_result['source'] == 'SPDX'
     assert expected_result['source_category'] == 'full_license'
     assert expected_result['source_origin'] == license_identifier.spdx_version
+
+
+def test_encode_as_utf8_doesnt_raise_exception_py2():
+    """
+    The original file contains the foreign letters/characters as is, a la
+    é and Ж and ױ and ㅎ and 你. Reading the original file converts each line
+    to unicode.
+
+    By the time the found_region or original_region has been returned for
+    the result, the characters are represented as below.
+
+    If py3 is used, the prep step treats the region as <str> and shows the
+    characters as is for the region.
+    'This is some license text with é and Ж and ױ and ㅎ and 你'
+
+    Regardless, all the wrappers that receive the raw result_obj OrderedDict
+    (notice_lid, report_lid, omniscan) should expect the found_region and
+    original_region values to be of type <unicode>
+    """
+    license_region = u'This is some license text with \xe9 and \u0416 and \u05f1 and \u314e and \u4f60'
+
+    encoded_region = license_identifier.PostProcessor(0.06).\
+        encode_as_utf8(license_region)
+    assert encoded_region == u'This is some license text with é and Ж and ױ and ㅎ and 你'
