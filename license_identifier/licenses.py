@@ -1,5 +1,7 @@
+Copyright (c) 2017, The Linux Foundation. All rights reserved.
+SPDX-License-Identifier: BSD-3-Clause
 spdx_version = '2.6 6 Jan 2017'
-date_updated_license_dir = 'Wed May 10 14:08:38 2017'
+date_updated_license_dir = 'Thu Oct 12 19:00:05 2017'
 license_ids = [   u'0BSD',
     u'AAL',
     u'ADSL',

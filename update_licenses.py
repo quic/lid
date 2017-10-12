@@ -188,6 +188,8 @@ def update_spdx_metadata():
     curr_datetime = datetime.datetime.now().strftime("%c")
     ids = sorted(get_license_ids_from_spdx())
     with open('./license_identifier/licenses.py', 'w') as out:
+        out.write("Copyright (c) 2017, The Linux Foundation. All rights reserved.\n")
+        out.write("SPDX-License-Identifier: BSD-3-Clause\n")
         out.write("spdx_version = '{}'\n".format(spdx_version))
         out.write("date_updated_license_dir = '{}'\n".format(curr_datetime))
         out.write("license_ids = ")
