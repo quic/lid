@@ -360,7 +360,7 @@ class PostProcessor(object):
         return stripped_region
 
     def encode_as_utf8(self, text):
-        encoded_text = text.encode('utf-8', 'surrogateescape')
+        encoded_text = text.encode('utf-8', 'ignore')
 
         return encoded_text.decode('utf-8')
 
