@@ -1,4 +1,6 @@
 # Copyright (c) 2017, The Linux Foundation. All rights reserved.
+#
+# SPDX-License-Identifier: BSD-3-Clause
 
 import argparse
 import csv
