@@ -2,5 +2,5 @@ dependencies:
   override:
     - pip install tox tox-pyenv
     - pyenv install 3.6.3
-    - pyenv install pypy-5.9.0
-    - pyenv local 2.7.10 3.6.3 pypy-5.9.0
+    - pyenv install pypy2.7-5.8.0
+    - pyenv local 2.7.10 3.6.3 pypy2.7-5.8.0
