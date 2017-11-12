@@ -8,6 +8,8 @@ files and identify the license text region and the type of license.
 additional dependencies needed for full LiD functionality. At that point it is 
 likely we will update this repository in a non-backwards compatible manner.*
 
+[![CircleCI](https://circleci.com/gh/codeauroraforum/lid.svg?style=svg)](https://circleci.com/gh/codeauroraforum/lid)
+
 License
 ===
 
