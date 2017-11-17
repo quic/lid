@@ -49,19 +49,9 @@ def detect_file_encoding(file_name):
 
     return encoding
 
+
 def read_lines_offsets(filename):
-    encoding = detect_file_encoding(filename)
-
-    try:
-        return read_with_detected_encoding(filename, encoding)
-    except:
-        return read_with_default_encoder(filename)
-
-
-def read_with_detected_encoding(filename, encoding):
-    with codecs.open(filename, 'r', encoding=encoding, errors='replace') as fp:
-        lines, line_offsets = get_lines_and_line_offsets(iter(fp))
-    return lines, line_offsets
+    return read_with_default_encoder(filename)
 
 
 def read_with_default_encoder(filename):
