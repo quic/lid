@@ -95,7 +95,6 @@ pip install -U setuptools pip  # get the latest versions of pip and setuptools
 To install dependencies:
 ```
 make deps
-make test-deps
 ```
 
 To update the licenses from the web:
@@ -110,7 +109,7 @@ make pickle
 
 To run tests:
 ```
-make test
+tox
 ```
 
 Usage

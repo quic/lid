@@ -1,4 +1,4 @@
-.PHONY: deps test-deps test install clean git-clean, all, pickle
+.PHONY: deps test install clean git-clean, all, pickle
 
 all: test
 
@@ -8,11 +8,7 @@ update-licenses: deps update_licenses.py
 deps: requirements.txt
 	pip install -r $<
 
-test-deps: test-requirements.txt
-	pip install -r $<
-
-test: deps test-deps
-	cd license_identifier && python -B -m pytest --cov-config=.coveragerc --cov=. --cov-report=term-missing *_test.py && python -m coverage xml -o ../coverage.xml
+test: tox
 
 install: deps
 	python setup.py install
