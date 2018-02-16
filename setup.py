@@ -95,6 +95,7 @@ setup(
     },
     install_requires=[
         "chardet",
+        "comment-filter",
         "future",
         "nltk==3.2.1",
         "pyyaml",

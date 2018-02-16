@@ -39,6 +39,9 @@ import ntpath
 from future.utils.surrogateescape import register_surrogateescape
 from future.utils import iteritems
 
+import comment_filter
+from comment_filter import language
+
 from . import location_identifier
 from . import match_summary
 from . import n_grams
@@ -367,10 +370,20 @@ class PostProcessor(object):
         return encoded_text.decode('utf-8')
 
     def _strip_file_lines(self, summary):
-        raise Exception("Not supported")
+        lang = self._get_language(summary['input_fp'])
+        src_lines_crlf = self._src_lines_crlf(summary['input_fp'])
+
+        if lang:
+            stripped_file_lines = list(
+                comment_filter.parse_file(lang, src_lines_crlf))
+        else:
+            stripped_file_lines = src_lines_crlf
+        return stripped_file_lines
 
     def _get_language(self, input_filepath):
-        raise Exception("Not supported")
+        __, ext = splitext(input_filepath)
+
+        return comment_filter.language.extension_to_lang_map.get(ext, None)
 
     def _src_lines_crlf(self, input_filepath):
         src = prep.Source.from_filepath(input_filepath)
