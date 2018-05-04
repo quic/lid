@@ -8,7 +8,8 @@ update-licenses: deps update_licenses.py
 deps: requirements.txt
 	pip install -r $<
 
-test: tox
+test:
+	tox -r
 
 install: deps
 	python setup.py install

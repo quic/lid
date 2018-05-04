@@ -123,7 +123,8 @@ def test_init():
 @patch('pickle.load')
 def test_init_pickle(mock_pickle_load, mock_pickle_dump):
     test_pickle_file = join(BASE_DIR, 'test.pickle')
-    lcs_id_obj._create_pickled_library(pickle_file=test_pickle_file)
+    license_identifier.license_library = None
+    license_identifier._create_pickled_library(lcs_id_obj.license_library, pickle_file=test_pickle_file)
 
     assert mock_pickle_dump.call_count == 1
     dump_args = mock_pickle_dump.call_args[0]
@@ -396,14 +397,14 @@ def test_default_pickle_path(mock_deserialize):
     # make sure global from previous tests is cleared before this one starts
     license_identifier.license_library = None
 
-    license_identifier.LicenseIdentifier().analyze()
+    license_identifier.LicenseIdentifier(run_in_parallel=False).analyze()
 
     assert mock_deserialize.call_count == 1
     assert abspath(mock_deserialize.call_args[0][0]) == \
         abspath(license_identifier.DEFAULT_PICKLED_LIBRARY_FILE)
 
     # reinstantiate LicenseIdentifier. Ensure deserialization does not repeat
-    license_identifier.LicenseIdentifier().analyze()
+    license_identifier.LicenseIdentifier(run_in_parallel=False).analyze()
     assert mock_deserialize.call_count == 1
 
 
@@ -487,8 +488,7 @@ def test_analyze_file_near_ties():
 
 @patch('license_identifier.license_identifier._analyze_file')
 @patch('license_identifier.license_identifier.util.files_from_path')
-@patch('license_identifier.license_identifier.LicenseIdentifier.'
-       '_init_pickled_library')
+@patch('license_identifier.license_identifier._init_pickled_library')
 def test_add_license_metadata_custom(mock_pickle, mock_files_from_path,
                                      mock_analyze_file):
     mock_files_from_path.return_value = ['test_file1']
@@ -508,8 +508,7 @@ def test_add_license_metadata_custom(mock_pickle, mock_files_from_path,
 
 @patch('license_identifier.license_identifier._analyze_file')
 @patch('license_identifier.license_identifier.util.files_from_path')
-@patch('license_identifier.license_identifier.LicenseIdentifier.'
-       '_init_pickled_library')
+@patch('license_identifier.license_identifier._init_pickled_library')
 def test_add_license_metadata_exception(mock_pickle, mock_files_from_path,
                                         mock_analyze_file):
     mock_files_from_path.return_value = ['test_file1']
@@ -529,8 +528,7 @@ def test_add_license_metadata_exception(mock_pickle, mock_files_from_path,
 
 @patch('license_identifier.license_identifier._analyze_file')
 @patch('license_identifier.license_identifier.util.files_from_path')
-@patch('license_identifier.license_identifier.LicenseIdentifier.'
-       '_init_pickled_library')
+@patch('license_identifier.license_identifier._init_pickled_library')
 def test_add_license_metadata_full_spdx(mock_pickle, mock_files_from_path,
                                         mock_analyze_file):
     mock_files_from_path.return_value = ['test_file1']

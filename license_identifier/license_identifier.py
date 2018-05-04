@@ -27,6 +27,7 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
+import copy
 import logging
 import multiprocessing
 import os
@@ -61,7 +62,6 @@ EXCEPTIONS_DIR = os.path.join(base_dir, 'data', 'license_dir', 'exceptions')
 DEFAULT_KEEP_FRACTION_OF_BEST = 0.9
 RANK_SCALE = (0.06, 0.08, 0.1, 0.5, 1.0)
 
-
 license_library = None
 lock = threading.Lock()
 
@@ -74,6 +74,42 @@ _logger.addHandler(logging.NullHandler())
 
 class ScoreOutOfRange(Exception):
     pass
+
+
+# For multi-processing, init a license library for each process
+def _init_global_license_library(license_library_input, pickle_file_path=None, license_dir=None):
+    global license_library
+    if license_library_input is not None:
+        _logger.info("Using given license library")
+        license_library = license_library_input
+    elif license_dir is None:
+        # Use pickled library
+        if pickle_file_path is None:
+            pickle_file_path = DEFAULT_PICKLED_LIBRARY_FILE
+        if not license_library:
+            license_library = _init_pickled_library(pickle_file_path)
+    else:
+        license_library = _init_using_lic_dir(license_dir)
+        if pickle_file_path is not None:
+            _create_pickled_library(license_library, pickle_file_path)
+    
+    return license_library
+
+
+def _init_pickled_library(pickle_file_path):
+    _logger.info("Loading pickled license library "
+                 "from {}".format(pickle_file_path))
+    return prep.LicenseLibrary.deserialize(pickle_file_path)
+
+    
+def _init_using_lic_dir(license_dir):
+    _logger.info("Loading license library from {}".format(license_dir))
+    return prep.LicenseLibrary.from_path(license_dir)
+
+
+def _create_pickled_library(license_library, pickle_file):
+    _logger.info("Saving license library to {}".format(pickle_file))
+    license_library.serialize(pickle_file)
 
 
 class LicenseIdentifier:
@@ -109,50 +145,18 @@ class LicenseIdentifier:
             self._check_keep_fraction_of_best(keep_fraction_of_best)
         self.original_matched_text_flag = original_matched_text_flag
         self.include_license_metadata = include_license_metadata
+        self.pickle_file_path = pickle_file_path
+        self.license_dir = license_dir
+        self.input_license_library = license_library
 
-        if license_library is not None:
-            self._init_using_library_object(license_library)
-        elif license_dir is None:
-            # Use pickled library
-            if pickle_file_path is None:
-                pickle_file_path = DEFAULT_PICKLED_LIBRARY_FILE
-            self._init_pickled_library(pickle_file_path)
-        else:
-            self._init_using_lic_dir(license_dir)
-            if pickle_file_path is not None:
-                self._create_pickled_library(pickle_file_path)
+        license_library = _init_global_license_library(license_library, pickle_file_path, license_dir)
+        self.license_library = license_library
 
     def _check_keep_fraction_of_best(self, keep_fraction_of_best):
         assert keep_fraction_of_best >= 0.0
         assert keep_fraction_of_best <= 1.0
 
         return keep_fraction_of_best
-
-    def _init_using_library_object(self, license_library):
-        _logger.info("Using given license library")
-        self.license_library = license_library
-
-    def _init_pickled_library(self, pickle_file_path):
-
-        global license_library
-
-        with lock:
-            if not license_library:
-                _logger.info("Loading license library "
-                             "from {}".format(pickle_file_path))
-                license_library = prep.LicenseLibrary.deserialize(
-                    pickle_file_path)
-
-        self.license_library = license_library
-
-    def _init_using_lic_dir(self, license_dir):
-        _logger.info("Loading license library from {}".format(license_dir))
-        license_library = prep.LicenseLibrary.from_path(license_dir)
-        self.license_library = license_library
-
-    def _create_pickled_library(self, pickle_file):
-        _logger.info("Saving license library to {}".format(pickle_file))
-        self.license_library.serialize(pickle_file)
 
     def analyze(self):
         if self.input_path is not None:
@@ -182,7 +186,7 @@ class LicenseIdentifier:
 
     def apply_function_on_all_files(self, function_ptr, filenames):
         if self.run_in_parallel:
-            with closing(multiprocessing.Pool(processes=self.cpu_count)) as \
+            with closing(multiprocessing.Pool(processes=self.cpu_count, initializer=_init_global_license_library, initargs=[copy.deepcopy(self.license_library)])) as \
                     pool:
                 output = self._apply_function_on_all_files(pool.apply_async,
                                                            function_ptr,
@@ -441,6 +445,9 @@ class PostProcessor(object):
 
 
 def _analyze_file(lid, input_path):
+    # for multi-processing always ensure the lid instance is using the global instance
+    # for the particular process it is running in
+    lid.license_library = license_library
     return lid.analyze_file(input_path)
 
 
