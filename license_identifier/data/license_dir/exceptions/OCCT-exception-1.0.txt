@@ -1,8 +1,6 @@
 
       
       
-      
-      
          Open CASCADE Exception (version 1.0) to GNU LGPL version 2.1.
 
       
@@ -17,5 +15,5 @@
          code that it makes use of or is based on facilities provided
          by the Open CASCADE Technology software.
 
-  
+    
       

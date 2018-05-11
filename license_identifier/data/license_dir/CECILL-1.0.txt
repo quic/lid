@@ -1,14 +1,13 @@
 
       
       
-      
-      
          CONTRAT DE LICENCE DE LOGICIEL LIBRE CeCILL
 
       
       
          Avertissement 
         
+
 Ce contrat est une licence de logiciel libre issue d'une concertation entre ses auteurs afin que le
              respect de deux grands principes préside à sa rédaction: 
       
@@ -80,6 +79,7 @@ Ce contrat est une licence de logiciel libre issue d'une concertation entre ses 
       Logiciel: désigne le logiciel sous sa forme de Code Objet et/ou de Code Source et le cas échéant sa
          documentation, dans leur état au moment de l'acceptation du 
         
+
 Contrat par le Licencié. 
       
 
@@ -110,6 +110,7 @@ Contrat par le Licencié.
       Module: désigne un ensemble de fichiers sources y compris leur documentation qui, une fois compilé sous
          forme exécutable, permet de réaliser des fonctionnalités ou 
         
+
 services supplémentaires à ceux fournis par le Logiciel. 
       
 
@@ -192,6 +193,7 @@ services supplémentaires à ceux fournis par le Logiciel.
       Par ailleurs, le Concédant concède au Licencié à titre gracieux les droits d'exploitation du ou
          des brevets qu'il détient sur tout ou partie des inventions 
          
+
 implémentées dans le Logiciel. 
       
 
@@ -278,6 +280,7 @@ implémentées dans le Logiciel.
                   d'un avertissement relatif à la restriction de garantie et de responsabilité du Concédant
                      telle que prévue aux articles 8 et 9, 
                      
+
          et que, dans le cas où seul le Code Objet du Logiciel est redistribué, le Licencié
                      permette aux futurs Licenciés d'accéder facilement au Code Source complet du
                      Logiciel en indiquant les modalités d'accès, étant entendu que le coût additionnel
@@ -295,6 +298,7 @@ implémentées dans le Logiciel.
                 redistribution du Logiciel Modifié sont alors soumises à l'intégralité des
                 dispositions du Contrat. 
                 
+
       Le Licencié est autorisé à redistribuer le Logiciel Modifié, sous forme de Code Source
                 ou de Code Objet, à condition que cette redistribution respecte les dispositions
                 du Contrat dans leur totalité et soit accompagnée:
@@ -313,6 +317,7 @@ implémentées dans le Logiciel.
                   d'un avertissement relatif à la restriction de garantie et de responsabilité du concédant
                      telle que prévue aux articles 8 et 9, 
                      
+
          et que, dans le cas où seul le Code Objet du Logiciel Modifié est redistribué, le
                      Licencié permette aux futurs Licenciés d'accéder facilement au Code Source complet
                      du Logiciel Modifié en indiquant les modalités d'accès, étant entendu que le coût
@@ -362,6 +367,7 @@ implémentées dans le Logiciel.
              le Titulaire a choisi de diffuser son œuvre et nul autre n'a la faculté de modifier
              les conditions de diffusion de ce Logiciel Initial. 
              
+
    Le Titulaire s'engage à maintenir la diffusion du Logiciel initial sous les conditions du
              Contrat et ce, pour la durée visée à l'article 4.2. 
           
@@ -435,6 +441,7 @@ implémentées dans le Logiciel.
           Le Contrat n'oblige en aucun cas le Concédant à la réalisation de prestations d'assistance
              technique ou de maintenance du Logiciel. 
              
+
    Cependant le Concédant reste libre de proposer ce type de services. Les termes et
              conditions d'une telle assistance technique et/ou d'une telle maintenance seront alors
              déterminés dans un acte séparé. Ces actes de maintenance et/ou assistance technique
@@ -492,6 +499,7 @@ implémentées dans le Logiciel.
              et/ou au développement et à la reproduction du Logiciel qui sont réservés à des utilisateurs
              avertis. 
              
+
    Il relève de la responsabilité du Licencié de contrôler, par tous moyens, l'adéquation du
              produit à ses besoins, son bon fonctionnement et de s'assurer qu'il ne causera pas de
              dommages aux personnes et aux biens. 
@@ -510,6 +518,7 @@ implémentées dans le Logiciel.
              garantie, expresse ou tacite, que celle prévue à l'article 9.2 et notamment sans aucune
              garantie sur sa valeur commerciale, son caractère sécurisé, innovant ou pertinent. 
              
+
    En particulier, le Concédant ne garantit pas que le Logiciel est exempt d'erreur, qu'il
              fonctionnera sans interruption, qu'il sera compatible avec l'équipement du Licencié et
              sa configuration logicielle ni qu'il remplira les besoins du Licencié. 
@@ -656,5 +665,5 @@ implémentées dans le Logiciel.
          Version 1 du 21/06/2004
 
       
-  
+    
       

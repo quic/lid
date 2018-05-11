@@ -1,7 +1,6 @@
 
       
       
-      
          Copyright 1995 by Wietse Venema. All rights reserved. Some
          individual files may be covered by other copyrights.
 
@@ -19,5 +18,5 @@
          warranties of merchantibility and fitness for any particular
          purpose.
 
-  
+    
       

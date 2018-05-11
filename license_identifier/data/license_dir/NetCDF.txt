@@ -1,7 +1,6 @@
 
       
       
-      
          Copyright 1993-2014 University Corporation for Atmospheric Research/Unidata
 
       
@@ -30,5 +29,4 @@
          PERFORMANCE OF THIS SOFTWARE.
 
     
-  
       

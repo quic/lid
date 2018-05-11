@@ -1,7 +1,6 @@
 
       
       
-      
          Zope Public License (ZPL) Version 2.0
 
       
@@ -70,5 +69,5 @@
          Corporation. Specific attributions are listed in the accompanying credits file.
 
       
-  
+    
       

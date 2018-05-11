@@ -1,7 +1,6 @@
 
       
       
-      
          Copyright (c) 1995, 1996 Xerox Corporation. All Rights Reserved.
 
       
@@ -19,5 +18,4 @@
          POSSIBILITY OF SUCH DAMAGES.
 
     
-  
       

@@ -1,8 +1,5 @@
 
       
-      
-      
-     
 	     insert GPL v3 text here
 
 	     AUTOCONF CONFIGURE SCRIPT EXCEPTION
@@ -45,6 +42,5 @@
 
 		       
 
-	
-  
+    
       

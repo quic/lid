@@ -1,7 +1,6 @@
 
       
       
-      
          LICENSE FOR THE Extreme! Lab PullParser
 
       
@@ -67,5 +66,4 @@
          SOFTWARE.
 
     
-  
       

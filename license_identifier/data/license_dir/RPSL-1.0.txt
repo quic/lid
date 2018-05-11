@@ -1,8 +1,6 @@
 
       
       
-      
-      
          RealNetworks Public Source License Version 1.0
 
          (Rev. Date October 28, 2002)
@@ -567,6 +565,7 @@ with the Covered Code or any Derivative
       
          EXHIBIT A.
 
+        
          "Copyright (c) 1995-2002 RealNetworks, Inc. and/or its licensors. All Rights Reserved.
 
          The contents of this file, and the files included with this file, are subject to the current version of
@@ -587,12 +586,14 @@ with the Covered Code or any Derivative
          WARRANTIES, INCLUDING WITHOUT LIMITATION, ANY WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
          PURPOSE, QUIET ENJOYMENT OR NON-INFRINGEMENT.
 
-         Contributor(s): ____________________________________
+         Contributor(s): 
+____________________________________
 
          Technology Compatibility Kit Test Suite(s) Location (if licensed under the RCSL):
+         
+_____"
 
-         ________________________________"
-
+         
          Object Code Notice: Helix DNA Client technology included. Copyright (c) RealNetworks, Inc., 1995-2002.
          All rights reserved.
 
@@ -603,62 +604,91 @@ with the Covered Code or any Derivative
 
          Academic Free License 
         
+
 Apache Software License 
         
+
 Apple Public Source License 
         
+
 Artistic license 
         
+
 Attribution Assurance Licenses 
         
+
 BSD license 
         
+
 Common Public License1 
         
+
 Eiffel Forum License 
         
+
 GNU General Public License (GPL)1 
         
+
 GNU Library or "Lesser" General Public License (LGPL)1 
         
+
 IBM Public License 
         
+
 Intel Open Source License 
         
+
 Jabber Open Source License 
         
+
 MIT license 
         
+
 MITRE Collaborative Virtual Workspace License (CVW License) 
         
+
 Motosoto License 
         
+
 Mozilla Public License 1.0 (MPL) 
         
+
 Mozilla Public License 1.1 (MPL) 
         
+
 Nokia Open Source License 
         
+
 Open Group Test Suite License 
         
+
 Python Software Foundation License 
         
+
 Ricoh Source Code Public License 
         
+
 Sun Industry Standards Source License (SISSL) 
         
+
 Sun Public License 
         
+
 University of Illinois/NCSA Open Source License 
         
+
 Vovida Software License v. 1.0 
         
+
 W3C License 
         
+
 X.Net License 
         
+
 Zope Public License 
         
+
 zlib/libpng license 
       
 
@@ -685,5 +715,5 @@ zlib/libpng license
          are posted at www.realnetworks.com/info/helixlogo.html.
 
       
-  
+    
       

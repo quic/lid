@@ -1,7 +1,6 @@
 
       
       
-      
          Copyright (c) 1997,1998,2002,2007 Adobe Systems Incorporated
 
       
@@ -41,5 +40,4 @@
          third party rights regarding the Adobe materials.
 
     
-  
       

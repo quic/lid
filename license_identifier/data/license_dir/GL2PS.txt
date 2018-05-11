@@ -1,7 +1,6 @@
 
       
       
-      
          GL2PS LICENSE Version 2, November 2003
 
       
@@ -35,5 +34,4 @@
       This software is provided "as is" without express or implied warranty.
 
     
-  
       

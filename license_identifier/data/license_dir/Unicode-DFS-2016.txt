@@ -1,7 +1,6 @@
 
       
       
-      
          UNICODE, INC. LICENSE AGREEMENT - DATA FILES AND SOFTWARE
 
       
@@ -80,5 +79,5 @@
          Software without prior written authorization of the copyright
          holder.
 
-  
+    
       

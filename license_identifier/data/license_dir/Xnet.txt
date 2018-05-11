@@ -1,8 +1,6 @@
 
       
       
-      
-      
          The X.Net, Inc. License
 
       
@@ -30,5 +28,4 @@
          of the United States of America.
 
     
-  
       

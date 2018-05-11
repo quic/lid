@@ -1,11 +1,11 @@
 
       
       
-      
          Copyright (c) 
         
 2011, Deusty, LLC
             
+
 All rights reserved.
       
 
@@ -58,5 +58,4 @@ THE COPYRIGHT
       
 
     
-  
       

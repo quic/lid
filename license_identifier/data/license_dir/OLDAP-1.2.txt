@@ -1,10 +1,9 @@
 
       
       
-      
-      
          The OpenLDAP Public License 
         
+
 Version 1.2, 1 September 1998 
       
 
@@ -173,5 +172,5 @@ d)
          The End
 
       
-  
+    
       

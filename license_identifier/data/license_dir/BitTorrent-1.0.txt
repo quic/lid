@@ -1,10 +1,9 @@
 
       
       
-      
-      
          BitTorrent Open Source License 
         
+
 Version 1.0 
       
 
@@ -292,29 +291,6 @@ f.
                Licensed Product or any Modifications thereto.
           
 
-                  
-g.
-            Compensation for Distribution of Executable Versions of Licensed Products, Modifications 
-            or Derivative Works. Notwithstanding any provision of this License to the contrary, by distributing, 
-            selling, licensing, sublicensing or otherwise making available any Licensed Product, or Modification 
-            or Derivative Work thereof, you and Licensor hereby acknowledge and agree that you may sell, license 
-            or sublicense for a fee, accept donations or otherwise receive compensation for executable versions 
-            of a Licensed Product, without paying a royalty or other fee to the Licensor or any other Contributor, 
-            provided that such executable versions (i) contain your or another Contributor's material Modifications, 
-            or (ii) are otherwise material Derivative Works. For purposes of this License, an executable version of 
-            the Licensed Product will be deemed to contain a material Modification, or will otherwise be deemed a 
-            material Derivative Work, if (a) the Licensed Product is modified with your own or a third party's software 
-            programs or other code, and/or the Licensed Product is combined with a number of your own or a third party's 
-            software programs or code, respectively, and (b) such software programs or code add or contribute material 
-            value, functionality or features to the License Product. For the avoidance of doubt, to the extent your 
-            executable version of a Licensed Product does not contain your or another Contributor's material Modifications 
-            or is otherwise not a material Derivative Work, in each case as contemplated herein, you may not sell, license 
-            or sublicense for a fee, accept donations or otherwise receive compensation for such executable. Additionally, 
-            without limitation of the foregoing and notwithstanding any provision of this License to the contrary, you 
-            cannot charge for, sell, license or sublicense for a fee, accept donations or otherwise receive compensation 
-            for the Source Code.
-          
-
         
 
             
@@ -446,6 +422,7 @@ d.
              HAVE BEEN INFORMED OF THE POSSIBILITY OF SUCH DAMAGES. THIS LIMITATION OF LIABILITY SHALL NOT
              APPLY TO LIABILITY FOR DEATH OR PERSONAL INJURY 
             
+
    RESULTING FROM SUCH PARTYS NEGLIGENCE TO THE EXTENT APPLICABLE LAW PROHIBITS SUCH
                  LIMITATION. SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OR LIMITATION OF INCIDENTAL
                  OR CONSEQUENTIAL DAMAGES, SO THIS EXCLUSION AND LIMITATION MAY NOT APPLY TO YOU. 
@@ -459,6 +436,7 @@ d.
              this License. You agree to work with Licensor and Contributors to distribute such
              responsibility on an equitable basis. Nothing herein is intended or 
             
+
    shall be deemed to constitute any admission of liability. 
           
         
@@ -533,6 +511,7 @@ d.
          and installation of an executable program, or a list of differential comparisons against the Source
          Code of the Licensed Product. (See 
         
+
    Section 1(a)) 
       
 
@@ -549,6 +528,7 @@ d.
 
          License:
 
+         
          The contents of this file are subject to the BitTorrent Open Source License Version 1.0 (the License).
          You may not copy or use this file, in either source code or executable form, except in compliance with
          the License. You may obtain a copy of the License at http://www.bittorrent.com/license/.
@@ -557,6 +537,7 @@ d.
          either express or implied. See the License for the specific language governing rights and limitations
          under the License.
 
+         
       
-  
+    
       

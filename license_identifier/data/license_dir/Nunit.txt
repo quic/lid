@@ -1,10 +1,9 @@
 
       
       
-      
-      
          Copyright © 2002-2004 James W. Newkirk, Michael C. Two, Alexei A. Vorontsov, Charlie Poole 
         
+
 Copyright © 2000-2004 Philip A. Craig 
       
 
@@ -41,5 +40,4 @@ Copyright © 2000-2004 Philip A. Craig
         
 
     
-  
       

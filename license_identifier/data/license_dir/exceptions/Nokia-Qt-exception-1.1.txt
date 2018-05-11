@@ -1,14 +1,12 @@
 
       
       
-      
-      
          Nokia Qt LGPL Exception version 1.1
 
       
       As an additional permission to the GNU Lesser General Public
-       License version 2.1, the object code form of a ""work that
-       uses the Library"" may incorporate material from a header file
+       License version 2.1, the object code form of a "work that
+       uses the Library" may incorporate material from a header file
        that is part of the Library. You may distribute such object
        code under terms of your choice, provided that:
 
@@ -66,5 +64,5 @@
       Furthermore, you are not required to apply this additional
        permission to a modified version of the Library.
 
-  
+    
       

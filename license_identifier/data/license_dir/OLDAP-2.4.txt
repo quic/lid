@@ -1,10 +1,9 @@
 
       
       
-      
-      
          The OpenLDAP Public License 
         
+
 Version 2.4, 8 December 2000 
       
 
@@ -69,5 +68,4 @@ Version 2.4, 8 December 2000
       
 
     
-  
       

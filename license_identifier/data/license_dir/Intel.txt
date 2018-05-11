@@ -1,14 +1,13 @@
 
       
       
-      
-      
          Intel Open Source License
 
       
       
          Copyright (c) 1996-2000 Intel Corporation
            
+
 All rights reserved.
 
       
@@ -56,5 +55,4 @@ All rights reserved.
          and any other country to which the U.S. has embargoed goods and services.
 
     
-  
       

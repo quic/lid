@@ -1,8 +1,5 @@
 
       
-   
-      
-      
       EXCEPTION NOTICE
 
       
@@ -50,5 +47,5 @@
              accordingly.
         
 
-  
+    
       

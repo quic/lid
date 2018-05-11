@@ -1,8 +1,12 @@
 
         
-         Copyright (c) 
-    
-<year> <copyright holders> Licensed under the Educational
-    Community License version 1.0 
-  
+        
+      Copyright (c) 
+        
+<year> <copyright holders>
+      
+
+      Licensed under the Educational Community License version 1.0
+
+      
       

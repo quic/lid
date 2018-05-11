@@ -1,9 +1,9 @@
 
       
       
-      
          OPEN PUBLIC LICENSE 
         
+
 Version 1.0 
       
 
@@ -373,6 +373,7 @@ B.
 6.4.
             Required Additional Developer Specific License 
               
+
       This license is a union of the following two parts that should be found as text files
                    in the same place (directory), in the order of preeminence: 
             
@@ -421,6 +422,7 @@ B.
 8.1
             Termination upon Breach 
               
+
       This License and the rights granted hereunder will terminate automatically if You fail
                    to comply with terms herein and fail to cure such breach within 30 days of
                    becoming aware of the breach. All sublicenses to the Covered Code, which are
@@ -546,5 +548,5 @@ B.
          provided by the Initial Developer. This license is not valid or complete with out that file.
 
       
-  
+    
       

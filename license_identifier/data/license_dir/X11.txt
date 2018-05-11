@@ -1,8 +1,6 @@
 
       
       
-      
-      
          X11 License
 
       
@@ -33,5 +31,4 @@
       X Window System is a trademark of X Consortium, Inc.
 
     
-  
       

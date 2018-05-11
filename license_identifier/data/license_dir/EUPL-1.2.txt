@@ -1,8 +1,6 @@
 
       
     
-    
-    
       
         European Union Public Licence v. 1.2
       
@@ -579,5 +577,5 @@
       require the production of a new EUPL version.
     
 
-  
+    
       

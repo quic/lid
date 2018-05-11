@@ -1,7 +1,5 @@
 
       
-      
-      
       In addition, as a special exception, 
         
 XXXX gives permission to
@@ -16,5 +14,5 @@ XXXX gives permission to
         version.
       
 
-  
+    
       

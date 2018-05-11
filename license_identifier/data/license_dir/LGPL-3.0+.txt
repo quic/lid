@@ -1,11 +1,9 @@
 
       
-	  
-      
-      
       
          GNU LESSER GENERAL PUBLIC LICENSE 
         
+
 Version 3, 29 June 2007 
       
 
@@ -69,6 +67,7 @@ Version 3, 29 June 2007
 1.
           Exception to Section 3 of the GNU GPL. 
             
+
    You may convey a covered work under sections 3 and 4 of this License without being bound by
                  section 3 of the GNU GPL.
         
@@ -77,6 +76,7 @@ Version 3, 29 June 2007
 2.
           Conveying Modified Versions. 
             
+
    If you modify a copy of the Library, and, in your modifications, a facility refers to a
                  function or data to be supplied by an Application that uses the facility (other than
                  as an argument passed when the facility is invoked), then you may convey a copy of the
@@ -103,6 +103,7 @@ b)
 3.
           Object Code Incorporating Material from Library Header Files. 
             
+
    The object code form of an Application may incorporate material from a header file that is
                  part of the Library. You may convey such object code under terms of your choice,
                  provided that, if the incorporated material is not limited to numerical parameters,
@@ -129,6 +130,7 @@ b)
 4.
           Combined Works. 
             
+
    You may convey a Combined Work under terms of your choice that, taken together, effectively
                  do not restrict modification of the portions of the Library contained in the Combined
                  Work and reverse engineering for debugging such modifications, if you also do each of
@@ -198,6 +200,7 @@ e)
 5.
           Combined Libraries. 
             
+
    You may place library facilities that are a work based on the Library side by side in a
                  single library together with other library facilities that are not Applications and
                  are not covered by this License, and convey such a combined library under terms of
@@ -243,5 +246,5 @@ b)
 
         
 
-  
+    
       

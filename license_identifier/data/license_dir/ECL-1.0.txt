@@ -1,8 +1,6 @@
 
       
       
-      
-      
          The Educational Community License
 
       
@@ -10,6 +8,7 @@
          "Original Work") whose owner (the "Licensor") has placed the following notice immediately following
          the copyright notice for the Original Work:
 
+      
       Copyright (c) 
         
 <year> <copyright holders>
@@ -17,6 +16,7 @@
 
       Licensed under the Educational Community License version 1.0
 
+      
       This Original Work, including software, source code, documents, or other related items, is being provided
          by the copyright holder(s) subject to the terms of the Educational Community License. By obtaining,
          using and/or copying this Original Work, you agree that you have read, understand, and will comply
@@ -48,5 +48,5 @@
          Original Work and any associated documentation will at all times remain with the copyright
          holders.
 
-  
+    
       

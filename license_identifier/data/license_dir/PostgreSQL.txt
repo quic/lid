@@ -1,9 +1,9 @@
 
       
       
-      
          PostgreSQL Database Management System 
         
+
 (formerly known as Postgres, then as Postgres95) 
       
 
@@ -34,5 +34,4 @@ THE UNIVERSITY OF CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE
          MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
     
-  
       

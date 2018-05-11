@@ -1,7 +1,6 @@
 
       
       
-      
          SUGARCRM PUBLIC LICENSE
 
       
@@ -550,5 +549,5 @@ II.
             
 
       
-  
+    
       

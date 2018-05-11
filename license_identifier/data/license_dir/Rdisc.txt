@@ -1,7 +1,5 @@
 
       
-      
-    
       Rdisc (this program) was developed by Sun Microsystems, Inc. and is provided for unrestricted use
          provided that this legend is included on all tape media and as a part of the software program in whole
          or part. Users may copy or modify Rdisc without charge, and they may freely distribute it.
@@ -22,11 +20,12 @@
 
       Sun Microsystems, Inc. 
         
+
 2550 Garcia Avenue 
         
+
 Mountain View, California 94043 
       
 
     
-  
       

@@ -1,7 +1,6 @@
 
       
       
-      
          MOTOSOTO OPEN SOURCE LICENSE - Version 0.9.1
 
       
@@ -456,5 +455,4 @@ d.
          LIABILITY SHALL NOT APPLY TO LIABILITY FOR DEATH OR PERSONAL INJURY RESULTING FROM SUCH PARTY
 
     
-  
       

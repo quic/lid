@@ -1,7 +1,6 @@
 
       
       
-      
          Copyright 1986 - 1993, 1998, 2004 Thomas Williams, Colin Kelley
 
       
@@ -47,5 +46,4 @@
          by applicable law.
 
     
-  
       

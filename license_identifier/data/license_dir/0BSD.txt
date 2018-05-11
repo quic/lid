@@ -1,7 +1,6 @@
 
       
       
-      
          Copyright (C) 2006 by Rob Landley <rob@landley.net>
 
       
@@ -16,5 +15,4 @@
          ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
     
-  
       

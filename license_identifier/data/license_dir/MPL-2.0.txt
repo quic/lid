@@ -1,8 +1,6 @@
 
       
       
-      
-      
          Mozilla Public License Version 2.0
 
       
@@ -519,5 +517,5 @@
          Public License, v. 2.0.
 
       
-  
+    
       

@@ -1,8 +1,6 @@
 
       
       
-      
-      
          Zope Public License (ZPL) Version 2.1
 
       
@@ -64,5 +62,4 @@
          POSSIBILITY OF SUCH DAMAGE.
 
     
-  
       

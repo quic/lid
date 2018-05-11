@@ -1,12 +1,9 @@
 
       
     
-    
-    
-    
-    
       
         GNU Free Documentation License
+
 
         Version 1.1, March 2000
       
@@ -532,5 +529,5 @@ N.
       
 
     
-  
+    
       

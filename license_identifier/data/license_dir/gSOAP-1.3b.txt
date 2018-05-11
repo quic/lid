@@ -1,7 +1,6 @@
 
       
       
-      
          gSOAP Public License
 
          Version 1.3b
@@ -252,7 +251,8 @@ B.
                         
 3.2.
                         Availability of Source Code.
-                        Any Modification created by You will be provided to the Initial Developer in Source Code
+                        Any Modification created by You 
+shall be provided to the Initial Developer in Source Code
                          form and are subject to the terms of the License.
 
                     
@@ -584,5 +584,5 @@ B.
             
 
       
-  
+    
       

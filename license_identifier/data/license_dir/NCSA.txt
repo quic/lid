@@ -1,7 +1,6 @@
 
       
       
-      
          University of Illinois/NCSA Open Source License
 
       
@@ -17,10 +16,13 @@
         
 
 		
+
 <Name of Development Group> 
 		
+
 <Name of Institution>
         
+
 <URL for Development Group/Institution>
       
 
@@ -65,5 +67,4 @@
          WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
 
     
-  
       

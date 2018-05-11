@@ -1,7 +1,6 @@
 
       
       
-      
          COPYRIGHT NOTICE
 
       
@@ -29,5 +28,5 @@
          END OF COPYRIGHT NOTICE
 
       
-  
+    
       

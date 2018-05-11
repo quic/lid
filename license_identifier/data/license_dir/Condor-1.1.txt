@@ -1,8 +1,6 @@
 
       
       
-      
-      
          Condor Public License
 
          Version 1.1, October 30, 2003
@@ -40,8 +38,10 @@
                
 2. Any user documentation included with a redistribution must include the following notice: 
             
+
    "This product includes software from the Condor® Project (http://www.condorproject.org/)" 
             
+
    Alternatively, if that is where third-party acknowledgments normally appear, this
                  acknowledgment must be reproduced in the Software itself. 
           
@@ -87,6 +87,7 @@ free perpetual license under such patent claims, with the rights for you
 6.
           DISCLAIMER 
             
+
    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS AND THE UNIVERSITY "AS
                  IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
                  WARRANTIES OF MERCHANTABILITY, OF SATISFACTORY QUALITY, AND FITNESS FOR A PARTICULAR
@@ -101,6 +102,7 @@ free perpetual license under such patent claims, with the rights for you
 7.
           LIMITATION OF LIABILITY 
             
+
    THE COPYRIGHT HOLDERS AND CONTRIBUTORS AND ANY OTHER OFFICER, AGENT, OR EMPLOYEE OF THE
                  UNIVERSITY SHALL HAVE NO LIABILITY TO LICENSEE OR OTHER PERSONS FOR DIRECT, INDIRECT,
                  SPECIAL, INCIDENTAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES OF ANY CHARACTER
@@ -138,20 +140,25 @@ free perpetual license under such patent claims, with the rights for you
 
         Condor Team 
           
+
 Attention: Professor Miron Livny 
           
+
 7367 Computer Sciences 
           
+
 1210 W. Dayton St. 
           
+
 Madison, WI 53706-1685 
           
+
 miron@cs.wisc.edu 
           
+
 http://pages.cs.wisc.edu/~miron/miron.html 
         
 
       
     
-  
       

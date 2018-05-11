@@ -1,7 +1,6 @@
 
       
       
-      
          (C) 1988, 1989 by Adobe Systems Incorporated. All rights reserved.
 
       
@@ -30,5 +29,4 @@
          OF MERCHANTABILITY, FITNESS FOR PARTICULAR PURPOSES AND NONINFRINGEMENT OF THIRD PARTY RIGHTS.
 
     
-  
       

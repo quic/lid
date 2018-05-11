@@ -1,7 +1,6 @@
 
       
       
-      
          Microsoft Public License (Ms-PL)
 
       
@@ -16,6 +15,7 @@
 1.
           Definitions 
             
+
    The terms "reproduce," "reproduction," "derivative works,"
                  and "distribution" have the same meaning here as under U.S. copyright law. A
                  "contribution" is the original software, or any additions or changes to the
@@ -96,5 +96,4 @@
         
 
     
-  
       

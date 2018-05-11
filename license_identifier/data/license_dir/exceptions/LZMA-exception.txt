@@ -1,7 +1,5 @@
 
       
-      
-      
 	  I.6 Special exception for LZMA compression module
       
          LZMA exception
@@ -16,5 +14,5 @@
        compression module for NSIS, however, are subject to the terms
        of the Common Public License version 1.0.
 
-  
+    
       

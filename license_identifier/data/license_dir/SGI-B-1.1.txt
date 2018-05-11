@@ -1,11 +1,9 @@
 
       
       
-      
-      
-      
          SGI FREE SOFTWARE LICENSE B 
         
+
 (Version 1.1 02/22/2000) 
       
 
@@ -325,6 +323,7 @@ B.
       
          Exhibit A
 
+         
          License Applicability. Except to the extent portions of this file are made subject to an alternative
          license as permitted in the SGI Free Software License B, Version 1.1 (the "License"), the contents of
          this file are subject only to the provisions of the License. You may not use this file except in
@@ -342,7 +341,7 @@ B.
             
 name of software,
       
-version number, and 
+version number, and
       
 release date
             ], developed by Silicon Graphics, Inc. The Original Code is Copyright (c) 
@@ -354,6 +353,7 @@ dates of first publication, as appearing in
        Silicon Graphics, Inc. Copyright in any portions created by third
          parties is as indicated elsewhere herein. All Rights Reserved.
 
+         
          Additional Notice Provisions: [
             
 such additional provisions, if any, as appear in the
@@ -361,6 +361,8 @@ such additional provisions, if any, as appear in the
             ]
          
 
+         
+         
       
-  
+    
       

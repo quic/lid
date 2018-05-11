@@ -1,7 +1,6 @@
 
       
       
-      
          Simple Public License (SimPL)
 
       
@@ -117,5 +116,4 @@
          "based on the Simple Public License").
 
     
-  
       

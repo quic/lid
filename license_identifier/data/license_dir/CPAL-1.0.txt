@@ -1,8 +1,6 @@
 
       
       
-      
-      
          Common Public Attribution License Version 1.0 (CPAL)
 
       
@@ -146,6 +144,7 @@ B.
 2.1
               The Initial Developer Grant. 
                 
+
       The Initial Developer hereby grants You a world-wide, royalty-free, non-exclusive license,
                      subject to third party intellectual property claims: 
               
@@ -187,6 +186,7 @@ B.
 2.2
               Contributor Grant. 
                 
+
       Subject to third party intellectual property claims, each Contributor hereby grants You a
                      world-wide, royalty-free, non-exclusive license 
               
@@ -242,6 +242,7 @@ B.
 3.1
               Application of License. 
                 
+
       The Modifications which You create or to which You contribute are governed by the terms of
                      this License, including without limitation Section 2.2. The Source Code version of
                      Covered Code may be distributed only under the terms of this License or a future
@@ -258,6 +259,7 @@ B.
 3.2
               Availability of Source Code. 
                 
+
       Any Modification which You create or to which You contribute must be made available in
                      Source Code form under the terms of this License either on the same media as an
                      Executable version or via an accepted Electronic Distribution Mechanism to anyone to
@@ -274,6 +276,7 @@ B.
 3.3
               Description of Modifications. 
                 
+
       You must cause all Covered Code to which You contribute to contain a file documenting the
                      changes You made to create that Covered Code and the date of any change. You must
                      include a prominent statement that the Modification is derived, directly or
@@ -326,6 +329,7 @@ B.
 3.5
               Required Notices. 
                 
+
       You must duplicate the notice in Exhibit A in each file of the Source Code. If it is not
                      possible to put such notice in a particular Source Code file due to its structure,
                      then You must include such notice in a location (such as a relevant directory) where a
@@ -348,6 +352,7 @@ B.
 3.6
               Distribution of Executable Versions. 
                 
+
       You may distribute Covered Code in Executable form only if the requirements of Section
                      3.1-3.5 have been met for that Covered Code, and if You include a notice stating that
                      the Source Code version of the Covered Code is available under the terms of this
@@ -373,6 +378,7 @@ B.
 3.7
               Larger Works. 
                 
+
       You may create a Larger Work by combining Covered Code with other code not governed by the
                      terms of this License and distribute the Larger Work as a single product. In such a
                      case, You must make sure the requirements of this License are fulfilled for the
@@ -386,6 +392,7 @@ B.
 4.
           Inability to Comply Due to Statute or Regulation. 
             
+
    If it is impossible for You to comply with any of the terms of this License with respect to
                  some or all of the Covered Code due to statute, judicial order, or regulation then You
                  must: (a) comply with the terms of this License to the maximum extent possible; and
@@ -401,6 +408,7 @@ B.
 5.
           Application of this License. 
             
+
    This License applies to code to which the Initial Developer has attached the notice in
                  Exhibit A and to related Covered Code. 
           
@@ -416,6 +424,7 @@ B.
 6.1
               New Versions. 
                 
+
       Socialtext, Inc. ("Socialtext") may publish revised and/or new versions of
                      the License from time to time. Each version will be given a distinguishing version
                      number. 
@@ -426,6 +435,7 @@ B.
 6.2
               Effect of New Versions. 
                 
+
       Once Covered Code has been published under a particular version of the License, You may
                      always continue to use it under the terms of that version. You may also choose to use
                      such Covered Code under the terms of any subsequent version of the License published
@@ -438,6 +448,7 @@ B.
 6.3
               Derivative Works. 
                 
+
       If You create or use a modified version of this License (which you may only do in order to
                      apply it to code which is not already Covered Code governed by this License), You must
                      (a) rename Your license so that the phrases "Socialtext",
@@ -456,6 +467,7 @@ B.
 7.
           DISCLAIMER OF WARRANTY. 
             
+
    COVERED CODE IS PROVIDED UNDER THIS LICENSE ON AN "AS IS" BASIS, WITHOUT
                  WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, WITHOUT LIMITATION,
                  WARRANTIES THAT THE COVERED CODE IS FREE OF DEFECTS, MERCHANTABLE, FIT FOR A
@@ -541,6 +553,7 @@ B.
 9.
           LIMITATION OF LIABILITY. 
             
+
    UNDER NO CIRCUMSTANCES AND UNDER NO LEGAL THEORY, WHETHER TORT (INCLUDING NEGLIGENCE),
                  CONTRACT, OR OTHERWISE, SHALL YOU, THE INITIAL DEVELOPER, ORIGINAL DEVELOPER, ANY
                  OTHER CONTRIBUTOR, OR ANY DISTRIBUTOR OF COVERED CODE, OR ANY SUPPLIER OF ANY OF SUCH
@@ -560,6 +573,7 @@ B.
 10.
           U.S. GOVERNMENT END USERS. 
             
+
    The Covered Code is a "commercial item," as that term is defined in 48 C.F.R.
                  2.101 (Oct. 1995), consisting of "commercial computer software" and
                  "commercial computer software documentation," as such terms are used in
@@ -573,6 +587,7 @@ B.
 11.
           MISCELLANEOUS. 
             
+
    This License represents the complete agreement concerning subject matter hereof. If any
                  provision of this License is held to be unenforceable, such provision shall be
                  reformed only to the extent necessary to make it enforceable. This License shall be
@@ -594,6 +609,7 @@ B.
 12.
           RESPONSIBILITY FOR CLAIMS. 
             
+
    As between Initial Developer, Original Developer and the Contributors, each party is
                  responsible for claims and damages arising, directly or indirectly, out of its
                  utilization of rights under this License and You agree to work with Initial Developer,
@@ -607,6 +623,7 @@ B.
 13.
           MULTIPLE-LICENSED CODE. 
             
+
    Initial Developer may designate portions of the Covered Code as Multiple-Licensed.
                  Multiple-Licensed means that the Initial Developer permits you to utilize portions of
                  the Covered Code under Your choice of the CPAL or the alternative licenses, if any,
@@ -692,39 +709,61 @@ B.
       
          EXHIBIT A. Common Public Attribution License Version 1.0.
 
+         
          "The contents of this file are subject to the Common Public Attribution License Version 1.0 (the
          "License"); you may not use this file except in compliance with the License. You may
-         obtain a copy of the License at _____________. The License is based on the Mozilla Public License
+         obtain a copy of the License at 
+_____________. The License is based on the Mozilla Public License
          Version 1.1 but Sections 14 and 15 have been added to cover use of software over a computer network
          and provide for limited attribution for the Original Developer. In addition, Exhibit A has been
          modified to be consistent with Exhibit B. 
         
+
 Software distributed under the License is distributed on an "AS IS" basis, WITHOUT
              WARRANTY OF ANY KIND, either express or implied. See the License for the specific language
              governing rights and limitations under the License. 
         
-The Original Code is______________________. 
+
+The Original Code is 
+______________________.
         
-The Original Developer is not the Initial Developer and is __________. If left blank, the Original
+
+The Original Developer is not the Initial Developer and is 
+__________. If left blank, the Original
              Developer is the Initial Developer. 
         
-The Initial Developer of the Original Code is ____________. All portions of the code written by
-             ___________ are Copyright (c) _____. All Rights Reserved. 
+
+The Initial Developer of the Original Code is 
+____________. All portions of the code written by
+             
+___________ are Copyright (c) 
+_____. All Rights Reserved.
         
-Contributor ______________________. 
+
+Contributor 
+______________________.
         
-Alternatively, the contents of this file may be used under the terms of the _____ license (the
-             [___] License), in which case the provisions of [______] License are applicable instead of
+
+Alternatively, the contents of this file may be used under the terms of the 
+_____ license (the
+             
+[___] License), in which case the provisions of 
+[______] License are applicable instead of
              those above. 
         
-If you wish to allow use of your version of this file only under the terms of the [____] License
+
+If you wish to allow use of your version of this file only under the terms of the 
+[____] License
              and not to allow others to use your version of this file under the CPAL, indicate your
              decision by deleting the provisions above and replace them with the notice and other
-             provisions required by the [___] License. If you do not delete the provisions above, a
-             recipient may use your version of this file under either the CPAL or the [___]
+             provisions required by the 
+[___] License. If you do not delete the provisions above, a
+             recipient may use your version of this file under either the CPAL or the 
+[___]
              License." 
       
 
+         
          [NOTE: The text of this Exhibit A may differ slightly from the text of the notices in the Source Code
          files of the Original Code. You should use the text of this Exhibit A rather than the text found in
          the Original Code Source Code for Your Modifications.]
@@ -733,17 +772,21 @@ If you wish to allow use of your version of this file only under the terms of th
 
          Attribution Copyright Notice: _______________________ 
         
+
 Attribution Phrase (not exceeding 10 words): _______________________ 
         
+
 Attribution URL: _______________________ 
         
+
 Graphic Image as provided in the Covered Code, if any. 
         
+
 Display of Attribution Information is [required/not required] in Larger Works which are defined in
              the CPAL as a work which combines Covered Code or portions thereof with code not governed by
              the terms of the CPAL. 
       
 
       
-  
+    
       

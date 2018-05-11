@@ -1,9 +1,9 @@
 
       
       
-      
          Copyright (C) 2000-2002 werken digital. 
         
+
 All rights reserved. 
       
 
@@ -45,6 +45,7 @@ All rights reserved.
       In addition, we request (but do not require) that you include in the end-user documentation provided with
          the redistribution and/or in the software itself an acknowledgement equivalent to the following: 
         
+
 "This product includes software developed by the SAXPath Project (http://www.saxpath.org/)." 
       
 
@@ -60,5 +61,4 @@ All rights reserved.
          POSSIBILITY OF SUCH DAMAGE.
 
     
-  
       

@@ -1,7 +1,6 @@
 
       
       
-      
          Secure Messaging Protocol (SMP) Libraries [ACL, CML, SFL]
 
       
@@ -81,5 +80,5 @@
          Copyright © 1997-2002 National Security Agency
 
       
-  
+    
       

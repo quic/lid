@@ -1,7 +1,6 @@
 
       
       
-      
          Noweb is copyright 1989-2000 by Norman Ramsey. All rights reserved.
 
       
@@ -23,5 +22,4 @@
          bug reports on your work be reported to you.
 
     
-  
       

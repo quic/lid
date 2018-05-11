@@ -1,7 +1,6 @@
 
       
       
-      
          Copyright: Copyright (c) 2006 by Apple Computer, Inc., All Rights Reserved.
 
       
@@ -36,5 +35,4 @@
          POSSIBILITY OF SUCH DAMAGE.
 
     
-  
       

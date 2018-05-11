@@ -1,7 +1,6 @@
 
       
       
-      
          CNRI OPEN SOURCE GPL-COMPATIBLE LICENSE AGREEMENT
 
       
@@ -93,5 +92,5 @@
          ACCEPT
 
       
-  
+    
       

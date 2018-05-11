@@ -1,10 +1,9 @@
 
       
       
-      
-      
          INTERBASE PUBLIC LICENSE 
         
+
 Version 1.0 
       
 
@@ -443,22 +442,29 @@ B.
               Origin of the Interbase Public License.
               The Interbase public license is based on the Mozilla Public License V 1.1 with the following changes: 
                 
+
       The license is published by Borland Software Corporation. Only Borland Software Corporation
                      can modify the terms applicable to Covered Code. 
                 
+
       The license can be modified used for code which is not already governed by this license.
                      Modified versions of the license must be renamed to avoid confusion with Netscape?s or
                      Interbase Software?s license and must include a description of changes from the
                      Interbase Public License. 
                 
+
       The name of the license in Exhibit A is the "Interbase Public License". 
                 
+
       The reference to an alternative license in Exhibit A has been removed. 
                 
+
       Amendments I, II, III, V, and VI have been deleted. 
                 
+
       Exhibit A, Netscape Public License has been deleted 
                 
+
       A new amendment (II) has been added, describing the required and restricted rights to use
                      the trademarks of Borland Software Corporation 
               
@@ -619,7 +625,8 @@ B.
 
             EXHIBIT A - InterBase Public License.
 
-            ``The contents of this file are subject to the Interbase Public License Version 1.0 (the
+            
+            "The contents of this file are subject to the Interbase Public License Version 1.0 (the
              "License"); you may not use this file except in compliance with the License. You may
              obtain a copy of the License at http://www.Interbase.com/IPL.html
 
@@ -631,8 +638,10 @@ B.
 
             Portions created by Borland/Inprise are Copyright (C) Borland/Inprise. All Rights Reserved.
 
-            Contributor(s): ______________________________________.
+            Contributor(s): 
+______________________________________.
 
+            
         
 
           AMENDMENTS
@@ -676,5 +685,5 @@ II.3.
  
          
   
-  
+    
       

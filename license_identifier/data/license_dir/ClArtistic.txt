@@ -1,7 +1,6 @@
 
       
       
-      
          The Clarified Artistic License
 
       
@@ -184,5 +183,5 @@ e)
 
       The End
 
-  
+    
       

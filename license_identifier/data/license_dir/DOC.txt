@@ -1,7 +1,6 @@
 
       
       
-      
          Copyright and Licensing Information for ACE(TM), TAO(TM), CIAO(TM), DAnCE(TM), and CoSMIC(TM)
 
       
@@ -62,5 +61,4 @@
       Douglas C. Schmidt
 
     
-  
       

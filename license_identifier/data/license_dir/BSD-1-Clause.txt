@@ -1,7 +1,6 @@
 
       
     
-    
       
         Copyright (c) 
 <year> <owner>
@@ -42,5 +41,5 @@ Berkeley Software Design, Inc.
       THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     
 
-  
+    
       

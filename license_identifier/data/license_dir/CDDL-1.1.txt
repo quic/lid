@@ -1,10 +1,9 @@
 
       
       
-      
-      
          COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) 
         
+
 Version 1.1 
       
 
@@ -133,6 +132,7 @@ C.
 2.1.
               The Initial Developer Grant. 
                 
+
       Conditioned upon Your compliance with Section 3.1 below and subject to third party
                      intellectual property claims, the Initial Developer hereby grants You a world-wide,
                      royalty-free, non-exclusive license: 
@@ -176,6 +176,7 @@ C.
 2.2.
               Contributor Grant. 
                 
+
       Conditioned upon Your compliance with Section 3.1 below and subject to third party
                      intellectual property claims, each Contributor hereby grants You a world-wide,
                      royalty-free, non-exclusive license: 
@@ -231,6 +232,7 @@ C.
 3.1.
                   Availability of Source Code. 
                     
+
       Any Covered Software that You distribute or otherwise make available in Executable form
                          must also be made available in Source Code form and that Source Code form must be
                          distributed only under the terms of this License. You must include a copy of this
@@ -245,6 +247,7 @@ C.
 3.2.
                   Modifications. 
                     
+
       The Modifications that You create or to which You contribute are governed by the terms of
                          this License. You represent that You believe Your Modifications are Your original
                          creation(s) and/or You have sufficient rights to grant the rights conveyed by this
@@ -256,6 +259,7 @@ C.
 3.3.
                   Required Notices. 
                     
+
       You must include a notice in each of Your Modifications that identifies You as the
                          Contributor of the Modification. You may not remove or alter any copyright, patent or
                          trademark notices contained within the Covered Software, or any notices of licensing
@@ -268,6 +272,7 @@ C.
 3.4.
                   Application of Additional Terms. 
                     
+
       You may not offer or impose any terms on any Covered Software in Source Code form that
                          alters or restricts the applicable version of this License or the recipients'
                          rights hereunder. You may choose to offer, and to charge a fee for, warranty, support,
@@ -285,6 +290,7 @@ C.
 3.5.
                   Distribution of Executable Versions. 
                     
+
       You may distribute the Executable form of the Covered Software under the terms of this
                          License or under the terms of a license of Your choice, which may contain terms
                          different from this License, provided that You are in compliance with the terms of
@@ -303,6 +309,7 @@ C.
 3.6.
                   Larger Works. 
                     
+
       You may create a Larger Work by combining Covered Software with other code not governed by
                          the terms of this License and distribute the Larger Work as a single product. In such
                          a case, You must make sure the requirements of this License are fulfilled for the
@@ -322,6 +329,7 @@ C.
 4.1.
                   New Versions. 
                     
+
       Oracle is the initial license steward and may publish revised and/or new versions of this
                          License from time to time. Each version will be given a distinguishing version number.
                          Except as provided in Section 4.3, no one other than the license steward has the right
@@ -333,6 +341,7 @@ C.
 4.2.
                   Effect of New Versions. 
                     
+
       You may always continue to use, distribute or otherwise make the Covered Software available
                          under the terms of the version of the License under which You originally received the
                          Covered Software. If the Initial Developer includes a notice in the Original Software
@@ -349,6 +358,7 @@ C.
 4.3.
                   Modified Versions. 
                     
+
       When You are an Initial Developer and You want to create a new license for Your Original
                          Software, You may create and use a modified version of this License if You: (a) rename
                          the license and remove any references to the name of the license steward (except to
@@ -487,6 +497,7 @@ C.
 
       NOTICE PURSUANT TO SECTION 9 OF THE COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) 
         
+
 The code released under the CDDL shall be governed by the laws of the State of California
              (excluding conflict-of-law provisions). Any litigation relating to this License shall be
              subject to the jurisdiction of the Federal Courts of the Northern District of California and
@@ -494,5 +505,5 @@ The code released under the CDDL shall be governed by the laws of the State of C
              California. 
       
 
-  
+    
       

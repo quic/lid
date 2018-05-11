@@ -1,11 +1,9 @@
 
       
       
-      
-      
-      
          The LaTeX Project Public License 
         
+
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 
       
 
@@ -21,6 +19,7 @@
 
       PREAMBLE 
         
+
 ======== 
       
 
@@ -54,6 +53,7 @@
 
       CONDITIONS ON DISTRIBUTION AND MODIFICATION 
         
+
 =========================================== 
       
 
@@ -160,6 +160,7 @@
 
       A Recommendation on Modification Without Distribution 
         
+
 ----------------------------------------------------- 
       
 
@@ -175,6 +176,7 @@
 
       Additional Conditions on Individual Files of The Program 
         
+
 -------------------------------------------------------- 
       
 
@@ -187,6 +189,7 @@
 
       Additional Conditions on LaTeX Software Files 
         
+
 --------------------------------------------- 
       
 
@@ -241,6 +244,7 @@
 
       NO WARRANTY 
         
+
 =========== 
       
 
@@ -260,6 +264,7 @@
 
       WHETHER AND HOW TO DISTRIBUTE PROGRAMS UNDER THIS LICENSE 
         
+
 ========================================================= 
       
 
@@ -269,6 +274,7 @@
 
       Choosing This License or Another License 
         
+
 ---------------------------------------- 
       
 
@@ -286,6 +292,7 @@
 
       How to Use This License 
         
+
 ----------------------- 
       
 
@@ -295,33 +302,54 @@
 
       Here is an example of such a notice and statement:
 
-      %% pig.dtx 
+      
+      %% 
+pig.dtx
         
-%% Copyright 2001 M. Y. Name 
+
+%% Copyright 
+2001 M. Y. Name
         
-% 
+
+%
         
-% This program may be distributed and/or modified under the 
+
+% This program may be distributed and/or modified under the
         
-% conditions of the LaTeX Project Public License, either version 1.1 
+
+% conditions of the LaTeX Project Public License, either version 1.1
         
-% of this license or (at your option) any later version. 
+
+% of this license or (at your option) any later version.
         
-% The latest version of this license is in % http://www.latex-project.org/lppl.txt 
+
+% The latest version of this license is in
         
-% and version 1.1 or later is part of all distributions of LaTeX % version 1999/06/01 or later. 
+
+% http://www.latex-project.org/lppl.txt
         
-% 
+
+% and version 1.1 or later is part of all distributions of LaTeX
         
-% This program consists of the files pig.dtx and pig.ins 
+
+% version 1999/06/01 or later.
+        
+
+%
+        
+
+% This program consists of the 
+files pig.dtx and pig.ins
       
 
+      
       Given such a notice and statement in a file, the conditions given in this license document would apply,
          with `The Program' referring to the two files `pig.dtx' and `pig.ins', and `The
          Copyright Holder' referring to the person `M. Y. Name'.
 
       Important Recommendations 
         
+
 ------------------------- 
       
 
@@ -351,5 +379,5 @@
          modified version of the file. The additional conditions on LaTeX software given above are examples of
          declaring a category of files bearing exceptional additional conditions.
 
-  
+    
       

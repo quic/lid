@@ -1,7 +1,6 @@
 
       
       
-      
          VOSTROM Public License for Open Source
 
       
@@ -88,5 +87,4 @@
          PERFORMANCE OF THIS SOFTWARE.
 
     
-  
       

@@ -1,8 +1,6 @@
 
       
       
-      
-      
          THE FRAMEWORX OPEN LICENSE 1.0
 
       
@@ -13,6 +11,7 @@
 
       AGREEMENT BACKGROUND 
         
+
 The Frameworx Company is committed to the belief that open source software results in better
              quality, greater technical and product innovation in the market place and a more empowered and
              productive developer and end-user community. Our objective is to ensure that the Frameworx
@@ -24,6 +23,7 @@ The Frameworx Company is committed to the belief that open source software resul
 
       AGREEMENT TERMS 
         
+
 The Frameworx Company and You have agreed as follows: 
       
 
@@ -267,5 +267,4 @@ The Frameworx Company and You have agreed as follows:
 
       (C) THE FRAMEWORX COMPANY 2003
     
-  
       

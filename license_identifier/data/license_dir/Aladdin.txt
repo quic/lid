@@ -1,10 +1,9 @@
 
       
       
-      
-      
          Aladdin Free Public License 
         
+
 (Version 8, November 18, 1999) 
       
 
@@ -12,6 +11,7 @@
       
          Copyright (C) 1994, 1995, 1997, 1998, 1999 Aladdin Enterprises, 
         
+
 Menlo Park, California, U.S.A. All rights reserved. 
       
 
@@ -38,6 +38,7 @@ Menlo Park, California, U.S.A. All rights reserved.
 0.
           Subject Matter 
             
+
    This License applies to the computer program known as "Aladdin Ghostscript." The "Program",
                  below, refers to such program. The Program is a copyrighted work whose copyright is
                  held by Aladdin Enterprises (the "Licensor"). Please note that Aladdin Ghostscript is
@@ -61,6 +62,7 @@ Menlo Park, California, U.S.A. All rights reserved.
 1.
           Licenses. 
             
+
    Licensor hereby grants you the following rights, provided that you comply with all of the
                  restrictions set forth in this License and provided, further, that you distribute an
                  unmodified copy of this License with the Program: 
@@ -85,6 +87,7 @@ Menlo Park, California, U.S.A. All rights reserved.
 2.
           Restrictions. 
             
+
    This license is subject to the following restrictions: 
           
         
@@ -214,6 +217,7 @@ Menlo Park, California, U.S.A. All rights reserved.
 3.
           Reservation of Rights. 
             
+
    No rights are granted to the Program except as expressly set forth herein. You may not
                  copy, modify, sublicense, or distribute the Program except as expressly provided under
                  this License. Any attempt otherwise to copy, modify, sublicense or distribute the
@@ -227,6 +231,7 @@ Menlo Park, California, U.S.A. All rights reserved.
 4.
           Other Restrictions. 
             
+
    If the distribution and/or use of the Program is restricted in certain countries for any
                  reason, Licensor may add an explicit geographical distribution limitation excluding
                  those countries, so that distribution is permitted only in or among countries not thus
@@ -239,6 +244,7 @@ Menlo Park, California, U.S.A. All rights reserved.
 5.
           Limitations. 
             
+
    THE PROGRAM IS PROVIDED TO YOU "AS IS," WITHOUT WARRANTY. THERE IS NO WARRANTY FOR THE
                  PROGRAM, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
                  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
@@ -281,5 +287,4 @@ Menlo Park, California, U.S.A. All rights reserved.
         
 
     
-  
       

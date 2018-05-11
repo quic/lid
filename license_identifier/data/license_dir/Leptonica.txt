@@ -1,8 +1,6 @@
 
       
       
-      
-      
          Copyright (C) 2001 Leptonica. All rights reserved.
 
       
@@ -33,5 +31,4 @@
         
 
     
-  
       

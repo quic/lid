@@ -1,7 +1,6 @@
 
       
       
-      
          SENDMAIL LICENSE
 
       
@@ -57,6 +56,7 @@
              other materials provided with the distribution. For the purposes of binary distribution the
              "Copyright Notice" refers to the following language: 
             
+
    "Copyright (c) 1998-2010 Sendmail, Inc. All rights reserved." 
           
         
@@ -95,7 +95,7 @@
             
 (i)
           Redistributions of source code must retain the above copyright notice, this list of conditions
-             and the following disclaimer. 139848.1
+             and the following disclaimer.
         
 
             
@@ -129,5 +129,5 @@
          $Revision: 8.16 $, Last updated $Date: 2010/10/25 23:11:19 $, Document 139848.1
 
       
-  
+    
       

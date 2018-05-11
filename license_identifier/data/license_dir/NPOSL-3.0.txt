@@ -1,7 +1,6 @@
 
       
       
-      
          Non-Profit Open Software License 3.0
 
       
@@ -271,5 +270,5 @@ e)
 
         
 
-  
+    
       

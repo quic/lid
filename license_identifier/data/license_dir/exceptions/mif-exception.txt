@@ -1,7 +1,5 @@
 
       
-      
-      
       As a special exception, you may use this file as part of a free
          software library without restriction. Specifically, if other
          files instantiate templates or use macros or inline functions
@@ -12,5 +10,5 @@
          invalidate any other reasons why the executable file might be
          covered by the GNU General Public License.
 
-  
+    
       

@@ -1,7 +1,6 @@
 
       
     
-    
       
         Community Data License Agreement - Permissive - Version 1.0
       
@@ -370,5 +369,5 @@ Section 7.
 
       
 
-  
+    
       

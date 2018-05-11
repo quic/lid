@@ -1,7 +1,6 @@
 
       
       
-      
          The Open Group Test Suite License
 
       
@@ -134,5 +133,5 @@
          The End
 
       
-  
+    
       

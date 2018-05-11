@@ -1,7 +1,6 @@
 
       
       
-      
          The source code in this package is copyright 1999-2010 by Andrew Plotkin.
 
       
@@ -12,5 +11,4 @@
          in your program or documentation which mentions my name and the URL shown above.
 
     
-  
       

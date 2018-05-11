@@ -1,7 +1,5 @@
 
       
-      
-      
       Any FreeRTOS source code, whether modified or in its original
        release form, or whether in whole or in part, can only be
        distributed by you under the terms of the GNU General Public
@@ -52,5 +50,5 @@
 
          
 
-  
+    
       

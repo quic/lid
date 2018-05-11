@@ -1,7 +1,5 @@
 
       
-      
-    
       Copyright Status
 
       SAX is free!
@@ -41,6 +39,7 @@
 
       David Megginson, Megginson Technologies Ltd. 
         
+
 1998-05-11 
       
 
@@ -52,9 +51,9 @@
 
       David Megginson, Megginson Technologies Ltd. 
         
+
 2000-05-05 
       
 
     
-  
       

@@ -1,7 +1,6 @@
 
       
       
-      
          The PHP License, version 3.0
 
       
@@ -77,5 +76,4 @@
       This product includes the Zend Engine, freely available at <http://www.zend.com>.
 
     
-  
       

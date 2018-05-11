@@ -1,8 +1,6 @@
 
       
       
-      
-      
          The Artistic License
 
       
@@ -161,5 +159,5 @@ d)
          The End
 
       
-  
+    
       

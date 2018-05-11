@@ -1,7 +1,5 @@
 
       
-      
-    
       Crystal Stacker is freeware. This means you can pass copies around freely provided you include this
          document in it's original form in your distribution. Please see the "Contacting Us" section of this
          document if you need to contact us for any reason.
@@ -19,5 +17,4 @@
          issues you have regarding the source.
 
     
-  
       

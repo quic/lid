@@ -1,8 +1,5 @@
 
       
-      
-      
-    
       As a special exception, the Free Software Foundation gives
          unlimited permission to copy, distribute and modify the
          configure scripts that are the output of Autoconf. You need
@@ -34,5 +31,4 @@
          exception to the GPL from your modified version.
 
     
-  
       

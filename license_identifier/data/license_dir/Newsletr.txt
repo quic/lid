@@ -1,7 +1,6 @@
 
       
       
-      
          Copyright 1989--2004 by Hunter Goatley.
 
       
@@ -25,5 +24,4 @@
         
 
     
-  
       

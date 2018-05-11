@@ -1,12 +1,12 @@
 
       
       
-      
          The Zend Engine License, version 2.00
 
       
       
       Copyright (c) 1999-2002 Zend Technologies Ltd. All rights reserved.
+
 
       
   
@@ -67,6 +67,5 @@
        OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
        DAMAGE.
 
-  
-   
+    
       

@@ -1,10 +1,9 @@
 
       
       
-      
-      
          APPLE PUBLIC SOURCE LICENSE 
         
+
 Version 1.0 - March 16, 1999 
       
 
@@ -306,6 +305,7 @@ Version 1.0 - March 16, 1999
              "Apple Marks") and no Apple Marks may be used to endorse or promote products derived
              from the Original Code 
             
+
    other than as permitted by and in strict compliance at all times with Apple's third
                  party trademark usage guidelines which are posted at
                  http://www.apple.com/legal/guidelinesfor3rdparties.html. 
@@ -361,6 +361,7 @@ Version 1.0 - March 16, 1999
                in the case of termination under Section 9.1, and to destroy all copies of the Covered
                Code or Affected Original Code (in the case of 
               
+
       termination under Section 9.1) that are in your possession or control. All sublicenses
                    to the Covered Code which have been properly granted prior to termination shall
                    survive any termination of this License. Provisions which, by their nature, should
@@ -399,6 +400,7 @@ Version 1.0 - March 16, 1999
                those rights customarily provided to the public as defined in this License. This customary
                commercial license in technical data and software is provided in 
               
+
       accordance with FAR 12.211 (Technical Data) and 12.212 (Computer Software) and, for
                    Department of Defense purchases, DFAR 252.227-7015 (Technical Data -- Commercial
                    Items) and 227.7202-3 (Rights in Commercial Computer Software or Computer Software
@@ -485,5 +487,5 @@ Version 1.0 - March 16, 1999
          limitations under the License."
 
       
-  
+    
       

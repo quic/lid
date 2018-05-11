@@ -1,7 +1,6 @@
 
       
       
-      
          Copyright (c) 1995-1999 The Apache Group. All rights reserved.
 
       
@@ -66,7 +65,7 @@ the Apache Group.
           Redistributions of any form whatsoever must retain the following acknowledgment:
           "This product includes software developed by 
 the 
-          Apache Group for use in the Apache HTTP server project (http://www.apache.org/).
+          Apache Group for use in the Apache HTTP server project (http://www.apache.org/)."
 
         
 
@@ -91,5 +90,5 @@ THE APACHE GROUP OR ITS CONTRIBUTORS BE LIABLE FOR
          the Apache HTTP server project, please see <http://www.apache.org/>.
       
 
-  
+    
       

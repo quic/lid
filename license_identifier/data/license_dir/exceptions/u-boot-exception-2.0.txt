@@ -1,9 +1,8 @@
 
       
       
-      
-      
-         The U-Boot License Exception:
+         
+GPL License Exception:
 
       
       Even though U-Boot in general is covered by the GPL-2.0/GPL-2.0+,
@@ -19,8 +18,9 @@
          considered normal use of U-Boot, and does *not* fall under the
          heading of "derived work".
         
+
 -- Wolfgang Denk
       
 
-  
+      
       

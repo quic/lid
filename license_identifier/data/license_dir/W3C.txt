@@ -1,9 +1,6 @@
 
       
       
-      
-      
-      
          W3C SOFTWARE NOTICE AND LICENSE
 
       
@@ -58,5 +55,5 @@
          GPL compatibility and OSI's certification under the Open Source Definition.
 
       
-  
+    
       

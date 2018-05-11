@@ -1,9 +1,8 @@
 
       
-      
-    
       Code derived from the document "Report on the Programming Language 
         
+
 Haskell 2010", is distributed under the following license: 
       
 
@@ -18,5 +17,4 @@ Haskell 2010", is distributed under the following license:
          of the Haskell 2010 Language.
 
     
-  
       

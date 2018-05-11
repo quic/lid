@@ -1,7 +1,6 @@
 
       
       
-      
          COPYRIGHT
 
       
@@ -11,6 +10,7 @@
 
       Copyright Notice 
         
+
 + 2002 University of Chicago 
       
 
@@ -37,5 +37,4 @@
          disclosed, or represents that its use would not infringe privately owned rights.
 
     
-  
       

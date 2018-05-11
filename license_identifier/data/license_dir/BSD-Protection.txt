@@ -1,9 +1,9 @@
 
       
       
-      
          BSD Protection License 
         
+
 February 2002 
       
 
@@ -11,6 +11,7 @@ February 2002
       
          Preamble 
         
+
 -------- 
       
 
@@ -87,6 +88,7 @@ d)
 1.
           Scope. 
             
+
    This license governs the copying, distribution, and modification of the Program. Other
                  activities are outside the scope of this license; The act of running the Program is
                  not restricted, and the output from the Program is covered only if its contents
@@ -98,6 +100,7 @@ d)
 2.
           Verbatim copies. 
             
+
    You may copy and distribute verbatim copies of the Program as you receive it, in any
                  medium, provided that you conspicuously and appropriately publish on each copy an
                  appropriate copyright notice; keep intact all the notices that refer to this License
@@ -110,6 +113,7 @@ d)
 3.
           Modification and redistribution under closed license. 
             
+
    You may modify your copy or copies of the Program, and distribute the resulting derivative
                  works, provided that you meet the following conditions: 
           
@@ -140,6 +144,7 @@ c)
 4.
           Modification and redistribution under open license. 
             
+
    You may modify your copy or copies of the Program, and distribute the resulting derivative
                  works, provided that you meet the following conditions: 
           
@@ -173,6 +178,7 @@ c)
 5.
           Implied acceptance. 
             
+
    You may not copy or distribute the Program or any derivative works except as expressly
                  provided under this license. Consequently, any such action will be taken as implied
                  acceptance of the terms of this license. 
@@ -195,5 +201,4 @@ c)
          DAMAGES.
 
     
-  
       

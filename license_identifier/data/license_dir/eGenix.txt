@@ -1,9 +1,9 @@
 
       
       
-      
          EGENIX.COM PUBLIC LICENSE AGREEMENT 
         
+
 Version 1.1.0 
       
 
@@ -21,6 +21,7 @@ Version 1.1.0
 1.
           Introduction 
             
+
    This "License Agreement" is between eGenix.com Software, Skills and Services GmbH
                  ("eGenix.com"), having an office at Pastor-Loeh-Str. 48, D-40764 Langenfeld, Germany,
                  and the Individual or Organization ("Licensee") accessing and otherwise using this
@@ -32,6 +33,7 @@ Version 1.1.0
 2.
           License 
             
+
    Subject to the terms and conditions of this eGenix.com Public License Agreement, eGenix.com
                  hereby grants Licensee a non-exclusive, royalty-free, world-wide license to reproduce,
                  analyze, test, perform and/or display publicly, prepare derivative works, distribute,
@@ -45,6 +47,7 @@ Version 1.1.0
 3.
           NO WARRANTY 
             
+
    eGenix.com is making the Software available to Licensee on an "AS IS" basis. SUBJECT TO ANY
                  STATUTORY WARRANTIES WHICH CAN NOT BE EXCLUDED, EGENIX.COM MAKES NO REPRESENTATIONS OR
                  WARRANTIES, EXPRESS OR IMPLIED. BY WAY OF EXAMPLE, BUT NOT LIMITATION, EGENIX.COM
@@ -58,6 +61,7 @@ Version 1.1.0
 4.
           LIMITATION OF LIABILITY 
             
+
    EGENIX.COM SHALL NOT BE LIABLE TO LICENSEE OR ANY OTHER USERS OF THE SOFTWARE FOR ANY
                  INCIDENTAL, SPECIAL, OR CONSEQUENTIAL DAMAGES OR LOSS (INCLUDING, WITHOUT LIMITATION,
                  DAMAGES FOR LOSS OF BUSINESS PROFITS, BUSINESS INTERRUPTION, LOSS OF BUSINESS
@@ -73,6 +77,7 @@ Version 1.1.0
 5.
           Termination 
             
+
    This License Agreement will automatically terminate upon a material breach of its terms and
                  conditions. 
           
@@ -82,6 +87,7 @@ Version 1.1.0
 6.
           Third Party Rights 
             
+
    Any software or documentation in source or binary form provided along with the Software
                  that is associated with a separate license agreement is licensed to Licensee under the
                  terms of that license agreement. This License Agreement does not apply to those
@@ -94,6 +100,7 @@ Version 1.1.0
 7.
           General 
             
+
    Nothing in this License Agreement affects any statutory rights of consumers that cannot be
                  waived or limited by contract. 
           
@@ -126,15 +133,18 @@ Version 1.1.0
          terms and conditions of this License Agreement. For question regarding this License Agreement, please
          write to: 
         
+
 eGenix.com Software, Skills and Services GmbH 
         
+
 Pastor-Loeh-Str. 48 
         
+
 D-40764 Langenfeld 
         
+
 Germany 
       
 
     
-  
       

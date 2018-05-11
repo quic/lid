@@ -1,7 +1,6 @@
 
       
       
-      
          Copyright (c) 
         
 <year> <owner>. All rights reserved.
@@ -44,5 +43,4 @@ THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
       
 
     
-  
       

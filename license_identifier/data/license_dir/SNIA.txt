@@ -1,12 +1,12 @@
 
       
       
-      
-      
          STORAGE NETWORKING INDUSTRY ASSOCIATION 
         
+
 PUBLIC LICENSE 
         
+
 Version 1.1 
       
 
@@ -531,5 +531,5 @@ B.
          Read more about this license at http://www.snia.org/smi/developers/open_source/
 
       
-  
+    
       

@@ -1,7 +1,6 @@
 
       
       
-      
          psfrag.dtx
 
       
@@ -18,5 +17,4 @@
          changes and their authors must be explicitly stated HERE.
 
     
-  
       

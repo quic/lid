@@ -1,13 +1,13 @@
 
       
       
-      
          MirOS License
 
       
       
          Copyright [YEAR] 
         
+
 [NAME] [EMAIL] 
       
 
@@ -29,6 +29,7 @@
       
          I_N_S_T_R_U_C_T_I_O_N_S_:_ 
         
+
 To apply the template(1) specify the years of copyright (separated by comma, not as a range), the
              legal names of the copyright holders, and the real names of the authors if different. Avoid
              adding text. 
@@ -36,6 +37,7 @@ To apply the template(1) specify the years of copyright (separated by comma, not
 
          R_A_T_I_O_N_A_L_E_:_ 
         
+
 This licence is apt for any kind of work (such as source code, fonts, documentation, graphics,
              sound etc.) and the preferred terms for work added to MirBSD. It has been drafted as
              universally usable equivalent of the "historic permission notice"(2) adapted to Europen law
@@ -55,6 +57,7 @@ This licence is apt for any kind of work (such as source code, fonts, documentat
          
         R_E_F_E_R_E_N_C_E_S_:_
         
+
 
             
 
@@ -112,5 +115,5 @@ This licence is apt for any kind of work (such as source code, fonts, documentat
          
 
       
-  
+    
       

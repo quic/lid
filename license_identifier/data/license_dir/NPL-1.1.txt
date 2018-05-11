@@ -1,7 +1,6 @@
 
       
       
-      
          Netscape Public LIcense version 1.1
 
       
@@ -21,6 +20,7 @@
 I.
           Effect. 
             
+
    These additional terms described in this Netscape Public License -- Amendments shall
                  apply to the Mozilla Communicator client code and to all Covered Code under this
                  License. 
@@ -38,6 +38,7 @@ II.
 III.
           Netscape and logo. 
             
+
    This License does not grant any rights to use the trademarks "Netscape", the "Netscape
                  N and horizon" logo or the "Netscape lighthouse" logo, "Netcenter", "Gecko",
                  "Java" or "JavaScript", "Smart Browsing" even if such marks are included in the
@@ -49,6 +50,7 @@ III.
 IV.
           Inability to Comply Due to Contractual Obligation. 
             
+
    Prior to licensing the Original Code under this License, Netscape has licensed third
                  party code for use in Netscape's Branded Code. To the extent that Netscape is
                  limited contractually from making such third party code available under this
@@ -68,6 +70,7 @@ V.
 V.1.
               In General. 
                 
+
       The obligations of Section 3 apply to Netscape, except to the extent specified
                      in this Amendment, Section V.2 and V.3. 
               
@@ -77,6 +80,7 @@ V.1.
 V.2.
               Other Products. 
                 
+
       Netscape may include Covered Code in products other than the Netscape's Branded
                      Code which are released by Netscape during the two (2) years following the
                      release date of the Original Code, without such additional products
@@ -90,6 +94,7 @@ V.2.
 V.3.
               Alternative Licensing. 
                 
+
       Netscape may license the Source Code of Netscape's Branded Code, including
                      Modifications incorporated therein, without such Netscape Branded Code
                      becoming subject to the terms of this License, and may license such
@@ -104,10 +109,12 @@ V.3.
 VI.
           Litigation. 
             
+
    Notwithstanding the limitations of Section 11 above, the provisions regarding
                  litigation in Section 11(a), (b) and (c) of the License shall apply to all
                  disputes relating to this License. 
             
+
    EXHIBIT A-Netscape Public License. 
           
           "The contents of this file are subject to the Netscape Public License Version 1.1 (the
@@ -120,12 +127,15 @@ VI.
          OF ANY KIND, either express or implied. See the License for the specific language
          governing rights and limitations under the License. 
          
+
 The Original Code is Mozilla Communicator client code, released March 31, 1998. 
          
+
 The Initial Developer of the Original Code is Netscape Communications Corporation.
               Portions created by Netscape are Copyright (C) 1998-1999 Netscape Communications
               Corporation. All Rights Reserved. 
          
+
 Contributor(s): ______________________________________. 
       
 
@@ -207,9 +217,11 @@ Contributor(s): ______________________________________.
                  the Original Code or any previous Modifications. When Covered Code is released as a series
                  of files, a Modification is: 
                 
+
       Any addition to or deletion from the contents of a file containing Original Code or
                      previous Modifications. 
                 
+
       Any new file that contains any part of the Original Code or previous Modifications. 
               
             
@@ -395,6 +407,7 @@ d.
 (a)
                   Third Party Claims 
                     
+
          If Contributor has knowledge that a license under a third party's intellectual
                          property rights is required to exercise the rights granted by such Contributor
                          under Sections 2.1 or 2.2, Contributor must include a text file with the
@@ -413,6 +426,7 @@ d.
 (b)
                   Contributor APIs 
                     
+
          If Contributor's Modifications include an application programming interface and
                          Contributor has knowledge of patent licenses which are reasonably necessary to
                          implement that API, Contributor must also include this information in the
@@ -424,6 +438,7 @@ d.
 (c)
                   Representations. 
                     
+
          Contributor represents that, except as disclosed pursuant to Section 3.4 (a) above,
                          Contributor believes that Contributor's Modifications are Contributor's
                          original creation(s) and/or Contributor has sufficient rights to grant the
@@ -499,6 +514,7 @@ d.
 5.
           Application of this License. 
             
+
    This License applies to code to which the Initial Developer has attached the notice in
                  Exhibit A and to related Covered Code. 
           
@@ -514,6 +530,7 @@ d.
 6.1.
               New Versions 
                 
+
       Netscape Communications Corporation ("Netscape") may publish revised and/or new
                      versions of the License from time to time. Each version will be given a
                      distinguishing version number. 
@@ -524,6 +541,7 @@ d.
 6.2.
               Effect of New Versions 
                 
+
       Once Covered Code has been published under a particular version of the License, You may
                      always continue to use it under the terms of that version. You may also choose to
                      use such Covered Code under the terms of any subsequent version of the License
@@ -536,6 +554,7 @@ d.
 6.3.
               Derivative Works 
                 
+
       If You create or use a modified version of this License (which you may only do in order
                      to apply it to code which is not already Covered Code governed by this License),
                      You must (a) rename Your license so that the phrases "Mozilla", "MOZILLAPL",
@@ -555,6 +574,7 @@ d.
 7.
           DISCLAIMER OF WARRANTY 
             
+
    COVERED CODE IS PROVIDED UNDER THIS LICENSE ON AN "AS IS" BASIS, WITHOUT WARRANTY OF ANY
                  KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, WITHOUT LIMITATION, WARRANTIES THAT THE
                  COVERED CODE IS FREE OF DEFECTS, MERCHANTABLE, FIT FOR A PARTICULAR PURPOSE OR
@@ -640,6 +660,7 @@ b.
 9.
           LIMITATION OF LIABILITY 
             
+
    UNDER NO CIRCUMSTANCES AND UNDER NO LEGAL THEORY, WHETHER TORT (INCLUDING NEGLIGENCE),
                  CONTRACT, OR OTHERWISE, SHALL YOU, THE INITIAL DEVELOPER, ANY OTHER CONTRIBUTOR, OR
                  ANY DISTRIBUTOR OF COVERED CODE, OR ANY SUPPLIER OF ANY OF SUCH PARTIES, BE LIABLE TO
@@ -658,6 +679,7 @@ b.
 10.
           U.S. government end users 
             
+
    The Covered Code is a "commercial item," as that term is defined in 48 C.F.R. 2.101 (Oct.
                  1995), consisting of "commercial computer software" and "commercial computer software
                  documentation," as such terms are used in 48 C.F.R. 12.212 (Sept. 1995). Consistent
@@ -671,6 +693,7 @@ b.
 11.
           Miscellaneous 
             
+
    This License represents the complete agreement concerning subject matter hereof. If any
                  provision of this License is held to be unenforceable, such provision shall be
                  reformed only to the extent necessary to make it enforceable. This License shall be
@@ -692,6 +715,7 @@ b.
 12.
           Responsibility for claims 
             
+
    As between Initial Developer and the Contributors, each party is responsible for claims and
                  damages arising, directly or indirectly, out of its utilization of rights under this
                  License and You agree to work with Initial Developer and Contributors to distribute
@@ -726,8 +750,10 @@ b.
 
          The Initial Developer of the Original Code is ________________________. 
         
+
 Portions created by ______________________ are Copyright (C) ______ 
         
+
 _______________________. All Rights Reserved. 
       
 
@@ -746,5 +772,5 @@ _______________________. All Rights Reserved.
          the Original Code Source Code for Your Modifications.
 
       
-  
+    
       

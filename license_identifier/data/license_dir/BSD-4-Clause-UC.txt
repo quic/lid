@@ -1,8 +1,6 @@
 
       
       
-      
-      
          BSD-4-Clause (University of California-Specific)
 
       
@@ -52,5 +50,4 @@
          ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     
-  
       

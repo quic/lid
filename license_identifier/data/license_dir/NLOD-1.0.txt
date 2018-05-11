@@ -1,8 +1,6 @@
 
       
       
-      
-      
          Norwegian Licence for Open Government Data (NLOD)
 
       
@@ -35,6 +33,7 @@
           «Database» shall mean a database or similar protected
              under Section 43 of the Norwegian Copyright Act.
             
+
    «Information» shall mean texts, images, recordings,
                  data sets or other works protected under
                  Section 1 of the Norwegian Copyright Act, or
@@ -45,20 +44,25 @@
                  and photographs), and which are distributed
                  under this licence.
             
+
    «Copy» shall mean reproduction in any form.
             
+
    «Licensee» and «you» shall mean natural or legal
                  persons using information under this licence.
             
+
    «Licensor» shall mean the natural or legal person
                  that makes information available under this
                  licence.
             
+
    «Distribute» shall mean any actions whereby
                  information is made available, including to
                  distribute, transfer, communicate, disperse,
                  show, perform, sell, lend and rent.
             
+
    «Use» shall mean one or more actions relevant to
                  copyright law requiring permission from the
                  owner of the copyright.
@@ -70,6 +74,7 @@
 2.
           Licence
             
+
    The licensee, subject to the limitations that
                  follow from this licence, may use the
                  information for any purpose and in all
@@ -110,6 +115,7 @@
 3.
           Exemptions
             
+
    The licence does not apply to and therefore does
                  not grant a right to use:
           
@@ -171,6 +177,7 @@
 4.
           Effects of breach of the licence
             
+
    The licence is subject to the licensee's compliance
                  with the terms and conditions of this licence.
                  In the event that the licensee commits a
@@ -191,6 +198,7 @@
 5.
           Attribution
             
+
    The licensee shall attribute the licensor as
                  specified by the licensor and include a
                  reference to this licence. To the extent
@@ -219,11 +227,13 @@
 6.
           Proper use
             
+
    The licensee shall not use the information in a
                  manner that appears misleading nor present the
                  information in a distorted or incorrect
                  manner.
             
+
    Neither the licensor's nor other contributors'
                  names or trademarks must be used to support,
                  recommend or market the licensee or any
@@ -235,6 +245,7 @@
 7.
           Disclaimer of liability
             
+
    The information is licensed «as is». The
                  information may contain errors and omissions.
                  The licensor provides no warranties, including
@@ -256,6 +267,7 @@
 8.
           Guarantees regarding data quality and accessibility
             
+
    This licence does not prevent the licensor from
                  issuing supplementary statements regarding
                  expected or intended data quality and
@@ -275,6 +287,7 @@
 9.
           Licence compatibility
             
+
    If the licensee is to distribute an adapted or
                  combined work based on information covered by
                  this licence and some other work licensed
@@ -320,6 +333,7 @@
 10.
           New versions of the licence
             
+
    The licensee may choose to use the information
                  covered by this licence under any new versions
                  of the Norwegian licence for Open Government
@@ -348,5 +362,5 @@
          of the country where the intellectual property rights are
          sought enforced.
 
-  
+    
       

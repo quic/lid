@@ -1,8 +1,6 @@
 
       
       
-  
-      
          Bootloader Exception
 
 
@@ -16,5 +14,5 @@ for example, they cover modification of the files, and distribution when
 not linked into a 
 combined executable.)
 
-  
+    
       

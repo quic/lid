@@ -1,7 +1,6 @@
 
       
       
-      
          Sybase Open Watcom Public License version 1.0
 
       
@@ -460,6 +459,7 @@
 
          "Portions Copyright (c) 1983-2002 Sybase, Inc. All Rights Reserved.
         
+
 This file contains Original Code and/or Modifications of Original Code as defined in and that are
              subject to the Sybase Open Watcom Public License version 1.0 (the 'License'). You may not use
              this file except in compliance with the License. BY USING THIS FILE YOU AGREE TO ALL TERMS AND
@@ -473,5 +473,5 @@ This file contains Original Code and/or Modifications of Original Code as define
          language governing rights and limitations under the License."
 
       
-  
+    
       

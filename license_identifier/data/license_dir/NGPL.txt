@@ -1,7 +1,6 @@
 
       
       
-      
          NETHACK GENERAL PUBLIC LICENSE
 
       
@@ -124,5 +123,4 @@ b)
       
 
     
-  
       

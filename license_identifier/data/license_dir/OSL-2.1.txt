@@ -1,9 +1,6 @@
 
       
       
-      
-      
-      
          The Open Software Licensev. 2.1
 
       
@@ -12,8 +9,10 @@
          "Original Work") whose owner (the "Licensor") has placed the following notice
          immediately following the copyright notice for the Original Work:
 
+      
       Licensed under the Open Software License version 2.1
 
+      
       
 
 
@@ -217,5 +216,4 @@ e)
          without the express written permission of its copyright owner.
 
     
-  
       

@@ -1,8 +1,6 @@
 
       
       
-      
-      
          Licence Libre du Québec – Permissive (LiLiQ-P)
 
          Version 1.1
@@ -15,6 +13,7 @@
 1.
           Préambule
             
+
    Cette licence s'applique à tout logiciel distribué
                  dont le titulaire du droit d'auteur précise
                  qu'il est sujet aux termes de la Licence Libre
@@ -27,6 +26,7 @@
 2.
           Définitions
             
+
    Dans la présente licence, à moins que le contexte
                  n'indique un sens différent, on entend par:
           
@@ -76,6 +76,7 @@
 3.
           Licence de droit d'auteur
             
+
    Sous réserve des termes de la licence, le concédant
                  accorde au licencié une licence non exclusive
                  et libre de redevances lui permettant
@@ -104,6 +105,7 @@
           
 
             
+
    
             Cette licence est accordée sans limite territoriale et
              sans limite de temps.
@@ -124,6 +126,7 @@
 4.
           Distribution
             
+
    Le licencié peut distribuer des copies du logiciel,
                  d'un logiciel modifié ou dérivé, sous réserve
                  de respecter les conditions suivantes :
@@ -157,11 +160,13 @@
             
 
                
+
    
                
 5.
                Contributions
             
+
    Sous réserve d'une entente distincte, toute
                  contribution soumise par un contributeur au
                  concédant pour inclusion dans le logiciel sera
@@ -174,6 +179,7 @@
 6.
           Marques de commerce
             
+
    La licence n'accorde aucune permission particulière
                  qui permettrait d'utiliser les marques de
                  commerce du concédant, autre que celle requise
@@ -186,6 +192,7 @@
 7.
           Garanties
             
+
    Sauf mention contraire, le concédant distribue le
                  logiciel sans aucune garantie, aux risques et
                  périls de l'acquéreur de la copie du logiciel,
@@ -202,6 +209,7 @@
 8.
           Responsabilité
             
+
    Le licencié est responsable de tout préjudice
                  résultant de l'exercice des droits accordés
                  par la licence.
@@ -216,6 +224,7 @@
 9.
           Résiliation
             
+
    La présente licence est automatiquement résiliée
                  dès que les droits qui y sont accordés ne sont
                  pas exercés conformément aux termes qui y sont
@@ -236,6 +245,7 @@
 10.
           Version de la licence
             
+
    Le Centre de services partagés du Québec, ses
                  ayants cause ou toute personne qu'il désigne,
                  peuvent diffuser des versions révisées ou
@@ -256,6 +266,7 @@
 11.
           Divers
       
+
    Dans la mesure où le concédant est un ministère, un organisme
          public ou une personne morale de droit public, créés en vertu
          d'une loi de l'Assemblée nationale du Québec, la licence est
@@ -272,5 +283,5 @@
 
         
 
-   
+    
       

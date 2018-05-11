@@ -1,11 +1,9 @@
 
       
       
-      
-      
-      
          BitTorrent Open Source License 
         
+
 Version 1.1 
       
 
@@ -99,6 +97,7 @@ Version 1.1
          relating to publishing the Source Code) for those portions of your Derivative Works that consist of
          the Licensed Product, including the files containing 
         
+
 Modifications. 
       
 
@@ -546,6 +545,7 @@ d.
 
       Modifications: Any additions to or deletions from the substance or structure of (i) a file containing Licensed 
         
+
    Product, or (ii) any new file that contains any part of Licensed Product. (See Section 2) 
       
 
@@ -567,20 +567,22 @@ d.
          Product or any hereto. Contributors to any Modifications may add their own copyright notices to
          identify their own contributions.
 
-         License: 
-        
-The contents of this file are subject to the BitTorrent Open Source License Version 1.0 (the
+         License:
+
+         
+           The contents of this file are subject to the BitTorrent Open Source License Version 
+1.1 (the
              License). You may not copy or use this file, in either source code or executable form, except
              in compliance with the License. You may obtain a copy of the License at
-             http://www.bittorrent.com/license/. 
-      
+             http://www.bittorrent.com/license/.
 
          Software distributed under the License is distributed on an AS IS basis, WITHOUT WARRANTY OF ANY KIND,
          either express or implied. See the License for the specific language governing rights and limitations
          under the License.
 
+         
          BitTorrent, Inc.
 
       
-  
+    
       

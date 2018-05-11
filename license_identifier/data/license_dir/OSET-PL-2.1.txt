@@ -1,7 +1,6 @@
 
       
       
-      
          OSET Public License
 
       
@@ -200,6 +199,7 @@ b. any new file in Source Code Form that contains
 
 		                
 2.1 Grants
+
       
 			Each Contributor hereby grants You a world-wide,
 		    royalty-free, non-exclusive license:
@@ -228,6 +228,7 @@ b. under Patent Claims of such Contributor to
                   
 2.2
           Effective Date
+
       
             The licenses granted in Section 2.1 with respect to
                  any Contribution become effective for each
@@ -239,6 +240,7 @@ b. under Patent Claims of such Contributor to
                   
 2.3
           Limitations on Grant Scope
+
       
           The licenses granted in this Section 2 are the only
              rights granted under this License.  No additional
@@ -273,6 +275,7 @@ c. under Patent Claims infringed by Covered
 
 		                
 2.4 Subsequent Licenses
+
       
             No Contributor makes additional grants as a result of 
             Your choice to distribute the Covered Software under a subsequent 
@@ -282,6 +285,7 @@ c. under Patent Claims infringed by Covered
 
 		                
 2.5 Representation
+
       
             Each Contributor represents that the Contributor believes its 
             Contributions are its original creation(s) or it has sufficient 
@@ -291,6 +295,7 @@ c. under Patent Claims infringed by Covered
 	                 
 2.6
 	   Fair Use 
+
       
 		  This License is not intended to limit any rights You have under 
             applicable copyright doctrines of fair use, fair dealing, or other equivalents.  
@@ -299,6 +304,7 @@ c. under Patent Claims infringed by Covered
 	                 
 2.7
 	   Conditions 
+
       
 	  Sections 3.1, 3.2, 3.3, and 3.4 are conditions of the licenses granted in Section 2.1.  
         
@@ -313,6 +319,7 @@ c. under Patent Claims infringed by Covered
 
 		                
 3.1 Distribution of Source Form 
+
       
 			All distribution of Covered Software in Source Code Form,
 			including any Modifications that You create or to which You contribute,
@@ -327,6 +334,7 @@ c. under Patent Claims infringed by Covered
 
 		                
 3.2  Distribution of Executable Form 
+
       
 			If You distribute Covered Software in Executable Form then: 
       
@@ -355,6 +363,7 @@ b.You may distribute such Executable Form under
 
 		                
 3.3 Distribution of a Larger Work
+
       
 			You may create and distribute a Larger Work under terms of Your choice,
 			provided that You also comply with the requirements of this License
@@ -370,6 +379,7 @@ b.You may distribute such Executable Form under
 
                   
 3.4 Notices
+
       
 		    You may not remove or alter the substance of any license notices
 		    (including copyright notices, patent notices, disclaimers of warranty,
@@ -423,6 +433,7 @@ b.You may distribute such Executable Form under
             
 4.
           Inability to Comply Due to Statute or Regulation
+
    
             If it is impossible for You to comply with any of
                  the terms of this License with respect to some
@@ -447,6 +458,7 @@ b.You may distribute such Executable Form under
 
 		                
 5.1 Failure to Comply
+
       
 			  The rights granted under this License will terminate automatically
 			  if You fail to comply with any of its terms. However, if You become
@@ -466,6 +478,7 @@ b.You may distribute such Executable Form under
 
 		                
 5.2 Patent Infringement Claims
+
       
 			  If You initiate litigation against any entity by asserting
 			  a patent infringement claim (excluding declaratory judgment actions,
@@ -479,6 +492,7 @@ cross-claims) alleging that a Contributor Version
 
 		                
 5.3 Additional Compliance Terms
+
       
 			  Notwithstanding the foregoing in this Section 5,
 			  for purposes of this Section, if You breach
@@ -496,6 +510,7 @@ cross-claims) alleging that a Contributor Version
 
 		                
 5.4 Contributor Remedies
+
       
 			  If You fail to comply with the terms of this License
 			  and do not thereafter become compliant in accordance
@@ -512,6 +527,7 @@ cross-claims) alleging that a Contributor Version
 
 		                
 5.5 End User License Agreements
+
       
 			In the event of termination under this Section 5,
 			all end user license agreements (excluding distributors and resellers),
@@ -523,6 +539,7 @@ cross-claims) alleging that a Contributor Version
 
 		          
 6. Disclaimer of Warranty 
+
    
 			Covered Software is provided under this License on
                  an "as is" basis, without warranty of any
@@ -543,6 +560,7 @@ cross-claims) alleging that a Contributor Version
 
 		          
 7. Limitation of Liability 
+
    
 			Under no circumstances and under no legal theory,
                  whether tort (including negligence), contract,
@@ -569,6 +587,7 @@ cross-claims) alleging that a Contributor Version
 
 		          
 8. Litigation 
+
    
 			Any litigation relating to this License may be
                  brought only in the courts of a jurisdiction
@@ -588,6 +607,7 @@ cross-claims) alleging that a Contributor Version
 
 		                
 9.1 Commercial Item
+
       
 			The Covered Software is a "commercial item," as that term is defined
 			in 48 C.F.R. 2.101 (Oct. 1995), consisting of "commercial computer software"
@@ -601,6 +621,7 @@ cross-claims) alleging that a Contributor Version
 
 		                
 9.2 No Sovereign Immunity
+
       
 			The U.S. federal government and states that use
 			or distribute Covered Software hereby waive
@@ -647,6 +668,7 @@ cross-claims) alleging that a Contributor Version
 
 		                
 9.4 Supremacy
+
       
 			  This Section 9 is in lieu of, and supersedes,
 			  any other Federal Acquisition Regulation,
@@ -659,6 +681,7 @@ cross-claims) alleging that a Contributor Version
 
 		          
 10. Miscellaneous 
+
    
 			This License represents the complete agreement
                  concerning the subject matter hereof. If any
@@ -679,6 +702,7 @@ cross-claims) alleging that a Contributor Version
 
 		                
 11.1 New Versions
+
       
 			The Open Source Election Technology Foundation ("OSET")
 			(formerly known as the Open Source Digital Voting Foundation)
@@ -690,6 +714,7 @@ cross-claims) alleging that a Contributor Version
 
 		                
 11.2 Effects of New Versions
+
       
 			You may distribute the Covered Software under the terms of the version
 			of the License under which You originally received the Covered Software,
@@ -699,6 +724,7 @@ cross-claims) alleging that a Contributor Version
 
 		                
 11.3 Modified Versions
+
       
 			If You create software not governed by this License,
 			and You want to create a new license for such software,
@@ -711,6 +737,7 @@ cross-claims) alleging that a Contributor Version
 		                
 11.4 Distributing Source Code Form That is Incompatible
 			With Secondary Licenses
+
       
 			If You choose to distribute Source Code Form
 			that is Incompatible With Secondary Licenses under the terms
@@ -742,5 +769,5 @@ cross-claims) alleging that a Contributor Version
             	      as defined by the OSET Public License, v.2.1.
 
 	     
-  
+    
       

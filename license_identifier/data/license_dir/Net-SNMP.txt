@@ -1,8 +1,5 @@
 
       
-      
-      
-    
       ---- Part 1: CMU/UCD copyright notice: (BSD like) -----
 
     
@@ -441,5 +438,4 @@
          EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     
-  
       

@@ -1,7 +1,5 @@
 
       
-      
-      
       As a special exception, if you create a document which uses this
          font, and embed this font or unaltered portions of this font
          into the document, this font does not by itself cause the
@@ -13,5 +11,5 @@
          obligated to do so. If you do not wish to do so, delete this
          exception statement from your version.
 
-  
+    
       

@@ -91,12 +91,20 @@ def get_license_text_and_header(license_id):
         return (None, None)
 
     text_location = "http://spdx.org/rdf/terms#licenseText"
-    text = get_sub_objs(text_location, graph)
+    text = remove_extraneous_text(get_sub_objs(text_location, graph))
     header_location = "http://spdx.org/rdf/terms#standardLicenseHeader"
     header = get_sub_objs(header_location, graph)
 
     return text, header
 
+def remove_extraneous_text(text):
+    # per condition 12 https://spdx.org/spdx-license-list/matching-guidelines
+    # this is not indicated in markdown, so just need to find the 
+    # text that indicates the end of the license and remove the rest
+    end_index = text.find("END OF TERMS AND CONDITIONS")
+    if end_index != -1:
+        text = text[0:end_index]
+    return text    
 
 def get_exception_text(exception_id):
     graph = rdflib.Graph()

@@ -1,6 +1,5 @@
 
       
-      
       Linking this library statically or dynamically with other modules
          is making a combined work based on this library. Thus, the
          terms and conditions of the GNU General Public License cover
@@ -19,5 +18,5 @@
          are not obligated to do so. If you do not wish to do so,
          delete this exception statement from your version.
 
-  
+    
       

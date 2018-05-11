@@ -1,8 +1,6 @@
 
       
       
-      
-      
          CNRI OPEN SOURCE LICENSE AGREEMENT
 
       
@@ -90,5 +88,5 @@
     
       ACCEPT
 
-  
+    
       

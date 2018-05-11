@@ -1,7 +1,5 @@
 
       
-      
-    
       The authors hereby grant permission to use, copy, modify, distribute, and license this software and its
          documentation for any purpose, provided that existing copyright notices are retained in all copies and
          that this notice is included verbatim in any distributions. No written agreement, license, or royalty
@@ -30,5 +28,4 @@
          AND THAT YOU AGREE TO BE BOUND BY ITS TERMS AND CONDITIONS.
 
     
-  
       

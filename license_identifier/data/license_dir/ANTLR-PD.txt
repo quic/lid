@@ -1,8 +1,6 @@
 
       
       
-      
-      
          ANTLR 2 License
 
       
@@ -20,5 +18,4 @@
          enhancing this system and expect to make other tools available as they are completed.
 
     
-  
       

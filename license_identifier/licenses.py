@@ -1,7 +1,7 @@
-# Copyright (c) 2017, The Linux Foundation. All rights reserved.
+# Copyright (c) 2018, The Linux Foundation. All rights reserved.
 # SPDX-License-Identifier: BSD-3-Clause
-spdx_version = '3.0 28 December 2017'
-date_updated_license_dir = 'Mon Feb 12 14:17:06 2018'
+spdx_version = '3.1 2018-04-14'
+date_updated_license_dir = 'Fri May 11 10:26:25 2018'
 license_ids = [   u'0BSD',
     u'AAL',
     u'ADSL',
@@ -11,6 +11,8 @@ license_ids = [   u'0BSD',
     u'AFL-2.1',
     u'AFL-3.0',
     u'AGPL-1.0',
+    u'AGPL-1.0-only',
+    u'AGPL-1.0-or-later',
     u'AGPL-3.0',
     u'AGPL-3.0-only',
     u'AGPL-3.0-or-later',
@@ -214,7 +216,9 @@ license_ids = [   u'0BSD',
     u'LiLiQ-R-1.1',
     u'LiLiQ-Rplus-1.1',
     u'Libpng',
+    u'Linux-OpenIB',
     u'MIT',
+    u'MIT-0',
     u'MIT-CMU',
     u'MIT-advertising',
     u'MIT-enna',

@@ -1,7 +1,5 @@
 
       
-	  
-      
       
          STANDARD ML OF NEW JERSEY COPYRIGHT NOTICE, LICENSE AND DISCLAIMER.
 
@@ -9,6 +7,7 @@
       
          Copyright (c) 2001-2011 by The Fellowship of SML/NJ 
         
+
 Copyright (c) 1989-2001 by Lucent Technologies 
       
 
@@ -28,5 +27,4 @@ Copyright (c) 1989-2001 by Lucent Technologies
          the use or performance of this software.
 
     
-  
       

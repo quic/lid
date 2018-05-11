@@ -1,7 +1,6 @@
 
       
       
-      
          The SFL License Agreement
 
       
@@ -91,6 +90,5 @@ The Product is provided as free software, in the hope that it will be useful. It
              the quality and performance of the Product is with you. Should the Product prove defective, the
              full cost of repair, servicing, or correction lies with you.
 
-      
     
       

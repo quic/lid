@@ -1,7 +1,6 @@
 
       
       
-      
          ODC Open Database License (ODbL)
 
       
@@ -779,5 +778,4 @@ c.
         
 
     
-  
       

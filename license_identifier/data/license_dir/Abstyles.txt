@@ -1,11 +1,12 @@
 
       
       
-      
          This is APREAMBL.TEX, version 1.10e, written by Hans-Hermann Bode 
         
+
 (HHBODE@DOSUNI1.BITNET), for the BibTeX `adaptable' family, version 1.10. 
         
+
 See the file APREAMBL.DOC for a detailed documentation. 
       
 
@@ -23,5 +24,4 @@ See the file APREAMBL.DOC for a detailed documentation.
          permission notice identical to this one.
 
     
-  
       

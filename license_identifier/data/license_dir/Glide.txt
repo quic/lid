@@ -1,7 +1,6 @@
 
       
       
-      
          3DFX GLIDE Source Code General Public License
 
       
@@ -363,5 +362,4 @@
             
 
     
-  
       

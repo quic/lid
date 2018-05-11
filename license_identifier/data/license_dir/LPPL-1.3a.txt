@@ -1,11 +1,9 @@
 
       
       
-      
-      
-      
          The LaTeX Project Public License 
         
+
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- 
       
 
@@ -21,6 +19,7 @@
 
       PREAMBLE 
         
+
 ======== 
       
 
@@ -46,6 +45,7 @@
 
       DEFINITIONS 
         
+
 =========== 
       
 
@@ -81,6 +81,7 @@
 
       CONDITIONS ON DISTRIBUTION AND MODIFICATION 
         
+
 =========================================== 
       
 
@@ -242,6 +243,7 @@ b.
 
       NO WARRANTY 
         
+
 =========== 
       
 
@@ -263,6 +265,7 @@ b.
 
       MAINTENANCE OF THE WORK 
         
+
 ======================= 
       
 
@@ -354,6 +357,7 @@ b.
 
       WHETHER AND HOW TO DISTRIBUTE WORKS UNDER THIS LICENSE 
         
+
 ====================================================== 
       
 
@@ -363,6 +367,7 @@ b.
 
       Choosing This License or Another License 
         
+
 ---------------------------------------- 
       
 
@@ -380,6 +385,7 @@ b.
 
       A Recommendation on Modification Without Distribution 
         
+
 ----------------------------------------------------- 
       
 
@@ -394,6 +400,7 @@ b.
 
       How to Use This License 
         
+
 ----------------------- 
       
 
@@ -404,39 +411,65 @@ b.
 
       Here is an example of such a notice and statement:
 
-      %% pig.dtx 
+      
+      %% 
+pig.dtx
         
-%% Copyright 2003 M. Y. Name 
+
+%% Copyright 
+2003 M. Y. Name
         
+
+%
+        
+
+% This work may be distributed and/or modified under the
+        
+
+% conditions of the LaTeX Project Public License, either version 1.3
+        
+
+% of this license or (at your option) any later version.
+        
+
+% The latest version of this license is in
+        
+
+% http://www.latex-project.org/lppl.txt
+        
+
+% and version 1.3 or later is part of all distributions of LaTeX
+        
+
+% version 2003/12/01 or later.
+        
+
+%
+        
+
+% This work has the LPPL maintenance status "
+maintained".
+        
+
+%
+        
+
 % 
+This Current Maintainer of this work is 
+M. Y. Name.
         
-% This work may be distributed and/or modified under the 
+
+%
         
-% conditions of the LaTeX Project Public License, either version 1.3 
+
+% This work consists of the 
+files pig.dtx and pig.ins
         
-% of this license or (at your option) any later version. 
-        
-% The latest version of this license is in 
-        
-% http://www.latex-project.org/lppl.txt 
-        
-% and version 1.3 or later is part of all distributions of LaTeX 
-        
-% version 2003/12/01 or later. 
-        
-% 
-        
-% This work has the LPPL maintenance status "maintained". 
-        
-% 
-        
-% This Current Maintainer of this work is M. Y. Name. 
-        
-% 
-        
-% This work consists of the files pig.dtx and pig.ins % and the derived file pig.sty. 
+
+% and the derived file pig.sty.
       
 
+      
       Given such a notice and statement in a file, the conditions given in this license document would apply,
          with the `Work' referring to the three files `pig.dtx', `pig.ins', and `pig.sty'
          (the last being generated from `pig.dtx' using `pig.ins'), the `Base Interpreter'
@@ -450,6 +483,7 @@ b.
 
       Important Recommendations 
         
+
 ------------------------- 
       
 
@@ -466,5 +500,5 @@ b.
          what is considered by you to comprise the Work and, in such a case, the licensee would be entitled to
          make reasonable conjectures as to which files comprise the Work.
 
-  
+    
       

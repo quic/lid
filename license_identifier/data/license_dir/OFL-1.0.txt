@@ -1,8 +1,6 @@
 
       
       
-      
-      
          SIL OPEN FONT LICENSE
 
          Version 1.0 - 22 November 2005
@@ -124,5 +122,4 @@
          USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM OTHER DEALINGS IN THE FONT SOFTWARE.
 
     
-  
       

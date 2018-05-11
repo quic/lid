@@ -1,7 +1,6 @@
 
       
       
-      
          Nokia Open Source License (NOKOS License)
 
          Version 1.0a
@@ -117,6 +116,7 @@ b)
 2.1
               Nokia Grant. 
                 
+
    Subject to the terms of this License, Nokia hereby grants You a world-wide,
                      royalty-free, non-exclusive license, subject to third party intellectual property
                      claims: 
@@ -158,6 +158,7 @@ d)
 2.2
               Contributor Grant. 
                 
+
    Subject to the terms of this License and subject to third party intellectual property
                      claims, each Contributor hereby grants You a world-wide, royalty-free,
                      non-exclusive license 
@@ -212,6 +213,7 @@ d)
 3.1
               Application of License. 
                 
+
    The Modifications which You create or to which You contribute are governed by the terms
                      of this License, including without limitation Section 2.2. The Source Code version
                      of Covered Software may be distributed only under the terms of this License or a
@@ -228,6 +230,7 @@ d)
 3.2
               Availability of Source Code. 
                 
+
    Any Modification which You create or to which You contribute must be made available in
                      Source Code form under the terms of this License either on the same media as an
                      Executable version or via an accepted Electronic Distribution Mechanism to anyone
@@ -245,6 +248,7 @@ d)
 3.3
               Description of Modifications. 
                 
+
    You must cause all Covered Software to which You contribute to contain a file
                      documenting the changes You made to create that Covered Software and the date of
                      any change. You must include a prominent statement that the Modification is
@@ -298,6 +302,7 @@ d)
 3.5
               Required Notices. 
                 
+
    You must duplicate the notice in Exhibit A in each file of the Source Code. If it is
                      not possible to put such notice in a particular Source Code file due to its
                      structure, then You must include such notice in a location (such as a relevant
@@ -320,6 +325,7 @@ d)
 3.6
               Distribution of Executable Versions. 
                 
+
    You may distribute Covered Software in Executable form only if the requirements of
                      Section 3.1-3.5 have been met for that Covered Software, and if You include a
                      notice stating that the Source Code version of the Covered Software is available
@@ -344,6 +350,7 @@ d)
 3.7
               Larger Works. 
                 
+
    You may create a Larger Work by combining Covered Software with other software not
                      governed by the terms of this License and distribute the Larger Work as a single
                      product. In such a case, You must make sure the requirements of this License are
@@ -355,6 +362,7 @@ d)
 4.
           INABILITY TO COMPLY DUE TO STATUTE OR REGULATION. 
             
+
 If it is impossible for You to comply with any of the terms of this License with respect to
                  some or all of the Covered Software due to statute, judicial order, or regulation then
                  You must: (a) comply with the terms of this License to the maximum extent possible;
@@ -369,6 +377,7 @@ If it is impossible for You to comply with any of the terms of this License with
 5.
           APPLICATION OF THIS LICENSE. 
             
+
 This License applies to code to which Nokia has attached the notice in Exhibit A and to
                  related Covered Software. 
             
@@ -381,6 +390,7 @@ This License applies to code to which Nokia has attached the notice in Exhibit A
 6.1
               New Versions. 
                 
+
    Nokia may publish revised and/or new versions of the License from time to time. Each
                      version will be given a distinguishing version number. 
               
@@ -390,6 +400,7 @@ This License applies to code to which Nokia has attached the notice in Exhibit A
 6.2
               Effect of New Versions. 
                 
+
    Once Covered Software has been published under a particular version of the License, You
                      may always continue to use it under the terms of that version. You may also choose
                      to use such Covered Software under the terms of any subsequent version of the
@@ -402,6 +413,7 @@ This License applies to code to which Nokia has attached the notice in Exhibit A
 7.
           DISCLAIMER OF WARRANTY. 
             
+
 COVERED SOFTWARE IS PROVIDED UNDER THIS LICENSE ON AN "AS IS" BASIS, WITHOUT
                  WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, WITHOUT LIMITATION,
                  WARRANTIES THAT THE COVERED SOFTWARE IS FREE OF DEFECTS, MERCHANTABLE, FIT FOR A
@@ -483,6 +495,7 @@ b)
 9.
           LIMITATION OF LIABILITY. 
             
+
 UNDER NO CIRCUMSTANCES AND UNDER NO LEGAL THEORY, WHETHER TORT (INCLUDING NEGLIGENCE),
                  CONTRACT, OR OTHERWISE, SHALL YOU, NOKIA, ANY OTHER CONTRIBUTOR, OR ANY DISTRIBUTOR OF
                  COVERED SOFTWARE, OR ANY SUPPLIER OF ANY OF SUCH PARTIES, BE LIABLE TO ANY PERSON FOR
@@ -501,6 +514,7 @@ UNDER NO CIRCUMSTANCES AND UNDER NO LEGAL THEORY, WHETHER TORT (INCLUDING NEGLIG
 10.
           MISCELLANEOUS. 
             
+
 This License represents the complete agreement concerning subject matter hereof. All rights
                  in the Covered Software not expressly granted under this License are reserved. Nothing
                  in this License shall grant You any rights to use any of the trademarks of Nokia or
@@ -517,6 +531,7 @@ This License represents the complete agreement concerning subject matter hereof.
             
 11.
           RESPONSIBILITY FOR CLAIMS.
+
 
              As between Nokia and the Contributors, each party is responsible for claims and damages arising, directly
              or indirectly, out of its utilization of rights under this License and You agree to work with Nokia
@@ -541,5 +556,5 @@ This License represents the complete agreement concerning subject matter hereof.
          Contributor(s): ______________________________________.
 
       
-  
+    
       

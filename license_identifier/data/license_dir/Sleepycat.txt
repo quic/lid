@@ -1,7 +1,6 @@
 
       
       
-      
          The Sleepycat License Copyright (c) 1990-1999 Sleepycat Software. All rights reserved.
          
 
@@ -127,5 +126,4 @@
          ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     
-  
       

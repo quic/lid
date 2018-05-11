@@ -1,7 +1,6 @@
 
       
       
-      
          Eiffel Forum License, version 2
 
       
@@ -41,5 +40,4 @@
          PACKAGE.
 
     
-  
       

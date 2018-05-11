@@ -1,10 +1,9 @@
 
       
       
-      
-      
          The Academic Free License 
         
+
 v. 2.0 
       
 
@@ -14,8 +13,10 @@ v. 2.0
          Work") whose owner (the "Licensor") has placed the following notice immediately following the
          copyright notice for the Original Work:
 
+         
          Licensed under the Academic Free License version 2.0
 
+         
       
       
 
@@ -206,9 +207,10 @@ e)
 
       This license is Copyright (C) 2003 Lawrence E. Rosen. All rights reserved. 
         
+
 Permission is hereby granted to copy and distribute this license without modification. This license
              may not be modified without the express written permission of its copyright owner. 
       
 
-  
+    
       

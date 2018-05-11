@@ -1,7 +1,6 @@
 
       
       
-      
          NAUMEN Public License
 
       
@@ -63,5 +62,4 @@
          in the accompanying credits file.
 
     
-  
       

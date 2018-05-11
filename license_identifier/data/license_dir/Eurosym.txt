@@ -1,14 +1,15 @@
 
       
       
-      
          Copyright (c) 1999-2002 Henrik Theiling
 
       
       
          
+
 Licence Version 2
       
+
 
       
     
@@ -56,5 +57,4 @@ Licence Version 2
       This licence is governed by the Laws of Germany. Disputes shall be settled by Saarbruecken City Court.
 
     
-  
       

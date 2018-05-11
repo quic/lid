@@ -1,8 +1,6 @@
 
       
       
-      
-      
          The Net Boolean Public License
 
       
@@ -171,5 +169,5 @@ d)
          The End
 
       
-  
+    
       

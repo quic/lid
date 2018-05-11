@@ -1,8 +1,6 @@
 
       
       
-      
-      
          Copyright 
         
 2002 (C) The Codehaus. All Rights Reserved. 
@@ -82,5 +80,4 @@ THE CODEHAUS OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
       
 
     
-  
       

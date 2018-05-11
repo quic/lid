@@ -1,7 +1,6 @@
 
       
       
-      
          Yahoo! Public License, Version 1.0 (YPL)
 
       
@@ -83,6 +82,7 @@
 2.
           Support 
             
+
    Yahoo! has no obligation to provide technical support or updates to You. Nothing in this
                  Agreement requires Yahoo! to enter into any license with You for any other edition of
                  the Software. 
@@ -124,6 +124,7 @@
 4.
           Disclaimer of Warranties 
             
+
    THE SOFTWARE IS PROVIDED "AS IS" AND WITHOUT WARRANTY OF ANY KIND. YAHOO! MAKES NO
                  WARRANTIES, WHETHER EXPRESS, IMPLIED, OR STATUTORY REGARDING OR RELATING TO THE
                  SOFTWARE. SPECIFICALLY, YAHOO! DOES NOT WARRANT THAT THE SOFTWARE WILL BE ERROR FREE
@@ -139,6 +140,7 @@
 5.
           Limitation of Liability 
             
+
    IN NO EVENT WILL YAHOO! BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
                  OR CONSEQUENTIAL DAMAGES OF ANY KIND (INCLUDING WITHOUT LIMITATION LOSS OF PROFITS,
                  LOSS OF USE, BUSINESS INTERRUPTION, LOSS OF DATA, COST OF COVER) IN CONNECTION WITH OR
@@ -188,6 +190,7 @@
 7.
           Miscellaneous
       
+
    This Agreement contains the entire agreement of the parties with respect to the subject matter of this
          Agreement and supersedes all previous communications, representations, understandings and agreements,
          either oral or written, between the parties with respect to said subject matter. The relationship of
@@ -215,5 +218,4 @@
       
 
     
-  
       

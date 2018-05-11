@@ -1,8 +1,6 @@
 
       
       
-      
-      
          Open Software License v. 3.0 (OSL-3.0)
 
       
@@ -11,8 +9,10 @@
          "Original Work") whose owner (the "Licensor") has placed the following licensing
          notice adjacent to the copyright notice for the Original Work:
 
+      
       Licensed under the Open Software License version 3.0
 
+      
       
 
 
@@ -225,5 +225,4 @@ e)
         
 
     
-  
       

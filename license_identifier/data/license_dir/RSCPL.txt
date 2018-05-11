@@ -1,9 +1,9 @@
 
       
       
-      
          Ricoh Source Code Public License 
         
+
 Version 1.0 
       
 
@@ -312,6 +312,7 @@ Version 1.0
 4.
           Inability to Comply Due to Statute or Regulation. 
             
+
    If it is impossible for You to comply with any of theterms of this License with respect to
                  some or all of the Governed Code due to statute or regulation then You must: (a)
                  comply with the terms of this License to the maximum extent possible; and (b) describe
@@ -379,6 +380,7 @@ Version 1.0
 7.
           Disclaimer of Warranty. 
             
+
    GOVERNED CODE IS PROVIDED UNDER THIS LICENSE ON AN "AS IS" BASIS, WITHOUT WARRANTY OF ANY
                  KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, WITHOUT LIMITATION, WARRANTIES THAT THE
                  GOVERNED CODE IS FREE OF DEFECTS, MERCHANTABLE, FIT FOR A PARTICULAR PURPOSE OR
@@ -464,6 +466,7 @@ Version 1.0
 9.
           Limitation of Liability. 
             
+
    UNDER NO CIRCUMSTANCES AND UNDER NO LEGAL THEORY, WHETHER TORT (INCLUDING NEGLIGENCE),
                  CONTRACT, OR OTHERWISE, SHALL RSV, ANY CONTRIBUTOR, OR ANY DISTRIBUTOR OF GOVERNED
                  CODE, OR ANY SUPPLIER OF ANY OF SUCH PARTIES, BE LIABLE TO YOU OR ANY OTHER PERSON FOR
@@ -489,6 +492,7 @@ Version 1.0
 10.
           U.S. Government End Users. 
             
+
    The Governed Code is a "commercial item," as that term is defined in 48 C.F.R. 2.101 (Oct.
                  1995), consisting of "commercial computer software" and "commercial computer software
                  documentation," as such terms are used in 48 C.F.R. 12.212 (Sept. 1995). Consistent
@@ -502,6 +506,7 @@ Version 1.0
 11.
           Miscellaneous. 
             
+
    This License represents the complete agreement concerning subject matter hereof. If any
                  provision of this License is held to be unenforceable, such provision shall be
                  reformed only to the extent necessary to make it enforceable. This License shall be
@@ -549,5 +554,5 @@ Version 1.0
          Contributor(s): ______________________________________."
 
       
-  
+    
       

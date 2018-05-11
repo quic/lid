@@ -1,7 +1,6 @@
 
       
       
-      
          ACPI - Software License Agreement
 
       
@@ -158,5 +157,4 @@
         
 
     
-  
       

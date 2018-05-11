@@ -82,6 +82,7 @@
 2.
           Support
             
+
    VMware has no obligation to provide technical support or updates to You. Nothing in this
             Agreement requires VMware to enter into any license with You for any other edition of
             the Software.
@@ -123,6 +124,7 @@
 4.
           Disclaimer of Warranties
             
+
    THE SOFTWARE IS PROVIDED "AS IS" AND WITHOUT WARRANTY OF ANY KIND. VMWARE MAKES NO
             WARRANTIES, WHETHER EXPRESS, IMPLIED, OR STATUTORY REGARDING OR RELATING TO THE
             SOFTWARE. SPECIFICALLY, VMWARE DOES NOT WARRANT THAT THE SOFTWARE WILL BE ERROR FREE
@@ -138,6 +140,7 @@
 5.
           Limitation of Liability
             
+
    IN NO EVENT WILL VMWARE BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
             OR CONSEQUENTIAL DAMAGES OF ANY KIND (INCLUDING WITHOUT LIMITATION LOSS OF PROFITS,
             LOSS OF USE, BUSINESS INTERRUPTION, LOSS OF DATA, COST OF COVER) IN CONNECTION WITH OR
@@ -212,8 +215,5 @@
 
         
 
-
-
     
-  
       

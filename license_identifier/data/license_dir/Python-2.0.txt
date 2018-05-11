@@ -1,8 +1,6 @@
 
       
       
-      
-      
          PYTHON SOFTWARE FOUNDATION LICENSE VERSION 2
 
       
@@ -249,5 +247,4 @@
          ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
     
-  
       

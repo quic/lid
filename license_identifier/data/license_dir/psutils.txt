@@ -1,7 +1,6 @@
 
       
       
-      
          PS Utilities Package
 
       
@@ -10,32 +9,46 @@
 
          LICENSE Makefile.msc Makefile.nt Makefile.os2 
         
+
 Makefile.unix README config.h descrip.mms 
         
+
 epsffit.c epsffit.man extractres.man extractres.pl 
         
+
 fixdlsrps.man fixdlsrps.pl fixfmps.man fixfmps.pl 
         
+
 fixmacps.man fixmacps.pl fixpsditps.man fixpsditps.pl 
         
+
 fixpspps.man fixpspps.pl fixscribeps.man fixscribeps.pl 
         
+
 fixtpps.man fixtpps.pl fixwfwps.man fixwfwps.pl 
         
+
 fixwpps.man fixwpps.pl fixwwps.man fixwwps.pl 
         
+
 getafm getafm.man includeres.man includeres.pl 
         
+
 maketext patchlev.h psbook.c psbook.man 
         
+
 pserror.c pserror.h psmerge.man psmerge.pl 
         
+
 psnup.c psnup.man psresize.c psresize.man 
         
+
 psselect.c psselect.man psspec.c psspec.h 
         
+
 pstops.c pstops.man psutil.c psutil.h 
         
+
 showchar 
       
 
@@ -72,5 +85,4 @@ showchar
          the originals if they want them.
 
     
-  
       

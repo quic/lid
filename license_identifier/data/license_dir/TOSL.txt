@@ -1,7 +1,6 @@
 
       
       
-      
          Trusster Open Source License version 1.0a (TRUST) copyright (c) 2006 Mike Mintz and Robert Ekendahl. All
          rights reserved.
 
@@ -48,5 +47,4 @@
          IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     
-  
       

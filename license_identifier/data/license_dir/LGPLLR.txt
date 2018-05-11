@@ -1,8 +1,6 @@
 
       
       
-      
-      
          Lesser General Public License For Linguistic Resources
 
       
@@ -309,7 +307,4 @@ e)
              SUCH DAMAGES.
         
 
-      END OF TERMS AND CONDITIONS
-
-  
       

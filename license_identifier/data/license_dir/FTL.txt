@@ -1,8 +1,6 @@
 
       
       
-      
-      
          The FreeType Project LICENSE
 
          2006-Jan-27
@@ -184,5 +182,5 @@ o
          --- end of FTL.TXT ---
 
       
-  
+    
       

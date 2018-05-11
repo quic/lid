@@ -1,10 +1,9 @@
 
       
       
-      
-      
          AUTOCONF CONFIGURE SCRIPT EXCEPTION
         
+
 Version 3.0, 18 August 2009
 
       
@@ -72,5 +71,5 @@ Version 3.0, 18 August 2009
 
          
 
-  
+    
       

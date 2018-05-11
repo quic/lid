@@ -1,7 +1,5 @@
 
       
-      
-      
         
             Deutsche Freie Software Lizenz
 
@@ -188,6 +186,7 @@
                     ein Hinweis auf den oder die Rechtsinhaber an den ersten unter dieser Lizenz nutzbaren
                      Programmbestandteilen 
                     
+
       ebenfalls angezeigt werden.
                 
 
@@ -503,6 +502,7 @@
 
             Anhang: Wie unterstellen Sie ein Programm der Deutschen Freien Software Lizenz? 
             
+
    Um jedermann den Abschluss dieser Lizenz zu ermöglichen, wird empfohlen, das Programm mit folgendem
              Hinweis auf die Lizenz zu versehen: 
             
@@ -516,5 +516,5 @@
 
         
 
-  
+    
       

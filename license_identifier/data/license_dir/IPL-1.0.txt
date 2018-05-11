@@ -1,16 +1,16 @@
 
       
       
-      
-      
          IBM Public License Version 1.0
 
       
     
       THE ACCOMPANYING PROGRAM IS PROVIDED UNDER THE TERMS OF THIS IBM 
         
+
 PUBLIC LICENSE ("AGREEMENT"). ANY USE, REPRODUCTION OR DISTRIBUTION 
         
+
 OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT. 
       
 
@@ -21,6 +21,7 @@ OF THE PROGRAM CONSTITUTES RECIPIENT'S ACCEPTANCE OF THIS AGREEMENT.
 1.
           DEFINITIONS 
             
+
    "Contribution" means: 
           
             
@@ -58,8 +59,10 @@ ii.
 (i)
                           are separate modules of software distributed in conjunction with 
                             
+
             the Program under their own license agreement, and (ii) are not 
                             
+
             derivative works of the Program. 
                           
                         
@@ -125,28 +128,40 @@ b.
 c.
               Recipient understands that although each Contributor grants the 
                 
+
       licenses to its Contributions set forth herein, no assurances are 
                 
+
       provided by any Contributor that the Program does not infringe the 
                 
+
       patent or other intellectual property rights of any other entity. 
                 
+
       Each Contributor disclaims any liability to Recipient for claims 
                 
+
       brought by any other entity based on infringement of intellectual 
                 
+
       property rights or otherwise. As a condition to exercising the 
                 
+
       rights and licenses granted hereunder, each Recipient hereby assumes 
                 
+
       sole responsibility to secure any other intellectual property rights 
                 
+
       needed, if any. For example, if a third party patent license is 
                 
+
       required to allow Recipient to distribute the Program, it is 
                 
+
       Recipient's responsibility to acquire that license before 
                 
+
       distributing the Program. 
               
             
@@ -155,8 +170,10 @@ c.
 d.
               Each Contributor represents that to its knowledge it has 
                 
+
       sufficient copyright rights in its Contribution, if any, to grant the 
                 
+
       copyright license set forth in this Agreement. 
               
             
@@ -167,6 +184,7 @@ d.
 3.
           REQUIREMENTS 
             
+
    A Contributor may choose to distribute 
             the Program in object code form under its own license agreement, 
             provided that: 
@@ -248,6 +266,7 @@ b.
 4.
           COMMERCIAL DISTRIBUTION 
             
+
    Commercial distributors of software may accept certain 
             responsibilities with respect to end users, business partners and the 
             like. While this license is intended to facilitate the commercial 
@@ -289,6 +308,7 @@ b.
 5.
           NO WARRANTY 
             
+
    EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, THE PROGRAM IS 
             PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY 
             KIND, EITHER EXPRESS OR IMPLIED INCLUDING, WITHOUT LIMITATION, ANY 
@@ -307,6 +327,7 @@ b.
 6.
           DISCLAIMER OF LIABILITY 
             
+
    EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, NEITHER RECIPIENT 
             NOR ANY CONTRIBUTORS SHALL HAVE ANY LIABILITY FOR ANY DIRECT, 
             INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
@@ -322,6 +343,7 @@ b.
 7.
           GENERAL
             
+
    If any provision of this Agreement is invalid or unenforceable under 
             applicable law, it shall not affect the validity or enforceability of 
             the remainder of the terms of this Agreement, and without further 
@@ -377,5 +399,4 @@ b.
          
 
     
-  
       

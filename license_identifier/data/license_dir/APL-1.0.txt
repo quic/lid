@@ -1,9 +1,9 @@
 
       
       
-      
          ADAPTIVE PUBLIC LICENSE 
         
+
 Version 1.0 
       
 
@@ -173,6 +173,7 @@ Version 1.0
 (c)
                 to any combination of the Initial Work and any such other Subsequent Work; 
                   
+
          where such changes and/or additions originate from a Subsequent Contributor. A
                        Subsequent Work will "originate" from a Subsequent Contributor if the Subsequent
                        Work was a result of efforts by such Subsequent Contributor (or anyone acting on
@@ -227,6 +228,7 @@ Version 1.0
                     reproduce, publicly display, publicly perform, distribute, and sublicense any derivative
                        works (if any) prepared by Recipient; 
                       
+
             in Source Code and Executable form, either with other Modifications, on an
                        unmodified basis, or as part of a Larger Work. 
                     
@@ -252,6 +254,7 @@ Version 1.0
                     reproduce, publicly display, publicly perform, distribute, and sublicense any derivative
                        works (if any) prepared by Recipient; 
                        
+
             in Source Code and Executable form, either with other Modifications, on an
                        unmodified basis, or as part of a Larger Work. 
                     
@@ -322,6 +325,7 @@ Version 1.0
 2.3.
             ACKNOWLEDGEMENT AND DISCLAIMER. 
               
+
       Recipient understands and agrees that although Initial Contributor and each Subsequent
                  Contributor grants the licenses to its Contributions set forth herein, no
                  representation, warranty, guarantee or assurance is provided by any Initial
@@ -342,6 +346,7 @@ Version 1.0
 2.4.
             RESERVATION. 
               
+
       Nothing in this License shall be deemed to grant any rights to trademarks, copyrights,
                  patents, trade secrets or any other intellectual property of Initial Contributor,
                  Subsequent Contributor, or Distributor except as expressly stated herein.
@@ -388,6 +393,7 @@ Version 1.0
 3.2.
           EXECUTABLE DISTRIBUTIONS OF THE LICENSED WORK. 
             
+
       A Distributor may choose to distribute the Licensed Work, or any portion thereof, in
                  Executable form (an "EXECUTABLE DISTRIBUTION") to any third party, under the terms of
                  Section 2 of this License, provided the Executable Distribution is made available
@@ -427,6 +433,7 @@ Version 1.0
 3.3.
           SOURCE CODE DISTRIBUTIONS. 
             
+
       When a Distributor makes the Licensed Work, or any portion thereof, available to any Person
                  in Source Code form, it must be made available under this License and a copy of this
                  License must be included with each copy of the Source Code, situated so that the copy
@@ -442,6 +449,7 @@ Version 1.0
 3.4.
               REQUIRED NOTICES IN SOURCE CODE. 
                 
+
       Each Subsequent Contributor must ensure that the notice set out in Part 5 of Exhibit A is
                      included in each file of the Source Code for each Subsequent Work originating from
                      that particular Subsequent Contributor, if such notice is not already included in each
@@ -456,6 +464,7 @@ Version 1.0
 3.5.
               NO DISTRIBUTION REQUIREMENTS FOR INTERNALLY USED MODIFICATIONS. 
                 
+
       Notwithstanding Sections 3.2, 3.3 and 3.4, Recipient may, internally within its own
                      corporation or organization use the Licensed Work, including the Initial Work and
                      Subsequent Works, and make Modifications for internal use within Recipient's own
@@ -478,6 +487,7 @@ Version 1.0
 3.6.
               INDEPENDENT MODULES. 
                 
+
       This License shall not apply to Independent Modules of any Initial Contributor, Subsequent
                      Contributor, Distributor or any Recipient, and such Independent Modules may be
                      licensed or made available under one or more separate license agreements.
@@ -487,6 +497,7 @@ Version 1.0
 3.7.
               LARGER WORKS. 
                 
+
       Any Distributor or Recipient may create or contribute to a Larger Work by combining any of
                      the Licensed Work with other code not governed by the terms of this License, and may
                      distribute the Larger Work as one or more products. However, in any such case,
@@ -564,6 +575,7 @@ Version 1.0
 3.9.
           USE OF DISTRIBUTOR NAME. 
             
+
       The name of a Distributor may not be used by any other Distributor to endorse or promote
                  the Licensed Work or products derived from the Licensed Work, without prior written
                  permission.
@@ -633,6 +645,7 @@ Version 1.0
 4.1.
           COMMERCIAL SERVICES. 
             
+
       A Recipient ("COMMERCIAL RECIPIENT") may choose to offer, and to charge a fee for,
                  warranty, support, indemnity or liability obligations (collectively, "SERVICES") to
                  one or more other Recipients or Distributors. However, such Commercial Recipient may
@@ -654,6 +667,7 @@ Version 1.0
 4.2.
           INDEMNITY. 
             
+
       Commercial distributors of software may accept certain responsibilities with respect to end
                  users, business partners and the like. While this License is intended to facilitate
                  the commercial use of the Licensed Work, the Distributor who includes any of the
@@ -688,6 +702,7 @@ Version 1.0
 5.1.
           NEW VERSIONS. 
             
+
       The Initial Contributor may publish revised and/or new versions of the License from time to
                  time. Each version will be given a distinguishing version number. 
           
@@ -697,6 +712,7 @@ Version 1.0
 5.2.
           EFFECT OF NEW VERSIONS. 
             
+
       Once the Licensed Work or any portion thereof has been published by Initial Contributor
                  under a particular version of the License, Recipient may choose to continue to use it
                  under the terms of that version. However, if a Recipient chooses to use the Licensed
@@ -722,6 +738,7 @@ Version 1.0
 6.1.
           GENERAL DISCLAIMER. 
             
+
       EXCEPT AS EXPRESSLY SET FORTH IN THIS LICENSE, THE LICENSED WORK IS PROVIDED UNDER THIS
                  LICENSE ON AN "AS IS" BASIS, WITHOUT ANY REPRESENTATION, WARRANTY, GUARANTEE,
                  ASSURANCE OR CONDITION OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, WITHOUT
@@ -739,6 +756,7 @@ Version 1.0
 6.2.
           RESPONSIBILITY OF RECIPIENTS. 
             
+
       Each Recipient is solely responsible for determining the appropriateness of using and
                  distributing the Licensed Work and assumes all risks associated with its exercise of
                  rights under this License, including but not limited to the risks and costs of program
@@ -953,32 +971,43 @@ Version 1.0
 	              
 PART 1: INITIAL CONTRIBUTOR AND DESIGNATED WEB SITE
 The Initial Contributor is: 
+
    
 ________________________________________________ 
+
    
 [Enter full name of Initial Contributor]
+
    
                
 
                
 Address of Initial Contributor: 
+
    
 ________________________________________________ 
+
    
 ________________________________________________ 
+
    
 ________________________________________________ 
+
    
 [Enter address above]
+
    
                
 
                
 The Designated Web Site is: 
+
    
 ________________________________________________ 
+
    
 [Enter URL for Designated Web Site of Initial Contributor]
+
    
                
 
@@ -1148,8 +1177,10 @@ C.
             the combination of Modifications made by that Subsequent Contributor with its Subsequent Work
                (or portions of such combination); 
               
+
          (collectively and in each case, the "SUBSEQUENT CONTRIBUTOR VERSION"). 
               
+
          Notwithstanding the foregoing, no patent license is granted under this Paragraph C by
                    such Subsequent Contributor: (1) for any code that such Subsequent Contributor
                    deletes from the Subsequent Contributor Version (or any portion thereof)

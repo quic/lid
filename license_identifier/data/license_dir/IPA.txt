@@ -1,7 +1,6 @@
 
       
       
-      
          IPA Font License Agreement v1.0
 
       
@@ -288,5 +287,4 @@
         
 
     
-  
       
