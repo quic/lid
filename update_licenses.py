@@ -29,12 +29,17 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
+# Use futures to enable urljoin for python2/3 compatibility
+# Must install aliases to import urljoin for both versions
+from future.standard_library import install_aliases
+install_aliases()
+from urllib.parse import urljoin
+
 import datetime
 import os
 from pprint import pprint
 import sys
 import rdflib
-import urlparse
 
 
 BASE_URL = 'http://spdx.org/licenses/'
@@ -54,17 +59,20 @@ def main():
 
 
 def get_license_version():
-    full_url = urlparse.urljoin(BASE_URL, 'index.html')
+    full_url = urljoin(BASE_URL, 'index.html')
     graph = rdflib.Graph()
     graph.parse(full_url, 'rdfa')
     ref = rdflib.URIRef('http://spdx.org/rdf/terms#licenseListVersion')
     objs = graph.subject_objects(ref)
-    version_str = objs.next()[1].decode()
-    return version_str
+    version_str = next(objs)[1]
+    try:
+        return version_str.decode()
+    except AttributeError:
+        return version_str
 
 
 def get_license_ids_from_spdx():
-    full_url = urlparse.urljoin(BASE_URL, 'index.html')
+    full_url = urljoin(BASE_URL, 'index.html')
     graph = rdflib.Graph()
     graph.parse(full_url, 'rdfa')
     ref = rdflib.URIRef('http://spdx.org/rdf/terms#licenseId')
@@ -73,7 +81,7 @@ def get_license_ids_from_spdx():
 
 
 def get_exception_ids():
-    full_url = urlparse.urljoin(BASE_URL, 'exceptions-index.html')
+    full_url = urljoin(BASE_URL, 'exceptions-index.html')
     graph = rdflib.Graph()
     graph.parse(full_url, 'rdfa')
     ref = rdflib.URIRef('http://spdx.org/rdf/terms#licenseExceptionId')
@@ -83,7 +91,7 @@ def get_exception_ids():
 
 def get_license_text_and_header(license_id):
     graph = rdflib.Graph()
-    full_url = urlparse.urljoin(BASE_URL, '{}.html'.format(license_id))
+    full_url = urljoin(BASE_URL, '{}.html'.format(license_id))
 
     try:
         graph.parse(full_url)
@@ -99,16 +107,16 @@ def get_license_text_and_header(license_id):
 
 def remove_extraneous_text(text):
     # per condition 12 https://spdx.org/spdx-license-list/matching-guidelines
-    # this is not indicated in markdown, so just need to find the 
+    # this is not indicated in markdown, so just need to find the
     # text that indicates the end of the license and remove the rest
     end_index = text.find("END OF TERMS AND CONDITIONS")
     if end_index != -1:
         text = text[0:end_index]
-    return text    
+    return text
 
 def get_exception_text(exception_id):
     graph = rdflib.Graph()
-    full_url = urlparse.urljoin(BASE_URL, '{}.html'.format(exception_id))
+    full_url = urljoin(BASE_URL, '{}.html'.format(exception_id))
 
     try:
         graph.parse(full_url)
@@ -125,7 +133,7 @@ def get_sub_objs(uri, graph):
     ref = rdflib.URIRef(uri)
     objs = graph.subject_objects(ref)
     try:
-        value = objs.next()
+        value = next(objs)
         return xml_to_text(value[1])
     except StopIteration:
         return None
@@ -133,12 +141,19 @@ def get_sub_objs(uri, graph):
 
 def xml_to_text(literal):
     # appears to be a series of <p> elements under the top level node
-    if isinstance(literal.value, unicode):
-        return literal.value.encode('utf-8')
+    try:
+        if isinstance(literal.value, unicode):
+            return literal.value.encode('utf-8')
+    except NameError:
+        if isinstance(literal.value, str):
+            return literal.value
     output = ""
     for child in literal.value.firstChild.childNodes:
         if child.nodeValue:
-            output += child.nodeValue.encode('utf-8')
+            try:
+                output += child.nodeValue.encode('utf-8')
+            except TypeError:
+                output += child.nodeValue
         output += output_tree(child)
     return output
 
@@ -147,7 +162,10 @@ def output_tree(parent):
     output = ""
     for node in parent.childNodes:
         if node.nodeValue:
-            output += node.nodeValue.encode('utf-8')
+            try:
+                output += node.nodeValue.encode('utf-8')
+            except TypeError:
+                output += node.nodeValue
         output += output_tree(node)
     return output
 
@@ -196,7 +214,7 @@ def update_spdx_metadata():
     curr_datetime = datetime.datetime.now().strftime("%c")
     ids = sorted(get_license_ids_from_spdx())
     with open('./license_identifier/licenses.py', 'w') as out:
-        out.write("# Copyright (c) %s, The Linux Foundation. All rights reserved.\n" % 
+        out.write("# Copyright (c) %s, The Linux Foundation. All rights reserved.\n" %
             datetime.datetime.now().year)
         out.write("# SPDX-License-Identifier: BSD-3-Clause\n")
         out.write("spdx_version = '{}'\n".format(spdx_version))
