@@ -40,6 +40,18 @@ def truncate_column(column):
         return column
 
 class MatchSummary(dict):
+
+    def __getitem__(self, key):
+        # for SPDX headers, return the SPDX name.
+        # The n-gram library data structure depends
+        # on the filename to key the n-gram data.
+        # Therefore the header file names need to be
+        # differentiated from the full licenses, but
+        # we want both to return the SPDX name for a
+        # match.
+        value = dict.__getitem__(self, key)
+        return value.replace("-header", "") if key == "matched_license" else value
+
     @staticmethod
     def field_names():
         return OrderedDict([

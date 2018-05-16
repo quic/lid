@@ -193,7 +193,7 @@ def write_licenses_dir(ids, exception_ids):
         no_header = "There is no standard license header for the license"
         if header and no_header not in header:
             header_file = os.path.join(license_dir, 'headers',
-                                       '{}.txt'.format(license_id))
+                                       '{}-header.txt'.format(license_id))
             with open(header_file, 'w') as hdl:
                 hdl.write(header)
 

@@ -1,9 +1,0 @@
-
-        
-        Copyright (C) 20[jj] [Name des Rechtsinhabers]. 
-Dieses Programm kann durch jedermann gemäß den 
-Bestimmungen der Deutschen Freien Software Lizenz 
-genutzt werden. 
-Die Lizenz kann unter <http://www.d-fsl.de> 
-abgerufen werden.
-      
