@@ -137,7 +137,8 @@ def test_init_pickle(mock_pickle_load, mock_pickle_dump):
     lcs_id_pickle_obj = license_identifier.LicenseIdentifier(
         threshold=threshold,
         input_path=input_dir,
-        pickle_file_path=test_pickle_file)
+        pickle_file_path=test_pickle_file,
+        run_in_parallel=False)
 
     assert mock_pickle_load.call_count == 1
     assert abspath(mock_pickle_load.call_args[0][0].name) == \
@@ -150,7 +151,8 @@ def test_init_pickle(mock_pickle_load, mock_pickle_dump):
 def test_write_csv_file():
     lid = license_identifier.LicenseIdentifier(license_dir=license_dir,
                                                threshold=threshold,
-                                               input_path=input_dir)
+                                               input_path=input_dir,
+                                               run_in_parallel=False)
 
     result_dict = lid.analyze_input_path(input_path=input_dir)
 
@@ -193,11 +195,13 @@ def test_init_using_license_library_object():
     # that don't interfere with each other
     path1 = join(BASE_DIR, 'data', 'test', 'near_tie', 'license')
     lid1 = license_identifier.LicenseIdentifier(
-        license_library=prep.LicenseLibrary.from_path(path1))
+        license_library=prep.LicenseLibrary.from_path(path1),
+        run_in_parallel=False)
 
     path2 = join(BASE_DIR, 'data', 'test', 'license')
     lid2 = license_identifier.LicenseIdentifier(
-        license_library=prep.LicenseLibrary.from_path(path2))
+        license_library=prep.LicenseLibrary.from_path(path2),
+        run_in_parallel=False)
 
     assert list(lid1.license_library.licenses.keys()) == ['license1',
                                                           'license2']
@@ -219,7 +223,8 @@ def test_forward_args_to_loc_id():
         location_strategy='exhaustive',
         location_similarity='ngram',
         penalty_only_license=3.0,
-        penalty_only_source=4.0
+        penalty_only_source=4.0,
+        run_in_parallel=False
     )
     with patch.object(location_identifier, 'Location_Finder',
                       wraps=location_identifier.Location_Finder) as m:
@@ -380,9 +385,10 @@ def test_truncate_column():
 @patch('pickle.dump')
 def test_main_process_pickle(mock_pickle_dump):
     test_pickle_file = join(BASE_DIR, "test.pickle")
-    license_identifier.LicenseIdentifier(
+    lid = license_identifier.LicenseIdentifier(
         license_dir=license_dir,
-        pickle_file_path=test_pickle_file)
+        pickle_file_path=test_pickle_file,
+        run_in_parallel=False)
 
     assert mock_pickle_dump.call_count == 1
     dump_args = mock_pickle_dump.call_args[0]

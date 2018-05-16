@@ -92,7 +92,7 @@ def _init_global_license_library(license_library_input, pickle_file_path=None, l
         license_library = _init_using_lic_dir(license_dir)
         if pickle_file_path is not None:
             _create_pickled_library(license_library, pickle_file_path)
-    
+
     return license_library
 
 
@@ -101,7 +101,7 @@ def _init_pickled_library(pickle_file_path):
                  "from {}".format(pickle_file_path))
     return prep.LicenseLibrary.deserialize(pickle_file_path)
 
-    
+
 def _init_using_lic_dir(license_dir):
     _logger.info("Loading license library from {}".format(license_dir))
     return prep.LicenseLibrary.from_path(license_dir)
@@ -149,8 +149,10 @@ class LicenseIdentifier:
         self.license_dir = license_dir
         self.input_license_library = license_library
 
-        license_library = _init_global_license_library(license_library, pickle_file_path, license_dir)
-        self.license_library = license_library
+        if self.run_in_parallel:
+            self.license_library = None
+        else:
+            self.license_library = _init_global_license_library(self.input_license_library, self.pickle_file_path, self.license_dir)
 
     def _check_keep_fraction_of_best(self, keep_fraction_of_best):
         assert keep_fraction_of_best >= 0.0
@@ -186,12 +188,13 @@ class LicenseIdentifier:
 
     def apply_function_on_all_files(self, function_ptr, filenames):
         if self.run_in_parallel:
-            with closing(multiprocessing.Pool(processes=self.cpu_count, initializer=_init_global_license_library, initargs=[copy.deepcopy(self.license_library)])) as \
+            with closing(multiprocessing.Pool(processes=self.cpu_count, initializer=_init_global_license_library, initargs=[copy.deepcopy(self.license_library), self.pickle_file_path, self.license_dir])) as \
                     pool:
                 output = self._apply_function_on_all_files(pool.apply_async,
                                                            function_ptr,
                                                            filenames)
         else:
+            self.license_library = _init_global_license_library(self.license_library, self.pickle_file_path, self.license_dir)
             output = self._apply_function_on_all_files(apply_sync,
                                                        function_ptr, filenames)
 
