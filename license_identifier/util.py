@@ -27,7 +27,6 @@
 #
 # SPDX-License-Identifier: BSD-3-Clause
 
-import chardet
 import codecs
 import datetime
 import getpass
@@ -35,28 +34,43 @@ import os
 import os.path
 import string
 
+from codecs import BOM_UTF8, BOM_UTF16_BE, BOM_UTF16_LE, BOM_UTF32_BE, BOM_UTF32_LE
 
-def detect_file_encoding(file_name):
-    """
-    Detect encoding by reading entire file in binary mode.
 
-    Note: If the files are too large, we may want to consider using
-          chardet.universaldetector to process it in smaller pieces.
-    """
-    with open(file_name, 'rb') as f:
-        contents = f.read()
-        encoding = chardet.detect(contents)["encoding"]
+BOMS = (
+        (BOM_UTF8, "UTF-8"),
+        (BOM_UTF32_BE, "UTF-32-BE"),
+        (BOM_UTF32_LE, "UTF-32-LE"),
+        (BOM_UTF16_BE, "UTF-16-BE"),
+        (BOM_UTF16_LE, "UTF-16-LE"),
+    )
+MAX_BOM_LENGTH = 5
 
-    return encoding
+
+def detect_utf(filename):
+    with open(filename, 'rb') as f:
+        # we are ignoring UTF-7 but it has a possible 5 byte BOM
+        # UTF-8/16/32 are maximum 4
+        contents = f.read(MAX_BOM_LENGTH)
+        for bom, encoding in BOMS:
+            if contents.startswith(bom):
+                return encoding
+    return "UTF-8"
 
 
 def read_lines_offsets(filename):
-    return read_with_default_encoder(filename)
+    return read_with_detected_encoder(filename)
 
 
-def read_with_default_encoder(filename):
-    with codecs.open(filename, 'r', encoding='utf-8', errors='replace') as fp:
-        lines, line_offsets = get_lines_and_line_offsets(iter(fp))
+def read_with_detected_encoder(filename):
+    encoding = detect_utf(filename)
+    while True:
+        try:
+            with codecs.open(filename, 'rb', encoding=encoding, errors='replace') as fp:
+                lines, line_offsets = get_lines_and_line_offsets(iter(fp))
+                break
+        except LookupError:
+            encoding = 'utf-8'
     return lines, line_offsets
 
 

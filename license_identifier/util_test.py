@@ -32,16 +32,22 @@ import os
 from . import util
 
 
-def test_detect_file_encoding():
+def test_utf_encoding():
     input_fp = os.path.join(os.getcwd(), '../data/test/encodings/test-utf-8')
-    encoding = util.detect_file_encoding(input_fp)
-    assert encoding == "utf-8"
+    encoding = util.detect_utf(input_fp)
+    assert encoding == "UTF-8"
 
+    # Chardet is unreliable, so we are defaulting to UTF-8 for files
+    # without a UTF BOM
     input_fp = os.path.join(os.getcwd(),
                             '../data/test/encodings/test-windows-1252')
-    encoding = util.detect_file_encoding(input_fp)
-    assert encoding == "windows-1252"
+    encoding = util.detect_utf(input_fp)
+    assert encoding == "UTF-8"
 
+    input_fp = os.path.join(os.getcwd(),
+                            '../data/test/encodings/VariableInfo.uni')
+    encoding = util.detect_utf(input_fp)
+    assert encoding == "UTF-16-LE"
 
 def test_read_lines_offsets():
     input_fp = os.path.join(os.getcwd(), '../data/test/data/test1.py')
