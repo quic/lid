@@ -36,13 +36,16 @@ source ENV/bin/activate
 # Get the latest versions of pip and setuptools:
 pip install -U setuptools pip
 
+# Install comment-filter (not available from pypi)
+pip install git+https://github.com/codeauroraforum/comment-filter.git
+
 # Install license_identifier
-pip install git+https://source.codeaurora.org/external/qostg/lid.git
+pip install git+https://github.com/codeauroraforum/license_identifier.git
 ```
 
 At this point, you can test the installation by running, for example:
 ```
-license-identifier -I path/to/source/files
+./ENV/bin/license-identifier -I path/to/source/files
 ```
 
 Note for the developers who want to integrate this module into their code:
