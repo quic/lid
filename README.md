@@ -40,7 +40,7 @@ pip install -U setuptools pip
 pip install git+https://github.com/codeauroraforum/comment-filter.git
 
 # Install license_identifier
-pip install git+https://github.com/codeauroraforum/license_identifier.git
+pip install git+https://github.com/codeauroraforum/lid.git
 ```
 
 At this point, you can test the installation by running, for example:
