@@ -136,6 +136,11 @@ class EditWeightedSimilarity(Similarity, EditWeightedSimilarityBase):
         only_lic = total_counts[("only_lic", "non_punct")] + \
             self.punct_weight * total_counts[("only_lic", "punct")]
 
+        if extras:
+            result["unchanged"] = unchanged
+            result["only_src"] = only_src
+            result["only_lic"] = only_lic
+
         denom = float(unchanged +
                       self.penalty_only_source * only_src +
                       self.penalty_only_license * only_lic)

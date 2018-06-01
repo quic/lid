@@ -145,15 +145,14 @@ class Location_Finder(object):
 
     def main_process(self, lic, src):
         if self.strategy == 'exhaustive':
-            start_line, end_line, best_score = \
+            start_line, end_line = \
                 self.best_region_exhaustive(lic, src)
         elif self.strategy == 'one_line_then_expand':
-            start_line, end_line, best_score = \
+            start_line, end_line = \
                 self.one_line_then_expand(lic, src)
         elif self.strategy == 'full_text_only':
             start_line = 0
             end_line = len(src.lines)
-            best_score = self.similarity_obj.score(lic, src)
         else:  # pragma: no cover
             raise Exception("Unrecognized strategy: {}".format(self.strategy))
 
@@ -161,6 +160,13 @@ class Location_Finder(object):
         start_line, end_line, start_offset, end_offset = \
             self.determine_offsets(start_line, end_line, src.lines,
                                    src.offsets_by_line)
+
+        # n-gram score for the resulting region
+        ngram_similarity_obj = scores.NgramSimilarity(
+                universe_n_grams=self.universe_n_grams)
+        ngram_score = ngram_similarity_obj.score_and_rationale(lic, src.subset(start_line_orig, end_line_orig), False)
+        if self.verbosity >= 1:
+            print("n-gram score for best region: {}".format(ngram_score))
 
         # Adjust line indices if we're dealing with a subset of the source
         start_line_orig += src.original_line_offset
@@ -172,7 +178,7 @@ class Location_Finder(object):
                                               end_line=end_line,
                                               start_offset=start_offset,
                                               end_offset=end_offset,
-                                              score=best_score,
+                                              score=ngram_score['score'],
                                               start_line_orig=start_line_orig,
                                               end_line_orig=end_line_orig)
 
@@ -193,7 +199,7 @@ class Location_Finder(object):
 
         start_line, end_line, best_score = max(results, key=lambda x: x[2])
 
-        return start_line, end_line, best_score
+        return start_line, end_line
 
     def one_line_then_expand(self, lic, src):
         # First, find best single line
@@ -235,7 +241,7 @@ class Location_Finder(object):
             prev_start_line = start_line
             prev_end_line = end_line
 
-        return start_line, end_line, best_score
+        return start_line, end_line
 
     def expand(self, lic, src, start_line, end_line, score_to_beat, top):
         if top:
