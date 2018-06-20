@@ -77,7 +77,8 @@ class CustomInstall(install):
         )
 
         LicenseIdentifier(license_dir=license_dir,
-                          pickle_file_path=pickle_file_path)
+                          pickle_file_path=pickle_file_path,
+                          run_in_parallel=False)
 
 
 setup(

@@ -32,6 +32,10 @@ def main():
         # if a source-code analysis will be run
         args.output_format = 'easy_read'
 
+    if args.input_path is None and not args.single_thread:
+        # If there is no input path, always use single thread mode
+        args.single_thread = True
+        
     numeric_logging_level = getattr(logging, args.log.upper(), None)
     if not isinstance(numeric_logging_level, int):  # pragma: no cover
         raise ValueError("Invalid log level: {}".format(args.log))

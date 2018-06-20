@@ -266,6 +266,7 @@ def test_analyze_file():
     assert summary_obj["original_region"] == "one two three four\r\n"
 
 
+
 def test_analyze_files():
     lid = license_identifier.LicenseIdentifier(license_dir=license_dir,
                                                threshold=threshold,
@@ -391,6 +392,19 @@ def test_main_process_pickle(mock_pickle_dump):
         run_in_parallel=False)
 
     assert mock_pickle_dump.call_count == 1
+    dump_args = mock_pickle_dump.call_args[0]
+    assert abspath(dump_args[1].name) == abspath(test_pickle_file)
+
+    test_pickle_file = join(BASE_DIR, "test.pickle")
+    lid = license_identifier.LicenseIdentifier(
+        license_dir=license_dir,
+        pickle_file_path=test_pickle_file)
+
+    assert mock_pickle_dump.call_count == 1
+    # Parallel LiD doesn't create the pickle file until you run analyze
+    lid.analyze()
+    assert mock_pickle_dump.call_count == 2
+
     dump_args = mock_pickle_dump.call_args[0]
     assert abspath(dump_args[1].name) == abspath(test_pickle_file)
 

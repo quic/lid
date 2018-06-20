@@ -164,6 +164,11 @@ class LicenseIdentifier:
         if self.input_path is not None:
             results = self.analyze_input_path(self.input_path)
         else:
+            # force library init to generate pickle file
+            _init_global_license_library(
+                self.license_library,
+                self.pickle_file_path,
+                self.license_dir)
             _logger.info("No input path; no analysis to perform")
             results = None
 
