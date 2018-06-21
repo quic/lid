@@ -83,11 +83,11 @@ class CustomInstall(install):
 
 setup(
     name='lid',
-    version='1.3.0',
+    version='1.4.1',
     description='Scans a file or folder for predefined licenses',
-    author='Peter Shin',
-    author_email='phshin@codeaurora.org',
-    url='https://www.python.org/sigs/distutils-sig/',
+    author='Craig Northway',
+    author_email='craign@qti.qualcomm.com',
+    url='https://github.com/codeauroraforum/lid',
     packages=['license_identifier'],
     entry_points={
         'console_scripts': [
