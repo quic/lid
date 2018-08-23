@@ -54,7 +54,7 @@ register_surrogateescape()
 
 base_dir = os.path.dirname(__file__)
 
-DEFAULT_THRESHOLD = 0.04
+DEFAULT_THRESHOLD = 0.06
 DEFAULT_PICKLED_LIBRARY_FILE = os.path.join(base_dir, 'data',
                                             'license_n_gram_lib.pickle')
 CUSTOM_LICENSE_METADATA_FILE = os.path.join(base_dir, 'data', 'custom_license.yml')
