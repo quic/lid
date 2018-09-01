@@ -10,7 +10,7 @@ In general, contributors should develop on branches based off of `master` and pu
 
 ## Submitting a pull request
 
-1. Please read our [code of conduct](code-of-conduct.md] and [license](LICENSE.txt).
+1. Please read our [code of conduct](code-of-conduct.md) and [license](LICENSE.txt).
 1. [Fork](https://github.com/codeauroraforum/lid/fork) and clone the repository.
 1. Create a new branch based on `master`: `git checkout -b <my-branch-name> master`.
 1. Make your changes, add tests, and make sure the tests still pass.
