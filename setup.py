@@ -96,14 +96,13 @@ setup(
     },
     install_requires=[
         "chardet",
-        "comment-filter",
+        "comment-filter @ https://github.com/codeauroraforum/comment-filter/tarball/v1.0.0",
         "future",
         "nltk==3.2.1",
         "pyyaml",
         "rdflib",
         "six",
     ],
-    dependency_links=['https://github.com/codeauroraforum/comment-filter/tarball/v1.0.0#egg=comment-filter-v1.0.0'],
     package_data={
         'license_identifier': [
             'data/license_n_gram_lib.pickle',
