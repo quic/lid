@@ -36,7 +36,7 @@ source ENV/bin/activate
 # Get the latest versions of pip and setuptools:
 pip install -U setuptools pip
 
-pip install --process-dependency-links git+https://github.qualcomm.com/qosp/lid.git
+pip install --process-dependency-links git+https://github.com/codeauroraforum/lid.git
 ```
 
 At this point, you can test the installation by running, for example:
