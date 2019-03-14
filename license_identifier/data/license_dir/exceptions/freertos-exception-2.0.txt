@@ -25,18 +25,30 @@
            independent modules, and to copy and distribute the resulting
            combined work under terms of your choice, provided that
 
+            
+
+
+               
++
             Every copy of the combined work is accompanied by a written
            statement that details to the recipient the version of
            FreeRTOS used and an offer by yourself to provide the FreeRTOS
            source code (including any modifications you may have made)
            should the recipient request it.
+               
 
-            The combined work is not itself an RTOS, scheduler, kernel or
+                   
++
+                  The combined work is not itself an RTOS, scheduler, kernel or
            related product.
+               
 
-            The independent modules add significant and primary functionality
+                   
++
+                  The independent modules add significant and primary functionality
            to FreeRTOS and do not merely extend the existing
            functionality already present in FreeRTOS.
+               
 
          
 
