@@ -1,0 +1,15 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: themattrix/tox
+    steps:
+      - checkout
+      - run:
+         command: |-
+             apt-get update
+             apt-get install -y software-properties-common
+             add-apt-repository -y ppa:pypy/ppa
+             apt-get update
+             apt-get install -y pypy
+             tox
