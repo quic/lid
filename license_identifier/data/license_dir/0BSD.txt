@@ -1,7 +1,10 @@
 
       
       
-         Copyright (C) 2006 by Rob Landley <rob@landley.net>
+         Copyright (C)
+            
+2006 by Rob Landley <rob@landley.net>
+         
 
       
     

@@ -1,10 +1,6 @@
 
       
       
-         The Universal Permissive License (UPL), Version 1.0
-
-      
-      
          Copyright (c) [year] [copyright holders]
 
       

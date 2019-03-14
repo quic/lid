@@ -13,9 +13,20 @@
          PART THEREOF, IS, BY THAT ACTION, ACCEPTING IN FULL THE RESPONSIBILITIES AND OBLIGATIONS CONTAINED IN
          THIS AGREEMENT.
 
-      Government Agency: _____ Government Agency Original Software Designation: __ Government Agency Original
-         Software Title: _____ User Registration Requested. Please Visit http://___ Government Agency Point of
-         Contact for Original Software: _____
+      Government Agency: 
+_______________
+
+      Government Agency Original Software Designation: 
+_______________
+
+      Government Agency Original Software Title: 
+_______________
+
+      User Registration Requested. Please Visit 
+http://_______________
+
+      Government Agency Point of Contact for Original Software: 
+_______________
 
       
 
@@ -70,7 +81,9 @@ F.
 G.
                 
                     "Original Software" means the computer software first released under this Agreement
-                    by Government Agency with Government Agency designation __ and entitled _________, including
+                    by Government Agency with Government Agency designation 
+_______________ and entitled 
+_______________, including
                     source code, object code and accompanying documentation, if any.
                 
             
@@ -251,11 +264,13 @@ B.
                     [The following copyright notice will be used if created by a contractor pursuant to Government
                      Agency contract and rights obtained from creator by assignment. Government Agency will insert
                      the year and its Agency designation and remove the bracketed language.] Copyright (c) {YEAR}
-                     United States Government as represented by ___ ____. All Rights Reserved.
+                     United States Government as represented by 
+_______________. All Rights Reserved.
 
                     [The following copyright notice will be used if created by civil servants only. Government Agency
                      will insert the year and its Agency designation and remove the bracketed language.] Copyright
-                     (c) {YEAR} United States Government as represented by ____ ____. No copyright is claimed in
+                     (c) {YEAR} United States Government as represented by 
+_______________. No copyright is claimed in
                      the United States under Title 17, U.S.Code. All Other Rights Reserved.
 
                 
@@ -293,7 +308,8 @@ E.
 F.
                     In an effort to track usage and maintain accurate records of the Subject Software, each
                      Recipient, upon receipt of the Subject Software, is requested to register with Government
-                     Agency by visiting the following website: ______. Recipient's name and personal
+                     Agency by visiting the following website: 
+_______________. Recipient's name and personal
                      information shall be used for statistical purposes only. Once a Recipient makes a Modification
                      available, it is requested that the Recipient inform Government Agency at the web site
                      provided above how to access the Modification.
@@ -301,7 +317,8 @@ F.
                      will not be supported by releasing Government Agency] In an effort to track usage and maintain
                      accurate records of the Subject Software, each Recipient, upon receipt of the Subject
                      Software, is requested to provide Government Agency, by e-mail to the Government Agency Point
-                     of Contact listed in clause 5.F., the following information: ______. Recipient's name and
+                     of Contact listed in clause 5.F., the following information: 
+_______________. Recipient's name and
                      personal information shall be used for statistical purposes only. Once a Recipient makes a
                      Modification available, it is requested that the Recipient inform Government Agency, by e-mail
                      to the Government Agency Point of Contact listed in clause 5.F., how to access the
@@ -428,7 +445,8 @@ E.
                     
 F.
                     Point of Contact: Any Recipient contact with Government Agency is to be directed to the
-                     designated representative as follows: ___________.
+                     designated representative as follows: 
+_______________.
                 
 
         
