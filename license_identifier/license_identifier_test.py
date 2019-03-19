@@ -182,8 +182,8 @@ def test_write_csv_file():
                 found_region='+zero\none two three four\n')
             result_dict = \
                 {'data/test/data/test1.py': [result_obj_dict]}
-            expected_res_string = [b'data/test/data/test1.py', 'test_license',
-                                   '1.0', 5, '0', '5', '0', '40', '1.0',
+            expected_res_string = [b'data/test/data/test1.py', b'test_license',
+                                   b'1.0', 5, b'0', b'5', b'0', b'40', b'1.0',
                                    b" +zero\none two three four\n"]
             cli._write_csv_file(result_dict, output_path, False, False)
             handle = m()
