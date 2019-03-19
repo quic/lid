@@ -42,4 +42,6 @@ license_n_gram_lib.pickle
 /test.pickle
 /ENV
 .coverage
+.coverage.*
 coverage.xml
+.tox/

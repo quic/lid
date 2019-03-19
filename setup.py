@@ -98,7 +98,7 @@ setup(
         "chardet",
         "comment-filter @ https://github.com/codeauroraforum/comment-filter/tarball/v1.0.0",
         "future",
-        "nltk==3.2.1",
+        "nltk<4",
         "pyyaml",
         "rdflib",
         "six",
