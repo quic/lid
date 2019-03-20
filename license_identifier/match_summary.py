@@ -97,14 +97,13 @@ class MatchSummary(dict):
         for key in self.field_names().keys():
             try:
                 if key in self:
+                    value = self[key]
                     if key in ("input_fp", "found_region", "original_region"):
-                        value = self[key]
                         if value.startswith(('+','-','@','=')):
                             value = ' ' + value
+                    if isinstance(value, six.string_types):
                         value = value.encode('utf8', 'replace')
-                        csv_row.append(truncate_column(value))
-                    else:
-                        csv_row.append(truncate_column(self[key]))
+                    csv_row.append(truncate_column(value))
             except:
                 csv_row.append("Errors in encoding/decoding unicode characters.")
         return csv_row
