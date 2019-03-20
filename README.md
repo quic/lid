@@ -9,7 +9,7 @@ files and identify the license text region and the type of license.
 License
 ===
 
-Copyright (c) 2017, The Linux Foundation. All rights reserved.
+Copyright (c) 2019, The Linux Foundation. All rights reserved.
 
 SPDX-License-Identifier: BSD-3-Clause
 
@@ -32,7 +32,7 @@ source ENV/bin/activate
 # Get the latest versions of pip and setuptools:
 pip install -U setuptools pip
 
-pip install --process-dependency-links git+https://github.com/codeauroraforum/lid.git
+pip install git+https://github.com/codeauroraforum/lid.git
 ```
 
 At this point, you can test the installation by running, for example:
