@@ -144,4 +144,4 @@ def _files_from_dir(path):
 
 
 def show_licenses_from_directory(directory):
-    return [lic.replace('.txt', '') for lic in os.listdir(directory)]
+    return [lic.replace('.txt', '') for lic in os.listdir(directory) if "readme" not in lic.lower()]
