@@ -34,7 +34,7 @@ import sys
 
 from setuptools import setup
 from setuptools.command.install import install
-
+from setuptools.command.sdist import sdist
 
 CUSTOM_DIR = 'license_identifier/data/license_dir/custom/'
 
@@ -51,12 +51,14 @@ def check_custom_yml_up_to_date():
     assert set(files_in_mappings) == set(custom_licenses)
 
 
-if sys.argv[-1] == 'sdist':
-    try:
-        check_custom_yml_up_to_date()
-    except AssertionError:
-        print("Please update custom_license.yml file.")
-        sys.exit(1)
+class CustomSdist(sdist):
+    def finalize_options(self):
+        sdist.finalize_options(self)
+        try:
+            check_custom_yml_up_to_date()
+        except AssertionError:
+            print("Please update custom_license.yml file.")
+            sys.exit(1)
 
 
 class CustomInstall(install):
@@ -66,7 +68,7 @@ class CustomInstall(install):
         install.run(self)
 
         # Perform custom install steps
-        from license_identifier.license_identifier import LicenseIdentifier
+        from license_identifier.prep import LicenseLibrary
 
         license_dir = os.path.join(
             self.install_lib, 'license_identifier/data/license_dir'
@@ -75,10 +77,8 @@ class CustomInstall(install):
             self.install_lib,
             'license_identifier/data/license_n_gram_lib.pickle'
         )
-
-        LicenseIdentifier(license_dir=license_dir,
-                          pickle_file_path=pickle_file_path,
-                          run_in_parallel=False)
+        library = LicenseLibrary.from_path(license_dir)
+        library.serialize(pickle_file_path)
 
 
 setup(
@@ -94,6 +94,10 @@ setup(
             'license-identifier = license_identifier.cli:main',
         ],
     },
+    setup_requires=[
+        "nltk",
+        "PyYAML",
+    ],
     install_requires=[
         "chardet",
         "comment-filter @ https://github.com/codeauroraforum/comment-filter/tarball/v1.0.0",
@@ -112,5 +116,5 @@ setup(
             'data/license_dir/exceptions/*.txt',
         ]
     },
-    cmdclass={'install': CustomInstall},
+    cmdclass={'install': CustomInstall, 'sdist': CustomSdist},
 )
