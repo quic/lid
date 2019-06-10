@@ -83,7 +83,7 @@ class CustomInstall(install):
 
 setup(
     name='lid',
-    version='1.4.3',
+    version='1.5.3',
     description='Scans a file or folder for predefined licenses',
     author='Craig Northway',
     author_email='craign@qti.qualcomm.com',
