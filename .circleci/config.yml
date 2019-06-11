@@ -7,9 +7,4 @@ jobs:
       - checkout
       - run:
          command: |-
-             apt-get update
-             apt-get install -y software-properties-common
-             add-apt-repository -y ppa:pypy/ppa
-             apt-get update
-             apt-get install -y pypy
-             tox
+             tox -e pypy3,py27,py36,py37
